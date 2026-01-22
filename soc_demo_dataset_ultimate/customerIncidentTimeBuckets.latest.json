@@ -1,0 +1,23 @@
+{
+  "metricName": "customerIncidentTimeBuckets",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "data": [
+    {
+      "bucket": "Ack <1h",
+      "count": 9
+    },
+    {
+      "bucket": "Ack 1-4h",
+      "count": 3
+    },
+    {
+      "bucket": "Resolved <24h",
+      "count": 5
+    },
+    {
+      "bucket": "Resolved >24h",
+      "count": 7
+    }
+  ]
+}

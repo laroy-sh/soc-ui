@@ -1,0 +1,14 @@
+{
+  "metricName": "incidentTimings",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": {
+    "mtta": {
+      "medianMinutes": 11,
+      "p95Minutes": 42
+    },
+    "mttr": {
+      "medianMinutes": 96,
+      "p95Minutes": 315
+    }
+  }
+}

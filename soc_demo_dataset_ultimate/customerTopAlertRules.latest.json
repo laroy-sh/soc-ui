@@ -1,0 +1,19 @@
+{
+  "metricName": "customerTopAlertRules",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "data": [
+    {
+      "alertName": "Failed Login Attempts",
+      "count": 17
+    },
+    {
+      "alertName": "Suspicious File Hash",
+      "count": 5
+    },
+    {
+      "alertName": "Impossible Travel",
+      "count": 4
+    }
+  ]
+}

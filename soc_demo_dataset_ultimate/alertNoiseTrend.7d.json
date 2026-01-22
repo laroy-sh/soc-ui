@@ -1,0 +1,35 @@
+{
+  "metricName": "alertNoiseTrend",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "interval": "1d",
+  "data": [
+    {
+      "date": "2026-01-13",
+      "alertCount": 331
+    },
+    {
+      "date": "2026-01-14",
+      "alertCount": 409
+    },
+    {
+      "date": "2026-01-15",
+      "alertCount": 372
+    },
+    {
+      "date": "2026-01-16",
+      "alertCount": 451
+    },
+    {
+      "date": "2026-01-17",
+      "alertCount": 398
+    },
+    {
+      "date": "2026-01-18",
+      "alertCount": 365
+    },
+    {
+      "date": "2026-01-19",
+      "alertCount": 289
+    }
+  ]
+}

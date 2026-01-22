@@ -1,0 +1,21 @@
+{
+  "metricName": "frequentEntityIncidents",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": [
+    {
+      "entityType": "User",
+      "entityName": "john@contoso.com",
+      "count": 14
+    },
+    {
+      "entityType": "Host",
+      "entityName": "CONTOSO-LT-23",
+      "count": 12
+    },
+    {
+      "entityType": "User",
+      "entityName": "svc-app@contoso.com",
+      "count": 9
+    }
+  ]
+}

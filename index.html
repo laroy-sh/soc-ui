@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBCTG - SOC & ROC Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="essential8.css">
+</head>
+<body>
+    <div class="soc-bg-gradient"></div>
+    <div class="soc-bg-grid"></div>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>MBCTG</h1>
+                <p class="subtitle">Security Operations</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-section">SOC</li>
+                <li><a href="#" class="nav-link active" data-dashboard="analyst">Analyst</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="lead">SOC Lead</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="telemetry">Telemetry Health</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="customer">Customer</a></li>
+                <li class="nav-section">ROC</li>
+                <li><a href="#" class="nav-link" data-dashboard="roc" data-roc-tab="executive">Executive Overview</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="roc" data-roc-tab="actions">Actions</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="roc" data-roc-tab="aging">Risk Aging</a></li>
+                <li class="nav-section">Frameworks</li>
+                <li><a href="#" class="nav-link" data-dashboard="essential8">Essential Eight</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <p class="data-source">Data Source: Microsoft Sentinel</p>
+                <p class="last-updated" id="lastUpdated">Loading...</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboardTitle">SOC Analyst Dashboard</h2>
+                <div class="header-meta">
+                    <span class="badge badge-live">Live (Sentinel)</span>
+                    <span class="timestamp" id="generatedAt">—</span>
+                </div>
+            </div>
+
+            <!-- SOC Analyst Dashboard -->
+            <div id="dashboard-analyst" class="dashboard active">
+                <div class="grid">
+                    <!-- New Incidents Counter -->
+                    <div class="card card-highlight">
+                        <h3>New Incidents</h3>
+                        <div class="counter-group">
+                            <div class="counter">
+                                <div class="counter-value" id="newIncidents15m">—</div>
+                                <div class="counter-label">Last 15 min</div>
+                            </div>
+                            <div class="counter">
+                                <div class="counter-value" id="newIncidents60m">—</div>
+                                <div class="counter-label">Last 60 min</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Open Incidents by Severity -->
+                    <div class="card">
+                        <h3>Open Incidents by Severity</h3>
+                        <div id="openIncidentsBySeverity" class="chart-container"></div>
+                    </div>
+
+                    <!-- Open Incidents by Status -->
+                    <div class="card">
+                        <h3>Open Incidents by Status</h3>
+                        <div id="openIncidentsByStatus" class="chart-container"></div>
+                    </div>
+
+                    <!-- Active Alerts -->
+                    <div class="card">
+                        <h3>Active Alerts (Last 15 min)</h3>
+                        <div id="activeAlertsBySeverity" class="chart-container"></div>
+                    </div>
+
+                    <!-- Incident Aging -->
+                    <div class="card card-span-2">
+                        <h3>Incident Aging</h3>
+                        <div id="incidentAging" class="chart-container"></div>
+                    </div>
+
+                    <!-- Top Affected Entities -->
+                    <div class="card">
+                        <h3>Top Affected Entities</h3>
+                        <div id="topEntities" class="table-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOC Lead Dashboard -->
+            <div id="dashboard-lead" class="dashboard">
+                <div class="grid">
+                    <!-- MTTA/MTTR -->
+                    <div class="card">
+                        <h3>Mean Time to Acknowledge</h3>
+                        <div class="metrics-group">
+                            <div class="metric">
+                                <span class="metric-label">Median</span>
+                                <span class="metric-value" id="mttaMedian">—</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">P95</span>
+                                <span class="metric-value" id="mttaP95">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Mean Time to Resolve</h3>
+                        <div class="metrics-group">
+                            <div class="metric">
+                                <span class="metric-label">Median</span>
+                                <span class="metric-value" id="mttrMedian">—</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">P95</span>
+                                <span class="metric-value" id="mttrP95">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incident Inflow -->
+                    <div class="card card-span-2">
+                        <h3>Incident Inflow (24h)</h3>
+                        <div id="incidentInflow" class="chart-container chart-line"></div>
+                    </div>
+
+                    <!-- Incident Closure Rate -->
+                    <div class="card card-span-2">
+                        <h3>Incident Closure Rate (24h)</h3>
+                        <div id="incidentClosureRate" class="chart-container chart-line"></div>
+                    </div>
+
+                    <!-- Rule Firing Volume -->
+                    <div class="card card-span-2">
+                        <h3>Rule Firing Volume (24h)</h3>
+                        <div id="ruleFiringVolume" class="table-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telemetry Health Dashboard -->
+            <div id="dashboard-telemetry" class="dashboard">
+                <!-- Health Status Header -->
+                <div class="telemetry-header">
+                    <p class="telemetry-note">Data ingestion health from Microsoft Sentinel (last 24 hours)</p>
+                </div>
+
+                <div class="grid">
+                    <!-- Ingestion Volume -->
+                    <div class="card card-span-2">
+                        <h3>Ingestion Volume by Table (24h)</h3>
+                        <div id="ingestionVolumeByTable" class="table-container"></div>
+                    </div>
+
+                    <!-- Zero Ingestion Tables -->
+                    <div class="card">
+                        <h3>Tables with Zero Ingestion</h3>
+                        <p class="card-subtitle">Tables that have not received data in 24h</p>
+                        <div id="zeroIngestionTables" class="alert-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Dashboard -->
+            <div id="dashboard-customer" class="dashboard">
+                <!-- Customer Header -->
+                <div class="customer-header">
+                    <p class="customer-note">Customer-scoped security metrics from Microsoft Sentinel</p>
+                </div>
+
+                <!-- Section: Security Snapshot -->
+                <div class="section-header">
+                    <h3 class="section-title">Security Snapshot</h3>
+                </div>
+                <div class="grid customer-grid">
+                    <!-- Customer Incidents by Severity -->
+                    <div class="card">
+                        <h3>Open Incidents by Severity</h3>
+                        <div id="customerIncidentsBySeverity" class="chart-container"></div>
+                    </div>
+
+                    <!-- Customer Incidents by Status -->
+                    <div class="card">
+                        <h3>Incidents by Status</h3>
+                        <div id="customerIncidentsByStatus" class="chart-container"></div>
+                    </div>
+
+                    <!-- Customer Active Alerts -->
+                    <div class="card">
+                        <h3>Active Alerts <span class="time-window">(Last 15 min)</span></h3>
+                        <div id="customerActiveAlertsBySeverity" class="chart-container"></div>
+                    </div>
+
+                    <!-- Customer Incident Aging -->
+                    <div class="card">
+                        <h3>Incident Age Distribution</h3>
+                        <div id="customerIncidentAging" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Incident Trends -->
+                <div class="section-header">
+                    <h3 class="section-title">Incident Trends (7 Days)</h3>
+                </div>
+                <div class="grid customer-grid">
+                    <!-- Incident Creation Trend -->
+                    <div class="card card-span-2">
+                        <h3>Incidents Created</h3>
+                        <div id="customerIncidentTrend" class="chart-container chart-trend"></div>
+                    </div>
+
+                    <!-- Incident Closure Trend -->
+                    <div class="card card-span-2">
+                        <h3>Incidents Closed</h3>
+                        <div id="customerClosureTrend" class="chart-container chart-trend"></div>
+                    </div>
+
+                    <!-- Severity Trend -->
+                    <div class="card card-span-2">
+                        <h3>Incident Severity Breakdown</h3>
+                        <p class="card-subtitle">Daily severity distribution</p>
+                        <div id="customerSeverityTrend" class="chart-container chart-trend"></div>
+                    </div>
+
+                    <!-- Alert to Incident Rate -->
+                    <div class="card card-span-2">
+                        <h3>Alert-to-Incident Rate</h3>
+                        <p class="card-subtitle">Percentage of alerts promoted to incidents</p>
+                        <div id="customerAlertToIncidentRate" class="chart-container chart-trend"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Responsiveness -->
+                <div class="section-header">
+                    <h3 class="section-title">Responsiveness</h3>
+                    <p class="section-subtitle">Elapsed time metrics (not SLA targets)</p>
+                </div>
+                <div class="grid customer-grid">
+                    <!-- Customer MTTA -->
+                    <div class="card customer-timing-card">
+                        <h3>Time to Acknowledge</h3>
+                        <div class="customer-metrics-group">
+                            <div class="customer-metric">
+                                <span class="customer-metric-label">Median</span>
+                                <span class="customer-metric-value" id="customerMttaMedian">—</span>
+                            </div>
+                            <div class="customer-metric">
+                                <span class="customer-metric-label">P95</span>
+                                <span class="customer-metric-value" id="customerMttaP95">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer MTTR -->
+                    <div class="card customer-timing-card">
+                        <h3>Time to Resolve</h3>
+                        <div class="customer-metrics-group">
+                            <div class="customer-metric">
+                                <span class="customer-metric-label">Median</span>
+                                <span class="customer-metric-value" id="customerMttrMedian">—</span>
+                            </div>
+                            <div class="customer-metric">
+                                <span class="customer-metric-label">P95</span>
+                                <span class="customer-metric-value" id="customerMttrP95">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Buckets -->
+                    <div class="card card-span-2">
+                        <h3>Response Time Distribution</h3>
+                        <p class="card-subtitle">Incidents by acknowledgment and resolution time buckets</p>
+                        <div id="customerIncidentTimeBuckets" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <!-- Section: What Is Affected -->
+                <div class="section-header">
+                    <h3 class="section-title">What Is Affected</h3>
+                </div>
+                <div class="grid customer-grid">
+                    <!-- Top Affected Entities -->
+                    <div class="card card-span-2">
+                        <h3>Top Affected Entities</h3>
+                        <div id="customerTopEntities" class="table-container"></div>
+                    </div>
+
+                    <!-- Top Alert Rules -->
+                    <div class="card card-span-2">
+                        <h3>Top Alert Rules</h3>
+                        <p class="card-subtitle">Most frequently triggered alert rules</p>
+                        <div id="customerTopAlertRules" class="table-container"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Supporting Metrics (De-emphasized) -->
+                <div class="section-header section-supporting">
+                    <h3 class="section-title">Supporting Metrics</h3>
+                </div>
+                <div class="grid customer-grid customer-supporting">
+                    <!-- Alert Noise Trend -->
+                    <div class="card card-muted">
+                        <h3>Alert Volume Trend</h3>
+                        <p class="card-subtitle">Daily alert counts (informational)</p>
+                        <div id="alertNoiseTrend" class="chart-container chart-trend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROC Dashboard -->
+            <div id="dashboard-roc" class="dashboard">
+                <div class="roc-tab-panel active" data-roc-panel="executive">
+                    <div class="section-header">
+                        <h3 class="section-title">Risk Scoring</h3>
+                        <p class="section-subtitle">30-day weighted risk view from closed and open incidents.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Risk Score (30d)</h3>
+                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <div class="metrics-group">
+                                <div class="metric">
+                                    <span class="metric-label">Weighted severity sum</span>
+                                    <span class="metric-value" id="rocRiskScore">—</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Avg High/Critical MTTR</h3>
+                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <div class="metrics-group">
+                                <div class="metric">
+                                    <span class="metric-label">Days to remediate</span>
+                                    <span class="metric-value" id="rocAvgHighRisk">—</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Attack Surface Coverage</h3>
+                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <div class="metrics-group">
+                                <div class="metric">
+                                    <span class="metric-label">Onboarded devices</span>
+                                    <span class="metric-value" id="rocAttackSurfaceCoverage">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Risk Exposure</h3>
+                        <p class="section-subtitle">Daily exposure trend based on weighted severity.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-2">
+                            <h3>Risk Exposure Trend (30d)</h3>
+                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <div id="rocRiskExposure" class="chart-container chart-line"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Top Incident Drivers (30d)</h3>
+                            <div id="rocIncidentCount" class="table-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Detections</h3>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-2">
+                            <h3>Repeated Detections (7d)</h3>
+                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <div id="repeatedDetections" class="table-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roc-tab-panel" data-roc-panel="actions">
+                    <div class="section-header">
+                        <h3 class="section-title">Executive Actions</h3>
+                        <p class="section-subtitle">Closed incidents requiring executive visibility.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-3">
+                            <h3>Executive Actions (30d)</h3>
+                            <div id="rocExecutiveActions" class="table-container"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">
+                        <h3 class="section-title">Workload & Risk Drivers</h3>
+                        <p class="section-subtitle">30-day remediation history and volume signals.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Workload Volume by Severity</h3>
+                            <div id="rocWorkloadBySeverity" class="chart-container"></div>
+                        </div>
+
+                        <div class="card card-span-2">
+                            <h3>Top 5 High-Volume Security Risks</h3>
+                            <div id="rocHighVolumeRisks" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roc-tab-panel" data-roc-panel="aging">
+                    <div class="section-header">
+                        <h3 class="section-title">Resolution Efficiency & Aging</h3>
+                    </div>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Aging Distribution (Incident Volume)</h3>
+                            <div id="rocIncidentAgeBuckets" class="chart-container"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Resolution Efficiency %</h3>
+                            <div id="rocResolutionEfficiency" class="chart-container"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Average Age Days to Resolve</h3>
+                            <div class="metrics-group">
+                                <div class="metric">
+                                    <span class="metric-label">Average</span>
+                                    <span class="metric-value" id="rocAvgResolveAge">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Daily Resolution Speed</h3>
+                        <p class="section-subtitle">Average resolution age with a 2-day target line.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-2">
+                            <h3>Daily Resolution Speed vs 2-Day Target</h3>
+                            <div id="rocResolutionSpeed" class="chart-container chart-line"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Target Outliers (&gt; 2 days)</h3>
+                            <div id="rocTargetOutliers" class="table-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Closed Incident Details</h3>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-3">
+                            <h3>Closed Incident Details (30d)</h3>
+                            <div id="rocIncidentAgingDetails" class="table-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Frameworks: Essential Eight -->
+            <div id="dashboard-essential8" class="dashboard">
+                <div class="frameworks-header">
+                    <h3>Essential Eight Framework</h3>
+                    <p class="frameworks-note">Interactive maturity assessment demo for the ACSC Essential Eight.</p>
+                </div>
+                <div class="e8">
+                    <div class="bg-gradient"></div>
+                    <div class="bg-grid"></div>
+
+                    <main class="dashboard-container">
+                        <header class="dashboard-header" id="e8-overview">
+                            <div class="header-content">
+                                <div class="header-text">
+                                    <span class="header-tag">ACSC Framework</span>
+                                    <h1>Essential Eight Maturity Assessment</h1>
+                                    <p>Real-time security posture monitoring powered by Microsoft Sentinel</p>
+                                </div>
+                                <div class="header-meta">
+                                    <div class="meta-item">
+                                        <span class="meta-label">Last Updated</span>
+                                        <span class="meta-value" id="e8-lastUpdated">Loading...</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">Assessment Period</span>
+                                        <span class="meta-value">Q1 2026</span>
+                                    </div>
+                                    <div class="meta-item header-actions">
+                                        <span class="demo-badge">Live Demo</span>
+                                        <button class="btn-primary" id="e8-refreshBtn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M23 4v6h-6M1 20v-6h6" />
+                                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                                            </svg>
+                                            Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <section class="kpi-section">
+                            <div class="kpi-card compliance-score">
+                                <div class="kpi-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                        <polyline points="22 4 12 14.01 9 11.01" />
+                                    </svg>
+                                </div>
+                                <div class="kpi-content">
+                                    <span class="kpi-value" id="e8-complianceScore">--</span>
+                                    <span class="kpi-label">Compliance Score</span>
+                                </div>
+                                <div class="kpi-chart">
+                                    <svg class="circular-progress" viewBox="0 0 36 36">
+                                        <path class="circle-bg"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="circle-progress" id="e8-scoreProgress"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card">
+                                <div class="kpi-icon effective">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                        <polyline points="9 12 11 14 15 10" />
+                                    </svg>
+                                </div>
+                                <div class="kpi-content">
+                                    <span class="kpi-value" id="e8-effectiveCount">--</span>
+                                    <span class="kpi-label">Effective Controls</span>
+                                </div>
+                                <div class="kpi-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                    </svg>
+                                    <span>+2 this quarter</span>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card">
+                                <div class="kpi-icon automated">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                        <line x1="8" y1="21" x2="16" y2="21" />
+                                        <line x1="12" y1="17" x2="12" y2="21" />
+                                    </svg>
+                                </div>
+                                <div class="kpi-content">
+                                    <span class="kpi-value" id="e8-automatedCount">--</span>
+                                    <span class="kpi-label">Automated Tests</span>
+                                </div>
+                                <div class="kpi-trend positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                    </svg>
+                                    <span>50% coverage</span>
+                                </div>
+                            </div>
+
+                            <div class="kpi-card">
+                                <div class="kpi-icon warning">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                        <line x1="12" y1="9" x2="12" y2="13" />
+                                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                                    </svg>
+                                </div>
+                                <div class="kpi-content">
+                                    <span class="kpi-value" id="e8-actionRequired">--</span>
+                                    <span class="kpi-label">Actions Required</span>
+                                </div>
+                                <div class="kpi-trend negative">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                    <span>Review pending</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="sentinel-info-section">
+                            <div class="card sentinel-card">
+                                <div class="card-header">
+                                    <h2>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                                        </svg>
+                                        Microsoft Sentinel Integration
+                                    </h2>
+                                    <span class="connection-status connected">
+                                        <span class="status-dot"></span>
+                                        Connected
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="sentinel-architecture">
+                                        <div class="arch-step">
+                                            <div class="arch-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                                                </svg>
+                                            </div>
+                                            <div class="arch-text">
+                                                <span class="arch-title">Sentinel Watchlists</span>
+                                                <span class="arch-desc">Controls & Assessments stored as watchlist data</span>
+                                            </div>
+                                        </div>
+                                        <div class="arch-arrow">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                                <polyline points="12 5 19 12 12 19" />
+                                            </svg>
+                                        </div>
+                                        <div class="arch-step">
+                                            <div class="arch-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="16 18 22 12 16 6" />
+                                                    <polyline points="8 6 2 12 8 18" />
+                                                </svg>
+                                            </div>
+                                            <div class="arch-text">
+                                                <span class="arch-title">KQL Query</span>
+                                                <span class="arch-desc">EssentialEight_Dashboard_Query.kql</span>
+                                            </div>
+                                        </div>
+                                        <div class="arch-arrow">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                                <polyline points="12 5 19 12 12 19" />
+                                            </svg>
+                                        </div>
+                                        <div class="arch-step">
+                                            <div class="arch-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                                    <line x1="3" y1="9" x2="21" y2="9" />
+                                                    <line x1="9" y1="21" x2="9" y2="9" />
+                                                </svg>
+                                            </div>
+                                            <div class="arch-text">
+                                                <span class="arch-title">Power BI Import</span>
+                                                <span class="arch-desc">Scheduled refresh every 15 min</span>
+                                            </div>
+                                        </div>
+                                        <div class="arch-arrow">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                                <polyline points="12 5 19 12 12 19" />
+                                            </svg>
+                                        </div>
+                                        <div class="arch-step highlight">
+                                            <div class="arch-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                                    <line x1="12" y1="17" x2="12" y2="21" />
+                                                </svg>
+                                            </div>
+                                            <div class="arch-text">
+                                                <span class="arch-title">This Dashboard</span>
+                                                <span class="arch-desc">Interactive visualization</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="sentinel-details">
+                                        <div class="detail-chip">
+                                            <span class="chip-label">Workspace:</span>
+                                            <span class="chip-value" id="e8-sentinelWorkspace">SecOps-Sentinel-Prod</span>
+                                        </div>
+                                        <div class="detail-chip">
+                                            <span class="chip-label">Last Sync:</span>
+                                            <span class="chip-value" id="e8-sentinelLastSync">Loading...</span>
+                                        </div>
+                                        <div class="detail-chip">
+                                            <span class="chip-label">Refresh:</span>
+                                            <span class="chip-value">Every 15 min</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="trends-section">
+                            <div class="card trends-card">
+                                <div class="card-header">
+                                    <h2>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                                        </svg>
+                                        Compliance Trend
+                                    </h2>
+                                    <div class="quarter-selector">
+                                        <label>View Quarter:</label>
+                                        <select id="e8-quarterSelector">
+                                            <option value="3" selected>Q1 2026 (Current)</option>
+                                            <option value="2">Q4 2025</option>
+                                            <option value="1">Q3 2025</option>
+                                            <option value="0">Q2 2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="trend-chart-container">
+                                        <div class="trend-chart" id="e8-trendChart"></div>
+                                        <div class="trend-summary">
+                                            <div class="trend-stat improvement">
+                                                <span class="trend-stat-value">+25%</span>
+                                                <span class="trend-stat-label">Improvement since Q2 2025</span>
+                                            </div>
+                                            <div class="trend-stat">
+                                                <span class="trend-stat-value">+2</span>
+                                                <span class="trend-stat-label">New effective controls</span>
+                                            </div>
+                                            <div class="trend-stat">
+                                                <span class="trend-stat-value">+2</span>
+                                                <span class="trend-stat-label">New automated tests</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="dashboard-grid">
+                            <div class="card chart-card" id="e8-controls">
+                                <div class="card-header">
+                                    <h2>Mitigation Strategy Overview</h2>
+                                    <div class="card-actions">
+                                        <button class="icon-btn" title="Download">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                <polyline points="7 10 12 15 17 10" />
+                                                <line x1="12" y1="15" x2="12" y2="3" />
+                                            </svg>
+                                        </button>
+                                        <button class="icon-btn" title="Fullscreen">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="15 3 21 3 21 9" />
+                                                <polyline points="9 21 3 21 3 15" />
+                                                <line x1="21" y1="3" x2="14" y2="10" />
+                                                <line x1="3" y1="21" x2="10" y2="14" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="strategy-chart" id="e8-strategyChart"></div>
+                                </div>
+                            </div>
+
+                            <div class="card donut-card">
+                                <div class="card-header">
+                                    <h2>Implementation Status</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="donut-container">
+                                        <div class="donut-chart" id="e8-statusDonut">
+                                            <svg viewBox="0 0 100 100">
+                                                <circle class="donut-hole" cx="50" cy="50" r="35" />
+                                                <circle class="donut-ring" cx="50" cy="50" r="35" />
+                                            </svg>
+                                            <div class="donut-center">
+                                                <span class="donut-value" id="e8-donutValue">8</span>
+                                                <span class="donut-label">Controls</span>
+                                            </div>
+                                        </div>
+                                        <div class="donut-legend" id="e8-statusLegend"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card evidence-card">
+                                <div class="card-header">
+                                    <h2>Evidence Quality</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="evidence-bars" id="e8-evidenceBars"></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="controls-section">
+                            <div class="card table-card">
+                                <div class="card-header">
+                                    <h2>Control Assessment Details</h2>
+                                    <div class="table-filters">
+                                        <div class="filter-group">
+                                            <label>Status</label>
+                                            <select id="e8-statusFilter">
+                                                <option value="all">All Statuses</option>
+                                                <option value="Effective">Effective</option>
+                                                <option value="Implemented">Implemented</option>
+                                                <option value="Not Effective">Not Effective</option>
+                                                <option value="Not Implemented">Not Implemented</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label>Test Type</label>
+                                            <select id="e8-testFilter">
+                                                <option value="all">All Types</option>
+                                                <option value="Automated">Automated</option>
+                                                <option value="Manual">Manual</option>
+                                            </select>
+                                        </div>
+                                        <div class="search-box">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="11" cy="11" r="8" />
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                            </svg>
+                                            <input type="text" id="e8-searchInput" placeholder="Search controls...">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="controls-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Control</th>
+                                                    <th>Mitigation Strategy</th>
+                                                    <th>Status</th>
+                                                    <th>Evidence</th>
+                                                    <th>Test Type</th>
+                                                    <th>Last Updated</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="e8-controlsTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="insights-section" id="e8-insights">
+                            <div class="card insights-card">
+                                <div class="card-header">
+                                    <h2>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="16" x2="12" y2="12" />
+                                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        </svg>
+                                        Key Insights & Recommendations
+                                    </h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="insights-grid" id="e8-insightsGrid"></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <footer class="dashboard-footer">
+                            <div class="footer-content">
+                                <p>Essential Eight Dashboard Demo | Powered by Microsoft Sentinel</p>
+                                <p class="footer-disclaimer">This is a demonstration dashboard. Data shown is simulated for demo
+                                    purposes.</p>
+                            </div>
+                        </footer>
+                    </main>
+
+                    <div class="modal-overlay" id="e8-modalOverlay">
+                        <div class="modal" id="e8-detailModal">
+                            <div class="modal-header">
+                                <h3 id="e8-modalTitle">Control Details</h3>
+                                <button class="modal-close" id="e8-modalClose">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="e8-modalBody"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="essential8.js"></script>
+</body>
+</html>

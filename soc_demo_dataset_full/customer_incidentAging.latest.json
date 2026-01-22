@@ -1,0 +1,23 @@
+{
+  "metricName": "customerIncidentAging",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "data": [
+    {
+      "bucket": "0-1h",
+      "count": 2
+    },
+    {
+      "bucket": "1-4h",
+      "count": 4
+    },
+    {
+      "bucket": "4-24h",
+      "count": 5
+    },
+    {
+      "bucket": ">24h",
+      "count": 2
+    }
+  ]
+}

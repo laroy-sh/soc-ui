@@ -1,0 +1,22 @@
+{
+  "metricName": "incidentAging",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": [
+    {
+      "bucket": "0-1h",
+      "count": 9
+    },
+    {
+      "bucket": "1-4h",
+      "count": 10
+    },
+    {
+      "bucket": "4-24h",
+      "count": 12
+    },
+    {
+      "bucket": ">24h",
+      "count": 4
+    }
+  ]
+}

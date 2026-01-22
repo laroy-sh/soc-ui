@@ -1,0 +1,28 @@
+{
+  "metricName": "incidentCountByTitle",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "windowStart": "2025-12-20T00:00:00Z",
+  "windowEnd": "2026-01-19T23:59:59Z",
+  "data": [
+    {
+      "Title": "Suspicious OAuth Consent",
+      "IncidentCount": 14
+    },
+    {
+      "Title": "Impossible Travel Sign-in",
+      "IncidentCount": 12
+    },
+    {
+      "Title": "Malware Detected on Endpoint",
+      "IncidentCount": 10
+    },
+    {
+      "Title": "Privilege Escalation Attempt",
+      "IncidentCount": 8
+    },
+    {
+      "Title": "Data Exfiltration Alert",
+      "IncidentCount": 6
+    }
+  ]
+}

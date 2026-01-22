@@ -1,0 +1,5 @@
+{
+  "metricName": "businessRiskPosture",
+  "status": "not_implemented",
+  "message": "Business risk metrics require external data sources and are not available in the MVP."
+}

@@ -1,0 +1,50 @@
+{
+  "metricName": "customerSeverityTrend",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "interval": "1d",
+  "data": [
+    {
+      "date": "2026-01-13",
+      "High": 2,
+      "Medium": 4,
+      "Low": 1
+    },
+    {
+      "date": "2026-01-14",
+      "High": 1,
+      "Medium": 2,
+      "Low": 3
+    },
+    {
+      "date": "2026-01-15",
+      "High": 3,
+      "Medium": 1,
+      "Low": 2
+    },
+    {
+      "date": "2026-01-16",
+      "High": 2,
+      "Medium": 3,
+      "Low": 2
+    },
+    {
+      "date": "2026-01-17",
+      "High": 4,
+      "Medium": 2,
+      "Low": 1
+    },
+    {
+      "date": "2026-01-18",
+      "High": 1,
+      "Medium": 3,
+      "Low": 2
+    },
+    {
+      "date": "2026-01-19",
+      "High": 0,
+      "Medium": 1,
+      "Low": 1
+    }
+  ]
+}

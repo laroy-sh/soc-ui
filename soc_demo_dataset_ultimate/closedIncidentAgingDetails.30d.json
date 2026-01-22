@@ -1,0 +1,38 @@
+{
+  "metricName": "closedIncidentAgingDetails",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "windowStart": "2025-12-20T00:00:00Z",
+  "windowEnd": "2026-01-19T23:59:59Z",
+  "data": [
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-18T15:24:00Z",
+      "IncidentTitle": "Suspicious MFA Bypass"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-17T09:12:00Z",
+      "IncidentTitle": "Endpoint Malware Containment"
+    },
+    {
+      "AgeDays": 12,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2026-01-10T21:03:00Z",
+      "IncidentTitle": "Privilege Escalation Attempt"
+    },
+    {
+      "AgeDays": 18,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2026-01-05T11:47:00Z",
+      "IncidentTitle": "Data Exfiltration Alert"
+    },
+    {
+      "AgeDays": 33,
+      "AgeBucket": "30+ Days",
+      "ClosedTime": "2025-12-20T05:31:00Z",
+      "IncidentTitle": "Legacy Account Compromise"
+    }
+  ]
+}

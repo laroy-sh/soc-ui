@@ -1,0 +1,19 @@
+{
+  "metricName": "customerIncidentsByStatus",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "data": [
+    {
+      "status": "New",
+      "count": 4
+    },
+    {
+      "status": "Active",
+      "count": 10
+    },
+    {
+      "status": "Closed",
+      "count": 8
+    }
+  ]
+}

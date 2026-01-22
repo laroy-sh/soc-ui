@@ -1,0 +1,43 @@
+{
+  "metricName": "executiveActions",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "windowStart": "2025-12-20T00:00:00Z",
+  "windowEnd": "2026-01-19T23:59:59Z",
+  "data": [
+    {
+      "Age": 4,
+      "Category": "High",
+      "Owner": "a.jackson@example.com",
+      "Risk": "Credential Dumping Detected",
+      "Status": "Closed"
+    },
+    {
+      "Age": 9,
+      "Category": "Critical",
+      "Owner": "s.lee@example.com",
+      "Risk": "Ransomware Containment",
+      "Status": "Closed"
+    },
+    {
+      "Age": 6,
+      "Category": "High",
+      "Owner": "m.patel@example.com",
+      "Risk": "Sensitive Data Exposure",
+      "Status": "Closed"
+    },
+    {
+      "Age": 13,
+      "Category": "Medium",
+      "Owner": "c.novak@example.com",
+      "Risk": "Suspicious Privilege Changes",
+      "Status": "Closed"
+    },
+    {
+      "Age": 7,
+      "Category": "High",
+      "Owner": "k.brown@example.com",
+      "Risk": "Cloud Resource Misconfiguration",
+      "Status": "Closed"
+    }
+  ]
+}

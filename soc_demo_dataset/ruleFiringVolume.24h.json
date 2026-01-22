@@ -1,0 +1,18 @@
+{
+  "metricName": "ruleFiringVolume",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": [
+    {
+      "ruleName": "Impossible Travel",
+      "count": 28
+    },
+    {
+      "ruleName": "Multiple Failed Logins",
+      "count": 21
+    },
+    {
+      "ruleName": "Malicious IP Connection",
+      "count": 14
+    }
+  ]
+}

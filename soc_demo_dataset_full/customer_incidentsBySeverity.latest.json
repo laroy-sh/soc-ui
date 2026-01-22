@@ -1,0 +1,19 @@
+{
+  "metricName": "customerIncidentsBySeverity",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "data": [
+    {
+      "severity": "High",
+      "count": 2
+    },
+    {
+      "severity": "Medium",
+      "count": 7
+    },
+    {
+      "severity": "Low",
+      "count": 4
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "metricName": "customerAlertToIncidentRate",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "customer": "Contoso",
+  "interval": "1d",
+  "data": [
+    {
+      "date": "2026-01-13",
+      "rate": 0.24
+    },
+    {
+      "date": "2026-01-14",
+      "rate": 0.31
+    },
+    {
+      "date": "2026-01-15",
+      "rate": 0.27
+    },
+    {
+      "date": "2026-01-16",
+      "rate": 0.35
+    },
+    {
+      "date": "2026-01-17",
+      "rate": 0.29
+    },
+    {
+      "date": "2026-01-18",
+      "rate": 0.22
+    },
+    {
+      "date": "2026-01-19",
+      "rate": 0.18
+    }
+  ]
+}

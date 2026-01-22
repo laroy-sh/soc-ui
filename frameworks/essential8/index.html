@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Essential Eight Security Maturity Assessment Dashboard - Interactive demo showcasing ACSC cybersecurity framework compliance monitoring">
+    <meta name="keywords" content="Essential Eight, ACSC, cybersecurity, maturity assessment, compliance dashboard">
+    <title>Essential Eight Dashboard | Security Maturity Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <span>Essential Eight</span>
+        </div>
+        <div class="nav-links">
+            <a href="#overview" class="nav-link active">Overview</a>
+            <a href="#controls" class="nav-link">Controls</a>
+            <a href="#insights" class="nav-link">Insights</a>
+        </div>
+        <div class="nav-actions">
+            <span class="demo-badge">Live Demo</span>
+            <button class="btn-primary" id="refreshBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6M1 20v-6h6" />
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                Refresh
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header" id="overview">
+            <div class="header-content">
+                <div class="header-text">
+                    <span class="header-tag">ACSC Framework</span>
+                    <h1>Essential Eight Maturity Assessment</h1>
+                    <p>Real-time security posture monitoring powered by Microsoft Sentinel</p>
+                </div>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Last Updated</span>
+                        <span class="meta-value" id="lastUpdated">Loading...</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Assessment Period</span>
+                        <span class="meta-value">Q1 2026</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <section class="kpi-section">
+            <div class="kpi-card compliance-score">
+                <div class="kpi-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="complianceScore">--</span>
+                    <span class="kpi-label">Compliance Score</span>
+                </div>
+                <div class="kpi-chart">
+                    <svg class="circular-progress" viewBox="0 0 36 36">
+                        <path class="circle-bg"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="circle-progress" id="scoreProgress"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon effective">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <polyline points="9 12 11 14 15 10" />
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="effectiveCount">--</span>
+                    <span class="kpi-label">Effective Controls</span>
+                </div>
+                <div class="kpi-trend positive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    </svg>
+                    <span>+2 this quarter</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon automated">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="automatedCount">--</span>
+                    <span class="kpi-label">Automated Tests</span>
+                </div>
+                <div class="kpi-trend positive">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    </svg>
+                    <span>50% coverage</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon warning">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-value" id="actionRequired">--</span>
+                    <span class="kpi-label">Actions Required</span>
+                </div>
+                <div class="kpi-trend negative">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>Review pending</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sentinel Integration Info -->
+        <section class="sentinel-info-section">
+            <div class="card sentinel-card">
+                <div class="card-header">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                        Microsoft Sentinel Integration
+                    </h2>
+                    <span class="connection-status connected">
+                        <span class="status-dot"></span>
+                        Connected
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="sentinel-architecture">
+                        <div class="arch-step">
+                            <div class="arch-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                                </svg>
+                            </div>
+                            <div class="arch-text">
+                                <span class="arch-title">Sentinel Watchlists</span>
+                                <span class="arch-desc">Controls & Assessments stored as watchlist data</span>
+                            </div>
+                        </div>
+                        <div class="arch-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </div>
+                        <div class="arch-step">
+                            <div class="arch-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="16 18 22 12 16 6" />
+                                    <polyline points="8 6 2 12 8 18" />
+                                </svg>
+                            </div>
+                            <div class="arch-text">
+                                <span class="arch-title">KQL Query</span>
+                                <span class="arch-desc">EssentialEight_Dashboard_Query.kql</span>
+                            </div>
+                        </div>
+                        <div class="arch-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </div>
+                        <div class="arch-step">
+                            <div class="arch-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="9" x2="21" y2="9" />
+                                    <line x1="9" y1="21" x2="9" y2="9" />
+                                </svg>
+                            </div>
+                            <div class="arch-text">
+                                <span class="arch-title">Power BI Import</span>
+                                <span class="arch-desc">Scheduled refresh every 15 min</span>
+                            </div>
+                        </div>
+                        <div class="arch-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </div>
+                        <div class="arch-step highlight">
+                            <div class="arch-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                    <line x1="12" y1="17" x2="12" y2="21" />
+                                </svg>
+                            </div>
+                            <div class="arch-text">
+                                <span class="arch-title">This Dashboard</span>
+                                <span class="arch-desc">Interactive visualization</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sentinel-details">
+                        <div class="detail-chip">
+                            <span class="chip-label">Workspace:</span>
+                            <span class="chip-value" id="sentinelWorkspace">SecOps-Sentinel-Prod</span>
+                        </div>
+                        <div class="detail-chip">
+                            <span class="chip-label">Last Sync:</span>
+                            <span class="chip-value" id="sentinelLastSync">Loading...</span>
+                        </div>
+                        <div class="detail-chip">
+                            <span class="chip-label">Refresh:</span>
+                            <span class="chip-value">Every 15 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Trends Section -->
+        <section class="trends-section">
+            <div class="card trends-card">
+                <div class="card-header">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Compliance Trend
+                    </h2>
+                    <div class="quarter-selector">
+                        <label>View Quarter:</label>
+                        <select id="quarterSelector">
+                            <option value="3" selected>Q1 2026 (Current)</option>
+                            <option value="2">Q4 2025</option>
+                            <option value="1">Q3 2025</option>
+                            <option value="0">Q2 2025</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="trend-chart-container">
+                        <div class="trend-chart" id="trendChart">
+                            <!-- Trend line chart rendered by JS -->
+                        </div>
+                        <div class="trend-summary">
+                            <div class="trend-stat improvement">
+                                <span class="trend-stat-value">+25%</span>
+                                <span class="trend-stat-label">Improvement since Q2 2025</span>
+                            </div>
+                            <div class="trend-stat">
+                                <span class="trend-stat-value">+2</span>
+                                <span class="trend-stat-label">New effective controls</span>
+                            </div>
+                            <div class="trend-stat">
+                                <span class="trend-stat-value">+2</span>
+                                <span class="trend-stat-label">New automated tests</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Grid -->
+        <section class="dashboard-grid">
+            <!-- Controls Overview Chart -->
+            <div class="card chart-card" id="controls">
+                <div class="card-header">
+                    <h2>Mitigation Strategy Overview</h2>
+                    <div class="card-actions">
+                        <button class="icon-btn" title="Download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                        </button>
+                        <button class="icon-btn" title="Fullscreen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 3 21 3 21 9" />
+                                <polyline points="9 21 3 21 3 15" />
+                                <line x1="21" y1="3" x2="14" y2="10" />
+                                <line x1="3" y1="21" x2="10" y2="14" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="strategy-chart" id="strategyChart"></div>
+                </div>
+            </div>
+
+            <!-- Compliance Breakdown -->
+            <div class="card donut-card">
+                <div class="card-header">
+                    <h2>Implementation Status</h2>
+                </div>
+                <div class="card-body">
+                    <div class="donut-container">
+                        <div class="donut-chart" id="statusDonut">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="donut-hole" cx="50" cy="50" r="35" />
+                                <circle class="donut-ring" cx="50" cy="50" r="35" />
+                                <!-- Segments will be added by JS -->
+                            </svg>
+                            <div class="donut-center">
+                                <span class="donut-value" id="donutValue">8</span>
+                                <span class="donut-label">Controls</span>
+                            </div>
+                        </div>
+                        <div class="donut-legend" id="statusLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Quality -->
+            <div class="card evidence-card">
+                <div class="card-header">
+                    <h2>Evidence Quality</h2>
+                </div>
+                <div class="card-body">
+                    <div class="evidence-bars" id="evidenceBars"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls Detail Table -->
+        <section class="controls-section">
+            <div class="card table-card">
+                <div class="card-header">
+                    <h2>Control Assessment Details</h2>
+                    <div class="table-filters">
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="statusFilter">
+                                <option value="all">All Statuses</option>
+                                <option value="Effective">Effective</option>
+                                <option value="Implemented">Implemented</option>
+                                <option value="Not Effective">Not Effective</option>
+                                <option value="Not Implemented">Not Implemented</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Test Type</label>
+                            <select id="testFilter">
+                                <option value="all">All Types</option>
+                                <option value="Automated">Automated</option>
+                                <option value="Manual">Manual</option>
+                            </select>
+                        </div>
+                        <div class="search-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="searchInput" placeholder="Search controls...">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="controls-table">
+                            <thead>
+                                <tr>
+                                    <th>Control</th>
+                                    <th>Mitigation Strategy</th>
+                                    <th>Status</th>
+                                    <th>Evidence</th>
+                                    <th>Test Type</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="controlsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section class="insights-section" id="insights">
+            <div class="card insights-card">
+                <div class="card-header">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="16" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                        </svg>
+                        Key Insights & Recommendations
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="insights-grid" id="insightsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>Essential Eight Dashboard Demo | Powered by Microsoft Sentinel</p>
+                <p class="footer-disclaimer">This is a demonstration dashboard. Data shown is simulated for demo
+                    purposes.</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="detailModal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Control Details</h3>
+                <button class="modal-close" id="modalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
