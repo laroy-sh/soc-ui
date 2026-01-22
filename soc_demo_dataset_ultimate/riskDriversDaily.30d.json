@@ -1,0 +1,673 @@
+{
+  "metricName": "riskDriversDaily",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 3
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-25T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-25T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-25T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-25T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-25T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-26T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-26T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-26T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-26T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-26T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-28T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-28T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-28T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-28T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-28T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-29T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-29T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-29T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-29T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-29T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-31T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2025-12-31T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2025-12-31T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-31T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2025-12-31T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-01T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-01T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-01T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-01T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-01T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-03T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-03T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-03T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-03T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-03T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-04T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-04T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-04T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-04T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-04T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-06T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-06T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-06T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-06T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-06T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-07T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-07T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-07T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-07T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-07T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-09T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-09T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-09T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-09T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-09T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-10T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-10T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-10T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-10T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-10T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-12T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-12T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-12T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-12T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-12T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-13T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-13T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-13T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-13T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-13T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-15T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-15T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-15T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-15T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-15T00:00:00Z",
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-16T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 32
+    },
+    {
+      "TimeGenerated": "2026-01-16T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-16T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-16T00:00:00Z",
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-18T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-18T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-18T00:00:00Z",
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 1
+    },
+    {
+      "TimeGenerated": "2026-01-19T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-19T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-21T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-21T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    },
+    {
+      "TimeGenerated": "2026-01-22T00:00:00Z",
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 31
+    },
+    {
+      "TimeGenerated": "2026-01-22T00:00:00Z",
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 2
+    }
+  ]
+}

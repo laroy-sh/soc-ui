@@ -1,9 +1,155 @@
 {
   "metricName": "attackSurfaceCoverage",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "windowStart": "2026-01-19T00:00:00Z",
-  "windowEnd": "2026-01-19T23:59:59Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": {
-    "CoveragePercent": 87.5
+    "CoveragePercent": 23.33,
+    "CoveredAssets": 280,
+    "TotalAssets": 1200,
+    "coverageHistory": [
+      {
+        "TimeGenerated": "2025-12-24T00:00:00Z",
+        "CoveragePercent": 20.0
+      },
+      {
+        "TimeGenerated": "2025-12-25T00:00:00Z",
+        "CoveragePercent": 20.11
+      },
+      {
+        "TimeGenerated": "2025-12-26T00:00:00Z",
+        "CoveragePercent": 20.23
+      },
+      {
+        "TimeGenerated": "2025-12-27T00:00:00Z",
+        "CoveragePercent": 20.34
+      },
+      {
+        "TimeGenerated": "2025-12-28T00:00:00Z",
+        "CoveragePercent": 20.46
+      },
+      {
+        "TimeGenerated": "2025-12-29T00:00:00Z",
+        "CoveragePercent": 20.57
+      },
+      {
+        "TimeGenerated": "2025-12-30T00:00:00Z",
+        "CoveragePercent": 20.69
+      },
+      {
+        "TimeGenerated": "2025-12-31T00:00:00Z",
+        "CoveragePercent": 20.8
+      },
+      {
+        "TimeGenerated": "2026-01-01T00:00:00Z",
+        "CoveragePercent": 20.92
+      },
+      {
+        "TimeGenerated": "2026-01-02T00:00:00Z",
+        "CoveragePercent": 21.03
+      },
+      {
+        "TimeGenerated": "2026-01-03T00:00:00Z",
+        "CoveragePercent": 21.15
+      },
+      {
+        "TimeGenerated": "2026-01-04T00:00:00Z",
+        "CoveragePercent": 21.26
+      },
+      {
+        "TimeGenerated": "2026-01-05T00:00:00Z",
+        "CoveragePercent": 21.38
+      },
+      {
+        "TimeGenerated": "2026-01-06T00:00:00Z",
+        "CoveragePercent": 21.49
+      },
+      {
+        "TimeGenerated": "2026-01-07T00:00:00Z",
+        "CoveragePercent": 21.61
+      },
+      {
+        "TimeGenerated": "2026-01-08T00:00:00Z",
+        "CoveragePercent": 21.72
+      },
+      {
+        "TimeGenerated": "2026-01-09T00:00:00Z",
+        "CoveragePercent": 21.84
+      },
+      {
+        "TimeGenerated": "2026-01-10T00:00:00Z",
+        "CoveragePercent": 21.95
+      },
+      {
+        "TimeGenerated": "2026-01-11T00:00:00Z",
+        "CoveragePercent": 22.07
+      },
+      {
+        "TimeGenerated": "2026-01-12T00:00:00Z",
+        "CoveragePercent": 22.18
+      },
+      {
+        "TimeGenerated": "2026-01-13T00:00:00Z",
+        "CoveragePercent": 22.3
+      },
+      {
+        "TimeGenerated": "2026-01-14T00:00:00Z",
+        "CoveragePercent": 22.41
+      },
+      {
+        "TimeGenerated": "2026-01-15T00:00:00Z",
+        "CoveragePercent": 22.53
+      },
+      {
+        "TimeGenerated": "2026-01-16T00:00:00Z",
+        "CoveragePercent": 22.64
+      },
+      {
+        "TimeGenerated": "2026-01-17T00:00:00Z",
+        "CoveragePercent": 22.76
+      },
+      {
+        "TimeGenerated": "2026-01-18T00:00:00Z",
+        "CoveragePercent": 22.87
+      },
+      {
+        "TimeGenerated": "2026-01-19T00:00:00Z",
+        "CoveragePercent": 22.99
+      },
+      {
+        "TimeGenerated": "2026-01-20T00:00:00Z",
+        "CoveragePercent": 23.1
+      },
+      {
+        "TimeGenerated": "2026-01-21T00:00:00Z",
+        "CoveragePercent": 23.22
+      },
+      {
+        "TimeGenerated": "2026-01-22T00:00:00Z",
+        "CoveragePercent": 23.33
+      }
+    ],
+    "gapBreakdown": [
+      {
+        "label": "Finance",
+        "percent": 28.0
+      },
+      {
+        "label": "IT",
+        "percent": 18.2
+      },
+      {
+        "label": "HR",
+        "percent": 15.5
+      },
+      {
+        "label": "Operations",
+        "percent": 10.5
+      },
+      {
+        "label": "Sales",
+        "percent": 4.47
+      }
+    ]
   }
 }

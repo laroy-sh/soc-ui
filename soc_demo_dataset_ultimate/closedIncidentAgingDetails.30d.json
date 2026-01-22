@@ -1,38 +1,771 @@
 {
   "metricName": "closedIncidentAgingDetails",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "windowStart": "2025-12-20T00:00:00Z",
-  "windowEnd": "2026-01-19T23:59:59Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": [
     {
-      "AgeDays": 3,
-      "AgeBucket": "0-7 Days",
-      "ClosedTime": "2026-01-18T15:24:00Z",
-      "IncidentTitle": "Suspicious MFA Bypass"
+      "AgeDays": 37,
+      "AgeBucket": "30+ Days",
+      "ClosedTime": "2026-01-03T13:12:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
     },
     {
-      "AgeDays": 6,
-      "AgeBucket": "0-7 Days",
-      "ClosedTime": "2026-01-17T09:12:00Z",
-      "IncidentTitle": "Endpoint Malware Containment"
-    },
-    {
-      "AgeDays": 12,
-      "AgeBucket": "8-30 Days",
-      "ClosedTime": "2026-01-10T21:03:00Z",
-      "IncidentTitle": "Privilege Escalation Attempt"
-    },
-    {
-      "AgeDays": 18,
-      "AgeBucket": "8-30 Days",
-      "ClosedTime": "2026-01-05T11:47:00Z",
-      "IncidentTitle": "Data Exfiltration Alert"
+      "AgeDays": 32,
+      "AgeBucket": "30+ Days",
+      "ClosedTime": "2026-01-04T15:10:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "High"
     },
     {
       "AgeDays": 33,
       "AgeBucket": "30+ Days",
-      "ClosedTime": "2025-12-20T05:31:00Z",
-      "IncidentTitle": "Legacy Account Compromise"
+      "ClosedTime": "2026-01-05T15:11:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "High"
+    },
+    {
+      "AgeDays": 9,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2025-12-29T10:20:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 12,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2025-12-30T10:21:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 15,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2025-12-31T10:22:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 18,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2026-01-01T10:23:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 21,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2026-01-02T10:24:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 24,
+      "AgeBucket": "8-30 Days",
+      "ClosedTime": "2026-01-03T10:25:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-24T08:00:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-25T09:03:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-26T010:06:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-27T011:09:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-28T012:12:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-29T013:15:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-30T014:18:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-31T015:21:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-01T016:24:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-02T017:27:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-03T08:30:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-04T09:33:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-05T010:36:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-06T011:39:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-07T012:42:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-08T013:45:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-09T014:48:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-10T015:51:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-11T016:54:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-12T017:57:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-13T08:00:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-14T09:03:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-15T010:06:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-16T011:09:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-17T012:12:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-18T013:15:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-19T014:18:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-20T015:21:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-21T016:24:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-22T017:27:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-24T08:30:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-25T09:33:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-26T010:36:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-27T011:39:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-28T012:42:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-29T013:45:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-30T014:48:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-31T015:51:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-01T016:54:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-02T017:57:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-03T08:00:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-04T09:03:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-05T010:06:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-06T011:09:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-07T012:12:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-08T013:15:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-09T014:18:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-10T015:21:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-11T016:24:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-12T017:27:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-13T08:30:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-14T09:33:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-15T010:36:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-16T011:39:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-17T012:42:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-18T013:45:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-19T014:48:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-20T015:51:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-21T016:54:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-22T017:57:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-24T08:00:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-25T09:03:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-26T010:06:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-27T011:09:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-28T012:12:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-29T013:15:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-30T014:18:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-31T015:21:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-01T016:24:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-02T017:27:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-03T08:30:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-04T09:33:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-05T010:36:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-06T011:39:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-07T012:42:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-08T013:45:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-09T014:48:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-10T015:51:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-11T016:54:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-12T017:57:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-13T08:00:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-14T09:03:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-15T010:06:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-16T011:09:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-17T012:12:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-18T013:15:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-19T014:18:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-20T015:21:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-21T016:24:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-22T017:27:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-24T08:30:00Z",
+      "IncidentTitle": "Azure AD Rare UserAgent App Sign-in involving multiple users",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-25T09:33:00Z",
+      "IncidentTitle": "Mail.Read Permissions Granted to application involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-26T010:36:00Z",
+      "IncidentTitle": "Suspicious application consent for offline access involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 3,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-27T011:39:00Z",
+      "IncidentTitle": "Excessive Mailbox Permission Changes",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 4,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-28T012:42:00Z",
+      "IncidentTitle": "Reconnaissance incident on multiple endpoints",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 5,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-29T013:45:00Z",
+      "IncidentTitle": "Spike in Firewall System Warning Messages",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 6,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-30T014:48:00Z",
+      "IncidentTitle": "High Volume File Activity by a single user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 7,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2025-12-31T015:51:00Z",
+      "IncidentTitle": "Privileged Role Assigned Outside PIM involving one user",
+      "Category": "Medium"
+    },
+    {
+      "AgeDays": 1,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-01T016:54:00Z",
+      "IncidentTitle": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Category": "Low"
+    },
+    {
+      "AgeDays": 2,
+      "AgeBucket": "0-7 Days",
+      "ClosedTime": "2026-01-02T017:57:00Z",
+      "IncidentTitle": "External Traffic Blocked by Firewall",
+      "Category": "Low"
     }
   ]
 }

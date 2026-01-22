@@ -1,6 +1,8 @@
 {
   "metricName": "repeatedDetections",
-  "generatedAt": "2026-01-19T10:15:00Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2026-01-15T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": [
     {
       "alertName": "Password Spray Attempt",
@@ -9,6 +11,18 @@
     {
       "alertName": "Suspicious OAuth App",
       "count": 19
+    },
+    {
+      "alertName": "Impossible Travel Sign-in",
+      "count": 14
+    },
+    {
+      "alertName": "Malware Detected on Endpoint",
+      "count": 11
+    },
+    {
+      "alertName": "Privileged Role Assignment",
+      "count": 9
     }
   ]
 }

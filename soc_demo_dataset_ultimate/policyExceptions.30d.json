@@ -1,0 +1,48 @@
+{
+  "metricName": "policyExceptions",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "Risk": "Legacy VPN access for Finance",
+      "Owner": "usha.giri@mbctg.com",
+      "ApprovedBy": "exec.board@mbctg.com",
+      "ApprovedDate": "2025-12-29T14:30:00Z",
+      "Status": "Accepted",
+      "Rationale": "Business continuity approved"
+    },
+    {
+      "Risk": "Shared admin account for OT systems",
+      "Owner": "sam.tan@mbctg.com",
+      "ApprovedBy": "exec.board@mbctg.com",
+      "ApprovedDate": "2026-01-01T14:30:00Z",
+      "Status": "Accepted",
+      "Rationale": "Business continuity approved"
+    },
+    {
+      "Risk": "Unsupported browser on HR kiosks",
+      "Owner": "jules.king@mbctg.com",
+      "ApprovedBy": "exec.board@mbctg.com",
+      "ApprovedDate": "2026-01-04T14:30:00Z",
+      "Status": "Accepted",
+      "Rationale": "Business continuity approved"
+    },
+    {
+      "Risk": "Third-party vendor with MFA exemption",
+      "Owner": "ophelia.ryan@mbctg.com",
+      "ApprovedBy": "exec.board@mbctg.com",
+      "ApprovedDate": "2026-01-07T14:30:00Z",
+      "Status": "Accepted",
+      "Rationale": "Business continuity approved"
+    },
+    {
+      "Risk": "Legacy mail relay in Operations",
+      "Owner": "peter.singh@mbctg.com",
+      "ApprovedBy": "exec.board@mbctg.com",
+      "ApprovedDate": "2026-01-10T14:30:00Z",
+      "Status": "Accepted",
+      "Rationale": "Business continuity approved"
+    }
+  ]
+}

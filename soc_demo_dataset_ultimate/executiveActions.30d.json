@@ -1,43 +1,125 @@
 {
   "metricName": "executiveActions",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "windowStart": "2025-12-20T00:00:00Z",
-  "windowEnd": "2026-01-19T23:59:59Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": [
     {
-      "Age": 4,
+      "Age": 0,
       "Category": "High",
-      "Owner": "a.jackson@example.com",
-      "Risk": "Credential Dumping Detected",
-      "Status": "Closed"
+      "Owner": "usha.giri@mbctg.com",
+      "Risk": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-22T09:00:00Z",
+      "ClosedTime": "2026-01-22T09:00:00Z"
     },
     {
-      "Age": 9,
-      "Category": "Critical",
-      "Owner": "s.lee@example.com",
-      "Risk": "Ransomware Containment",
-      "Status": "Closed"
-    },
-    {
-      "Age": 6,
+      "Age": 1,
       "Category": "High",
-      "Owner": "m.patel@example.com",
-      "Risk": "Sensitive Data Exposure",
-      "Status": "Closed"
+      "Owner": "sam.tan@mbctg.com",
+      "Risk": "Exchange workflow MailItemsAccessed operation anomaly involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-20T10:00:00Z",
+      "ClosedTime": "2026-01-21T10:00:00Z"
     },
     {
-      "Age": 13,
+      "Age": 2,
+      "Category": "High",
+      "Owner": "jules.king@mbctg.com",
+      "Risk": "New User Assigned to Privileged Role involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-18T11:00:00Z",
+      "ClosedTime": "2026-01-20T11:00:00Z"
+    },
+    {
+      "Age": 0,
+      "Category": "High",
+      "Owner": "ophelia.ryan@mbctg.com",
+      "Risk": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-19T12:00:00Z",
+      "ClosedTime": "2026-01-19T12:00:00Z"
+    },
+    {
+      "Age": 1,
+      "Category": "Low",
+      "Owner": "peter.singh@mbctg.com",
+      "Risk": "External Traffic Blocked by Firewall",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-17T13:00:00Z",
+      "ClosedTime": "2026-01-18T13:00:00Z"
+    },
+    {
+      "Age": 2,
+      "Category": "Low",
+      "Owner": "mira.chen@mbctg.com",
+      "Risk": "Unfamiliar sign-in properties involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-15T14:00:00Z",
+      "ClosedTime": "2026-01-17T14:00:00Z"
+    },
+    {
+      "Age": 0,
+      "Category": "Low",
+      "Owner": "usha.giri@mbctg.com",
+      "Risk": "External Traffic Blocked by Firewall",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-16T09:00:00Z",
+      "ClosedTime": "2026-01-16T09:00:00Z"
+    },
+    {
+      "Age": 1,
+      "Category": "Low",
+      "Owner": "sam.tan@mbctg.com",
+      "Risk": "Attempt to bypass conditional access rule in Microsoft Entra ID involving multiple users",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-14T10:00:00Z",
+      "ClosedTime": "2026-01-15T10:00:00Z"
+    },
+    {
+      "Age": 2,
+      "Category": "Low",
+      "Owner": "jules.king@mbctg.com",
+      "Risk": "Fortinet - External Traffic Blocked by Firewall",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-12T11:00:00Z",
+      "ClosedTime": "2026-01-14T11:00:00Z"
+    },
+    {
+      "Age": 0,
+      "Category": "Low",
+      "Owner": "ophelia.ryan@mbctg.com",
+      "Risk": "Privileged Role Assigned Outside PIM involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-13T12:00:00Z",
+      "ClosedTime": "2026-01-13T12:00:00Z"
+    },
+    {
+      "Age": 1,
+      "Category": "Low",
+      "Owner": "peter.singh@mbctg.com",
+      "Risk": "User Added to Admin Role involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-11T13:00:00Z",
+      "ClosedTime": "2026-01-12T13:00:00Z"
+    },
+    {
+      "Age": 2,
       "Category": "Medium",
-      "Owner": "c.novak@example.com",
-      "Risk": "Suspicious Privilege Changes",
-      "Status": "Closed"
+      "Owner": "mira.chen@mbctg.com",
+      "Risk": "Exchange workflow MailItemsAccessed operation anomaly involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-09T14:00:00Z",
+      "ClosedTime": "2026-01-11T14:00:00Z"
     },
     {
-      "Age": 7,
-      "Category": "High",
-      "Owner": "k.brown@example.com",
-      "Risk": "Cloud Resource Misconfiguration",
-      "Status": "Closed"
+      "Age": 0,
+      "Category": "Medium",
+      "Owner": "usha.giri@mbctg.com",
+      "Risk": "Files uploaded to teams and access summary involving one user",
+      "Status": "Closed",
+      "CreatedTime": "2026-01-10T09:00:00Z",
+      "ClosedTime": "2026-01-10T09:00:00Z"
     }
   ]
 }

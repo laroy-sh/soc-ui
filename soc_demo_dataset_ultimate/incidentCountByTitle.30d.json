@@ -1,28 +1,28 @@
 {
   "metricName": "incidentCountByTitle",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "windowStart": "2025-12-20T00:00:00Z",
-  "windowEnd": "2026-01-19T23:59:59Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": [
     {
-      "Title": "Suspicious OAuth Consent",
-      "IncidentCount": 14
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 954
     },
     {
-      "Title": "Impossible Travel Sign-in",
-      "IncidentCount": 12
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 61
     },
     {
-      "Title": "Malware Detected on Endpoint",
-      "IncidentCount": 10
+      "Title": "Suspicious Sign-in Attempts involving one user",
+      "IncidentCount": 26
     },
     {
-      "Title": "Privilege Escalation Attempt",
-      "IncidentCount": 8
+      "Title": "SharePoint - Mass File Download Detected (Potential Exfiltration) involving one user",
+      "IncidentCount": 24
     },
     {
-      "Title": "Data Exfiltration Alert",
-      "IncidentCount": 6
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 23
     }
   ]
 }

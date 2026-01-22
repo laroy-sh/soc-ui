@@ -652,6 +652,18 @@ tbody tr:hover {
     .card-span-3 {
         grid-column: span 2;
     }
+
+    .roc-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .roc-drivers-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .roc-coverage-layout {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 900px) {
@@ -670,6 +682,11 @@ tbody tr:hover {
     .card-span-2,
     .card-span-3 {
         grid-column: span 1;
+    }
+
+    .roc-overview-grid,
+    .roc-drivers-grid {
+        grid-template-columns: 1fr;
     }
 
     .frameworks-embed iframe {
@@ -738,6 +755,338 @@ tbody tr:hover {
 
 .roc-tab-panel.active {
     display: block;
+}
+
+/* ROC Toolbar */
+.roc-toolbar {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    justify-content: flex-start;
+}
+
+.roc-window {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--card-radius);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+}
+
+.roc-window-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.roc-window-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+#rocRangePreset {
+    padding: 6px 28px 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    appearance: none;
+    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.roc-window-dates {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* ROC Overview */
+.roc-overview-grid {
+    grid-template-columns: 1.1fr 1fr 1.9fr;
+}
+
+.roc-hero-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(17, 24, 39, 0.9) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.roc-hero-value {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.roc-hero-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.roc-drivers-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+/* ROC Bar Trend */
+.roc-bar-trend {
+    position: relative;
+    min-height: 220px;
+}
+
+.roc-bar-trend-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 200px;
+    padding-top: var(--spacing-sm);
+    position: relative;
+    z-index: 2;
+}
+
+.roc-bar {
+    flex: 1;
+    min-width: 0;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.9) 0%, rgba(99, 102, 241, 0.2) 100%);
+    border-radius: 8px 8px 4px 4px;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 12px 20px rgba(15, 23, 42, 0.35);
+}
+
+.roc-bar.is-alert {
+    background: linear-gradient(180deg, rgba(248, 113, 113, 0.95) 0%, rgba(248, 113, 113, 0.3) 100%);
+    border-color: rgba(248, 113, 113, 0.5);
+}
+
+.roc-bar-value {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 4px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.roc-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.roc-bar-threshold {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed rgba(248, 113, 113, 0.75);
+    z-index: 1;
+}
+
+.roc-bar-threshold span {
+    position: absolute;
+    right: 0;
+    top: -18px;
+    font-size: var(--font-size-xs);
+    color: rgba(248, 113, 113, 0.9);
+}
+
+/* Primary Risk Drivers */
+.roc-primary-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.roc-primary-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.roc-primary-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.roc-primary-track {
+    height: 18px;
+    background: var(--chart-track);
+    border: 1px solid var(--chart-track-border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.roc-primary-fill {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(248, 113, 113, 0.9) 0%, rgba(239, 68, 68, 0.4) 100%);
+    border-radius: 999px;
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.35);
+}
+
+/* Coverage Gauge + Treemap */
+.roc-coverage-layout {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(180px, 1.2fr);
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.roc-gauge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+}
+
+.roc-gauge svg {
+    width: 160px;
+    height: 100px;
+}
+
+.roc-gauge-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 16;
+    stroke-linecap: round;
+}
+
+.roc-gauge-fill {
+    fill: none;
+    stroke: rgba(99, 102, 241, 0.9);
+    stroke-width: 16;
+    stroke-linecap: round;
+}
+
+.roc-gauge-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.roc-gauge-caption {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.roc-treemap-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.roc-treemap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.roc-treemap-hint {
+    color: var(--text-muted);
+}
+
+.roc-treemap {
+    border-radius: var(--card-radius);
+    border: 1px solid var(--border);
+    padding: var(--spacing-sm);
+    background: rgba(15, 23, 42, 0.5);
+    cursor: pointer;
+}
+
+.roc-treemap-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+}
+
+.roc-treemap-item {
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--text-primary);
+    font-size: var(--font-size-xs);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 50px;
+}
+
+.roc-treemap-item strong {
+    font-size: var(--font-size-sm);
+}
+
+.roc-treemap.is-collapsed .roc-treemap-grid {
+    grid-template-columns: 1fr;
+}
+
+/* Multi-series line chart */
+.multi-line-chart-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.multi-line-path {
+    fill: none;
+    stroke-width: 2.5;
+}
+
+.multi-line-path.series-identified {
+    stroke: var(--accent-primary);
+}
+
+.multi-line-path.series-remediated {
+    stroke: var(--severity-low);
+}
+
+.multi-line-dot {
+    fill: var(--text-primary);
+}
+
+.multi-line-legend {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-sm);
+}
+
+.multi-line-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.multi-line-legend i {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.multi-line-legend i.identified {
+    background: var(--accent-primary);
+}
+
+.multi-line-legend i.remediated {
+    background: var(--severity-low);
 }
 
 /* ROC Donut Charts */

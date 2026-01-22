@@ -1,0 +1,28 @@
+{
+  "metricName": "highVolumeRisks",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "Title": "External Traffic Blocked by Firewall",
+      "IncidentCount": 264
+    },
+    {
+      "Title": "Fortinet - External Traffic Blocked by Firewall",
+      "IncidentCount": 10
+    },
+    {
+      "Title": "Attempt to bypass conditional access rule in Microsoft Entra ID involving one user",
+      "IncidentCount": 8
+    },
+    {
+      "Title": "Files uploaded to teams and access summary involving one user",
+      "IncidentCount": 8
+    },
+    {
+      "Title": "Privileged Role Assigned Outside PIM involving one user",
+      "IncidentCount": 8
+    }
+  ]
+}

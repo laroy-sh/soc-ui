@@ -7,10 +7,13 @@ const CONFIG = {
 // State
 let currentDashboard = 'analyst';
 let refreshTimer = null;
+let rocRangeDays = 30;
+let rocData = null;
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     initializeNavigation();
+    initializeRocFilters();
     loadAllData();
     startAutoRefresh();
 });
@@ -98,6 +101,16 @@ function updateRocTitle() {
     }
 }
 
+function initializeRocFilters() {
+    const rangeSelect = document.getElementById('rocRangePreset');
+    if (!rangeSelect) return;
+    rocRangeDays = parseInt(rangeSelect.value, 10) || rocRangeDays;
+    rangeSelect.addEventListener('change', () => {
+        rocRangeDays = parseInt(rangeSelect.value, 10) || 30;
+        renderRocDashboard();
+    });
+}
+
 // Data Loading
 async function loadAllData() {
     try {
@@ -120,11 +133,19 @@ async function loadAllData() {
             rocRiskScore,
             rocRiskExposure,
             rocIncidentCount,
+            rocRiskDriversDaily,
             rocExecutiveActions,
+            rocWorkloadBySeverity,
+            rocHighVolumeRisks,
             rocAvgHighRisk,
             rocAttackSurfaceCoverage,
             rocIncidentAgeBuckets,
             rocIncidentAgingDetails,
+            rocRiskBurndown,
+            rocRiskDebtTrend,
+            rocPolicyExceptions,
+            rocRemediationRoi,
+            rocSlaHealthByBu,
             // Customer Dashboard Extended Metrics
             customerIncidentTrend,
             customerIncidentClosureTrend,
@@ -157,11 +178,19 @@ async function loadAllData() {
             fetchMetric('riskScore.30d.json'),
             fetchMetric('riskExposure.30d.json'),
             fetchMetric('incidentCountByTitle.30d.json'),
+            fetchMetric('riskDriversDaily.30d.json'),
             fetchMetric('executiveActions.30d.json'),
+            fetchMetric('workloadBySeverity.30d.json'),
+            fetchMetric('highVolumeRisks.30d.json'),
             fetchMetric('avgHighRisk.30d.json'),
             fetchMetric('attackSurfaceCoverage.latest.json'),
             fetchMetric('closedIncidentAgeBuckets.30d.json'),
             fetchMetric('closedIncidentAgingDetails.30d.json'),
+            fetchMetric('riskBurndown.30d.json'),
+            fetchMetric('riskDebtTrend.30d.json'),
+            fetchMetric('policyExceptions.30d.json'),
+            fetchMetric('remediationRoi.30d.json'),
+            fetchMetric('slaHealthByBusinessUnit.30d.json'),
             // Customer Dashboard Extended Metrics
             fetchMetric('customer_incidentTrend.7d.json'),
             fetchMetric('customer_incidentClosureTrend.7d.json'),
@@ -185,6 +214,7 @@ async function loadAllData() {
         renderBarChart('activeAlertsBySeverity', activeAlerts, 'severity');
         renderIncidentAging(incidentAging);
         renderTopEntities(topEntities);
+        renderRepeatedDetections(repeatedDetections);
         
         // Render SOC Lead Dashboard
         renderIncidentTimings(incidentTimings);
@@ -212,21 +242,26 @@ async function loadAllData() {
         renderAlertNoiseTrend(alertNoiseTrend);
         
         // Render ROC Dashboard
-        renderRepeatedDetections(repeatedDetections);
-        renderRiskScore(rocRiskScore);
-        renderRiskExposure(rocRiskExposure);
-        renderIncidentCountByTitle(rocIncidentCount);
-        renderExecutiveActions(rocExecutiveActions);
-        renderAvgHighRisk(rocAvgHighRisk);
-        renderAttackSurfaceCoverage(rocAttackSurfaceCoverage);
-        renderIncidentAgeBuckets(rocIncidentAgeBuckets);
-        renderIncidentAgingDetails(rocIncidentAgingDetails);
-        renderWorkloadBySeverity(rocExecutiveActions);
-        renderTopHighVolumeRisks(rocIncidentCount);
-        renderResolutionEfficiency(rocIncidentAgeBuckets);
-        renderAvgResolveAge(rocIncidentAgingDetails);
-        renderResolutionSpeed(rocIncidentAgingDetails);
-        renderTargetOutliers(rocIncidentAgingDetails);
+        rocData = {
+            riskScore: rocRiskScore,
+            riskExposure: rocRiskExposure,
+            riskDriversDaily: rocRiskDriversDaily,
+            incidentCountByTitle: rocIncidentCount,
+            executiveActions: rocExecutiveActions,
+            workloadBySeverity: rocWorkloadBySeverity,
+            highVolumeRisks: rocHighVolumeRisks,
+            avgHighRisk: rocAvgHighRisk,
+            attackSurfaceCoverage: rocAttackSurfaceCoverage,
+            incidentAgeBuckets: rocIncidentAgeBuckets,
+            incidentAgingDetails: rocIncidentAgingDetails,
+            riskBurndown: rocRiskBurndown,
+            riskDebtTrend: rocRiskDebtTrend,
+            policyExceptions: rocPolicyExceptions,
+            remediationRoi: rocRemediationRoi,
+            slaHealthByBusinessUnit: rocSlaHealthByBu,
+            repeatedDetections
+        };
+        renderRocDashboard();
         
         // Update last updated timestamp
         updateTimestamp(openIncidentsBySeverity?.generatedAt);
@@ -235,6 +270,78 @@ async function loadAllData() {
         console.error('Error loading data:', error);
         showError('Failed to load dashboard data');
     }
+}
+
+// Centralized ROC rendering so range changes reuse the same data pipeline.
+function renderRocDashboard() {
+    if (!rocData) return;
+
+    const windowEnd = getRocWindowEnd();
+    if (!windowEnd) return;
+
+    const { start, end } = getDateRange(windowEnd, rocRangeDays);
+    updateRocDateRangeDisplay(start, end);
+
+    const exposurePoints = filterByRange(rocData.riskExposure?.data, ['TimeGenerated'], start, end)
+        .map(row => ({
+            time: row.TimeGenerated || row.time || row.timestamp,
+            count: row.DailyRiskScore ?? row.dailyRiskScore ?? row.RiskScore ?? row.count ?? row.value
+        }))
+        .filter(point => point.time && point.count !== null && point.count !== undefined)
+        .sort((a, b) => new Date(a.time) - new Date(b.time));
+    renderRiskScore(rocData.riskScore, { exposurePoints });
+    renderRiskExposure(exposurePoints, rocData.riskExposure?.threshold);
+
+    renderAvgHighRisk(rocData.avgHighRisk, { start, end });
+    renderAttackSurfaceCoverage(rocData.attackSurfaceCoverage, { start, end });
+
+    const driverEntries = filterByRange(rocData.riskDriversDaily?.data, ['TimeGenerated'], start, end);
+    const driverTotals = getDriverTotals(driverEntries, rocData.incidentCountByTitle, rocRangeDays);
+    renderPrimaryRiskDrivers(driverTotals);
+
+    const highVolumeItems = Array.isArray(rocData.highVolumeRisks?.data)
+        ? rocData.highVolumeRisks.data.map(item => ({
+            title: item.Title || item.title || 'Unknown',
+            count: scaleCount(item.IncidentCount ?? item.count ?? 0, rocRangeDays)
+        }))
+        : driverTotals;
+    renderTopHighVolumeRisks(highVolumeItems);
+
+    const execActions = filterByRange(rocData.executiveActions?.data, ['ClosedTime', 'closedTime'], start, end);
+    const workloadItems = Array.isArray(rocData.workloadBySeverity?.data)
+        ? rocData.workloadBySeverity.data.map(item => ({
+            ...item,
+            Count: scaleCount(item.Count ?? item.count ?? 0, rocRangeDays)
+        }))
+        : execActions;
+    renderExecutiveActions(execActions);
+    renderWorkloadBySeverity(workloadItems);
+
+    const agingDetails = filterByRange(rocData.incidentAgingDetails?.data, ['ClosedTime', 'closedTime'], start, end);
+    const ageBuckets = getAgeBucketCounts(agingDetails, rocData.incidentAgeBuckets?.data);
+    renderIncidentAgeBuckets(ageBuckets);
+    renderResolutionEfficiency(ageBuckets);
+    renderIncidentAgingDetails(agingDetails);
+    renderAvgResolveAge(agingDetails);
+    renderResolutionSpeed(agingDetails);
+    renderTargetOutliers(agingDetails);
+
+    const burndownPoints = filterByRange(rocData.riskBurndown?.data, ['TimeGenerated'], start, end);
+    renderRiskBurndown(burndownPoints);
+
+    const debtPoints = filterByRange(rocData.riskDebtTrend?.data, ['TimeGenerated'], start, end);
+    renderRiskDebtTrend(debtPoints);
+
+    const exceptions = filterByRange(rocData.policyExceptions?.data, ['ApprovedDate'], start, end);
+    renderPolicyExceptions(exceptions);
+
+    const roiEntries = filterByRange(rocData.remediationRoi?.data, ['ClosedTime'], start, end);
+    renderRemediationRoi(roiEntries);
+
+    const slaEntries = filterByRange(rocData.slaHealthByBusinessUnit?.data, ['TimeGenerated'], start, end);
+    renderSlaHealth(slaEntries);
+
+    renderRepeatedDetections(rocData.repeatedDetections);
 }
 
 async function fetchMetric(filename) {
@@ -455,6 +562,80 @@ function renderLineChart(elementId, data) {
     container.innerHTML = html;
 }
 
+function renderMultiLineChart(elementId, series) {
+    const container = document.getElementById(elementId);
+
+    if (!Array.isArray(series) || series.length === 0) {
+        container.innerHTML = createEmptyState('No data available');
+        return;
+    }
+
+    const baseSeries = series[0]?.data || [];
+    if (baseSeries.length === 0) {
+        container.innerHTML = createEmptyState('No data available');
+        return;
+    }
+
+    const allValues = series.flatMap(item => item.data.map(point => point.count || 0));
+    const maxValue = Math.max(...allValues, 1);
+    const width = 800;
+    const height = 200;
+    const padding = 40;
+    const chartWidth = width - (padding * 2);
+    const chartHeight = height - (padding * 2);
+    const step = chartWidth / (baseSeries.length - 1 || 1);
+
+    const gridLines = [0, 0.25, 0.5, 0.75, 1].map(ratio => {
+        const y = padding + (chartHeight * (1 - ratio));
+        return `
+            <line class="line-chart-grid"
+                  x1="${padding}" y1="${y}"
+                  x2="${width - padding}" y2="${y}" />
+            <text class="line-chart-label"
+                  x="${padding - 5}" y="${y + 4}"
+                  text-anchor="end">${Math.round(maxValue * ratio)}</text>
+        `;
+    }).join('');
+
+    const paths = series.map(item => {
+        const svgPoints = item.data.map((point, index) => {
+            const x = padding + (index * step);
+            const y = padding + chartHeight - ((point.count / maxValue) * chartHeight);
+            return { x, y };
+        });
+
+        const pathData = svgPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ');
+        return `<path class="multi-line-path series-${item.id}" d="${pathData}" />`;
+    }).join('');
+
+    const labels = [0, Math.floor(baseSeries.length / 2), baseSeries.length - 1].map(index => {
+        const point = baseSeries[index];
+        const date = new Date(point.time);
+        const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const x = padding + (index * step);
+        return `
+            <text class="line-chart-label" x="${x}" y="${height - 10}" text-anchor="middle">${label}</text>
+        `;
+    }).join('');
+
+    const legend = `
+        <div class="multi-line-legend">
+            ${series.map(item => `
+                <span><i class="${item.id}"></i>${item.name}</span>
+            `).join('')}
+        </div>
+    `;
+
+    container.innerHTML = `
+        <svg class="multi-line-chart-svg" viewBox="0 0 ${width} ${height}">
+            ${gridLines}
+            ${paths}
+            ${labels}
+        </svg>
+        ${legend}
+    `;
+}
+
 function renderRuleFiringVolume(data) {
     const container = document.getElementById('ruleFiringVolume');
     
@@ -540,6 +721,7 @@ function renderZeroIngestionTables(data) {
 
 function renderRepeatedDetections(data) {
     const container = document.getElementById('repeatedDetections');
+    if (!container) return;
     
     if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
         container.innerHTML = createEmptyState('No repeated detections found');
@@ -568,49 +750,120 @@ function renderRepeatedDetections(data) {
     container.innerHTML = html;
 }
 
-function renderRiskScore(data) {
+function renderRiskScore(data, options = {}) {
     const element = document.getElementById('rocRiskScore');
     if (!element) return;
-    const value = getScalarMetricValue(data, ['RiskScore', 'riskScore']);
-    element.textContent = value === null ? '—' : formatNumber(value);
+    let value = null;
+
+    if (Array.isArray(options.exposurePoints) && options.exposurePoints.length > 0) {
+        value = options.exposurePoints.reduce((sum, point) => sum + (point.count || 0), 0);
+    } else {
+        value = getScalarMetricValue(data, ['RiskScore', 'riskScore']);
+    }
+
+    element.textContent = value === null ? '—' : formatCompactNumber(value);
 }
 
-function renderAvgHighRisk(data) {
+function renderAvgHighRisk(data, options = {}) {
     const element = document.getElementById('rocAvgHighRisk');
     if (!element) return;
-    const value = getScalarMetricValue(data, ['AvgMTTR', 'avgMTTR']);
-    element.textContent = value === null ? '—' : `${formatNumber(value, 1)}d`;
+
+    let value = null;
+    const history = data?.data?.history;
+    if (Array.isArray(history) && options.start && options.end) {
+        const points = filterByRange(history, ['TimeGenerated'], options.start, options.end);
+        if (points.length > 0) {
+            const total = points.reduce((sum, item) => sum + (item.AvgMTTR ?? item.avgMTTR ?? 0), 0);
+            value = total / points.length;
+        }
+    }
+
+    if (value === null) {
+        value = getScalarMetricValue(data, ['AvgMTTR', 'avgMTTR']);
+    }
+
+    if (value === null) {
+        element.textContent = '—';
+        return;
+    }
+
+    const decimals = Number.isInteger(value) ? 0 : 1;
+    element.textContent = `${formatNumber(value, decimals)}d`;
 }
 
-function renderAttackSurfaceCoverage(data) {
-    const element = document.getElementById('rocAttackSurfaceCoverage');
-    if (!element) return;
-    const value = getScalarMetricValue(data, ['CoveragePercent', 'coveragePercent']);
-    element.textContent = value === null ? '—' : `${formatNumber(value, 1)}%`;
+function renderAttackSurfaceCoverage(data, options = {}) {
+    const gaugeContainer = document.getElementById('rocAttackSurfaceCoverage');
+    const treemapContainer = document.getElementById('rocCoverageTreemap');
+    if (!gaugeContainer || !treemapContainer) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        gaugeContainer.innerHTML = createEmptyState('No coverage data available');
+        treemapContainer.innerHTML = createEmptyState('No gap data available');
+        return;
+    }
+
+    const history = data.data.coverageHistory || [];
+    let coverageValue = getScalarMetricValue(data, ['CoveragePercent', 'coveragePercent']);
+
+    if (Array.isArray(history) && options.start && options.end) {
+        const filtered = filterByRange(history, ['TimeGenerated'], options.start, options.end);
+        if (filtered.length > 0) {
+            coverageValue = filtered[filtered.length - 1].CoveragePercent ?? coverageValue;
+        }
+    }
+
+    renderCoverageGauge(gaugeContainer, coverageValue);
+    renderCoverageTreemap(treemapContainer, data.data.gapBreakdown || [], coverageValue);
 }
 
-function renderRiskExposure(data) {
+function renderRiskExposure(points, threshold) {
     const container = document.getElementById('rocRiskExposure');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(points) || points.length === 0) {
         container.innerHTML = createEmptyState('No risk exposure data available');
         return;
     }
 
-    const points = data.data.map(row => {
-        const time = row.TimeGenerated || row.time || row.timestamp;
-        const count = row.DailyRiskScore ?? row.dailyRiskScore ?? row.RiskScore ?? row.count ?? row.value;
-        if (!time || count === null || count === undefined) return null;
-        return { time, count };
-    }).filter(Boolean);
+    const maxValue = Math.max(...points.map(point => point.count || 0), 1);
+    const bars = points.map(point => {
+        const count = Number(point.count) || 0;
+        const height = Math.max(2, (count / maxValue) * 100);
+        const isAlert = Number.isFinite(threshold) && count >= threshold;
+        return `
+            <div class="roc-bar ${isAlert ? 'is-alert' : ''}" style="height: ${height}%;">
+                <span class="roc-bar-value">${formatNumber(count)}</span>
+            </div>
+        `;
+    }).join('');
 
-    if (points.length === 0) {
-        container.innerHTML = createEmptyState('No risk exposure data available');
-        return;
-    }
+    // SLA threshold overlay for the daily risk intensity chart.
+    const thresholdLine = Number.isFinite(threshold) ? (() => {
+        const rawPosition = 100 - ((threshold / maxValue) * 100);
+        const position = Math.min(100, Math.max(0, rawPosition));
+        return `
+            <div class="roc-bar-threshold" style="top: ${position}%;">
+                <span>SLA ${formatNumber(threshold)}</span>
+            </div>
+        `;
+    })() : '';
 
-    renderLineChart('rocRiskExposure', { data: points, labelMode: 'date' });
+    const labels = [0, Math.floor(points.length / 2), points.length - 1].map(index => {
+        const date = new Date(points[index].time);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+
+    container.innerHTML = `
+        ${thresholdLine}
+        <div class="roc-bar-trend-chart">
+            ${bars}
+        </div>
+        <div class="roc-bar-labels">
+            <span>${labels[0]}</span>
+            <span>${labels[1]}</span>
+            <span>${labels[2]}</span>
+        </div>
+    `;
 }
 
 function renderIncidentCountByTitle(data) {
@@ -647,38 +900,36 @@ function renderIncidentCountByTitle(data) {
     container.innerHTML = html;
 }
 
-function renderExecutiveActions(data) {
+function renderExecutiveActions(items) {
     const container = document.getElementById('rocExecutiveActions');
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No executive actions available');
         return;
     }
+
+    const sorted = items
+        .slice()
+        .sort((a, b) => new Date(b.ApprovedDate || b.approvedDate) - new Date(a.ApprovedDate || a.approvedDate));
 
     const html = `
         <table>
             <thead>
                 <tr>
-                    <th>Age (Days)</th>
-                    <th>Severity</th>
-                    <th>Owner</th>
                     <th>Risk</th>
+                    <th>Owner</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                ${data.data.map(item => {
-                    const age = item.Age ?? item.age ?? '—';
-                    const category = escapeHtml(item.Category || item.category || '—');
+                ${items.map(item => {
                     const owner = escapeHtml(item.Owner || item.owner || '—');
                     const risk = escapeHtml(item.Risk || item.risk || '—');
-                    const status = escapeHtml(item.Status || item.status || '—');
+                    const status = escapeHtml(item.Status || item.status || 'Closed');
                     return `
                         <tr>
-                            <td>${formatNumber(age)}</td>
-                            <td>${category}</td>
-                            <td>${owner}</td>
                             <td>${risk}</td>
+                            <td>${owner}</td>
                             <td>${status}</td>
                         </tr>
                     `;
@@ -690,28 +941,28 @@ function renderExecutiveActions(data) {
     container.innerHTML = html;
 }
 
-function renderIncidentAgeBuckets(data) {
+function renderIncidentAgeBuckets(buckets) {
     const container = document.getElementById('rocIncidentAgeBuckets');
 
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(buckets) || buckets.length === 0) {
         container.innerHTML = createEmptyState('No closed incident aging data available');
         return;
     }
 
-    const normalized = data.data.map(item => ({
-        category: item.AgeBucket || item.ageBucket || 'Unknown',
-        count: item.IncidentCount ?? item.count ?? 0
+    const normalized = buckets.map(item => ({
+        category: item.category || item.AgeBucket || item.ageBucket || 'Unknown',
+        count: item.count ?? item.IncidentCount ?? 0
     }));
 
     renderBarChart('rocIncidentAgeBuckets', { data: normalized }, 'aging');
 }
 
-function renderIncidentAgingDetails(data) {
+function renderIncidentAgingDetails(items) {
     const container = document.getElementById('rocIncidentAgingDetails');
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No closed incident details available');
         return;
     }
@@ -727,7 +978,7 @@ function renderIncidentAgingDetails(data) {
                 </tr>
             </thead>
             <tbody>
-                ${data.data.map(item => {
+                ${items.map(item => {
                     const title = escapeHtml(item.IncidentTitle || item.Title || item.title || '—');
                     const ageDays = item.AgeDays ?? item.ageDays ?? '—';
                     const bucket = escapeHtml(item.AgeBucket || item.ageBucket || '—');
@@ -748,106 +999,116 @@ function renderIncidentAgingDetails(data) {
     container.innerHTML = html;
 }
 
-function renderWorkloadBySeverity(data) {
+function renderWorkloadBySeverity(items) {
     const container = document.getElementById('rocWorkloadBySeverity');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No workload data available');
         return;
     }
 
-    const counts = data.data.reduce((acc, item) => {
-        const category = (item.Category || item.category || 'Unknown').toString();
+    const counts = items.reduce((acc, item) => {
+        const category = (item.Category || item.category || item.severity || 'Unknown').toString();
+        const countValue = item.Count ?? item.count;
         const key = category.toLowerCase();
+        const increment = Number.isFinite(countValue) ? countValue : 1;
         if (key === 'critical') {
-            acc.high = (acc.high || 0) + 1;
+            acc.high = (acc.high || 0) + increment;
             return acc;
         }
-        acc[key] = (acc[key] || 0) + 1;
+        acc[key] = (acc[key] || 0) + increment;
         return acc;
     }, {});
 
-    const items = [
-        { label: 'Low', count: counts.low || 0, color: '#1f77b4' },
-        { label: 'Medium', count: counts.medium || 0, color: '#ff7f0e' },
-        { label: 'High', count: counts.high || 0, color: '#d62728' }
+    const donutItems = [
+        { label: 'Low', count: counts.low || 0, color: getCssVar('--severity-low', '#22c55e') },
+        { label: 'Medium', count: counts.medium || 0, color: getCssVar('--severity-medium', '#f59e0b') },
+        { label: 'High', count: counts.high || 0, color: getCssVar('--severity-high', '#f97316') }
     ].filter(item => item.count > 0);
 
-    renderRocDonutChart(container, items, 'Incidents');
+    renderRocDonutChart(container, donutItems, 'Incidents');
 }
 
-function renderTopHighVolumeRisks(data) {
-    const container = document.getElementById('rocHighVolumeRisks');
+function renderTopHighVolumeRisks(items) {
+    const container = document.getElementById('socHighVolumeRisks');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No high-volume risk data available');
         return;
     }
 
-    const items = data.data
+    const normalized = items
+        .slice()
+        .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
+        .slice(0, 5)
         .map(item => ({
-            category: item.Title || item.title || 'Unknown',
-            count: item.IncidentCount ?? item.count ?? 0
-        }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5);
+            category: item.title || item.Title || 'Unknown',
+            count: item.count ?? item.IncidentCount ?? 0
+        }));
 
-    renderBarChart('rocHighVolumeRisks', { data: items }, 'severity');
+    renderBarChart('socHighVolumeRisks', { data: normalized }, 'severity');
 }
 
-function renderResolutionEfficiency(data) {
+function renderResolutionEfficiency(buckets) {
     const container = document.getElementById('rocResolutionEfficiency');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(buckets) || buckets.length === 0) {
         container.innerHTML = createEmptyState('No resolution efficiency data available');
         return;
     }
 
-    const items = data.data.map(item => {
-        const label = item.AgeBucket || item.ageBucket || 'Unknown';
-        let color = '#0078d4';
+    const items = buckets.map(item => {
+        const label = item.category || item.AgeBucket || item.ageBucket || 'Unknown';
+        let color = getCssVar('--severity-informational', '#3b82f6');
         const normalized = label.toLowerCase();
-        if (normalized.includes('0-7')) color = '#107c10';
-        if (normalized.includes('8-30')) color = '#f7630c';
-        if (normalized.includes('30+')) color = '#e81123';
+        if (normalized.includes('0-7')) color = getCssVar('--severity-low', '#22c55e');
+        if (normalized.includes('8-30')) color = getCssVar('--severity-medium', '#f59e0b');
+        if (normalized.includes('30+')) color = getCssVar('--severity-high', '#f97316');
         return {
             label,
-            count: item.IncidentCount ?? item.count ?? 0,
+            count: item.count ?? item.IncidentCount ?? 0,
             color
         };
     });
 
-    renderRocDonutChart(container, items, 'Incidents');
+    const total = items.reduce((sum, item) => sum + item.count, 0);
+    const efficient = items.find(item => item.label.toLowerCase().includes('0-7'));
+    const efficiencyPercent = total > 0 ? (efficient?.count || 0) / total * 100 : 0;
+
+    renderRocDonutChart(container, items, 'Incidents', {
+        centerValue: `${formatNumber(efficiencyPercent, 2)}%`,
+        centerLabel: '0-7 Days'
+    });
 }
 
-function renderAvgResolveAge(data) {
+function renderAvgResolveAge(items) {
     const element = document.getElementById('rocAvgResolveAge');
     if (!element) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         element.textContent = '—';
         return;
     }
 
-    const total = data.data.reduce((sum, item) => sum + (item.AgeDays ?? item.ageDays ?? 0), 0);
-    const avg = total / data.data.length;
+    const total = items.reduce((sum, item) => sum + (item.AgeDays ?? item.ageDays ?? 0), 0);
+    const avg = total / items.length;
     element.textContent = Number.isFinite(avg) ? formatNumber(avg, 2) : '—';
 }
 
-function renderResolutionSpeed(data) {
+function renderResolutionSpeed(items) {
     const container = document.getElementById('rocResolutionSpeed');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No resolution speed data available');
         return;
     }
 
     const grouped = {};
-    data.data.forEach(item => {
+    items.forEach(item => {
         const dateValue = item.ClosedTime || item.closedTime;
         const age = item.AgeDays ?? item.ageDays;
         if (!dateValue || age === null || age === undefined) return;
@@ -873,16 +1134,16 @@ function renderResolutionSpeed(data) {
     renderLineChart('rocResolutionSpeed', { data: points, labelMode: 'date', target: 2 });
 }
 
-function renderTargetOutliers(data) {
+function renderTargetOutliers(items) {
     const container = document.getElementById('rocTargetOutliers');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = createEmptyState('No outliers available');
         return;
     }
 
-    const outliers = data.data.filter(item => (item.AgeDays ?? item.ageDays ?? 0) > 2);
+    const outliers = items.filter(item => (item.AgeDays ?? item.ageDays ?? 0) > 2);
 
     if (outliers.length === 0) {
         container.innerHTML = createEmptyState('No outliers above 2 days');
@@ -918,6 +1179,225 @@ function renderTargetOutliers(data) {
     container.innerHTML = html;
 }
 
+function renderPrimaryRiskDrivers(items) {
+    const container = document.getElementById('rocPrimaryRiskDrivers');
+    if (!container) return;
+
+    if (!Array.isArray(items) || items.length === 0) {
+        container.innerHTML = createEmptyState('No primary risk drivers available');
+        return;
+    }
+
+    const topItems = items.slice(0, 5);
+    const maxValue = Math.max(...topItems.map(item => item.count || 0), 1);
+    const html = `
+        <div class="roc-primary-list">
+            ${topItems.map(item => {
+                const percentage = (item.count / maxValue) * 100;
+                return `
+                    <div class="roc-primary-item">
+                        <div class="roc-primary-label">
+                            <span>${escapeHtml(item.title)}</span>
+                            <strong>${formatNumber(item.count)}</strong>
+                        </div>
+                        <div class="roc-primary-track">
+                            <div class="roc-primary-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+function renderCoverageGauge(container, value) {
+    const percent = Number(value);
+    if (!Number.isFinite(percent)) {
+        container.innerHTML = createEmptyState('No coverage data available');
+        return;
+    }
+
+    const clamped = Math.max(0, Math.min(100, percent));
+    container.innerHTML = `
+        <div>
+            <svg viewBox="0 0 200 120">
+                <path class="roc-gauge-track" d="M10 110 A90 90 0 0 1 190 110" pathLength="100" />
+                <path class="roc-gauge-fill" d="M10 110 A90 90 0 0 1 190 110" pathLength="100" stroke-dasharray="${clamped} 100" />
+            </svg>
+            <div class="roc-gauge-value">${formatNumber(clamped, 2)}%</div>
+        </div>
+    `;
+}
+
+function renderCoverageTreemap(container, breakdown, coverageValue) {
+    const gap = Math.max(0, 100 - (Number(coverageValue) || 0));
+    const expanded = container.dataset.expanded === 'true';
+    container.classList.toggle('is-collapsed', !expanded);
+    container.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+
+    const items = expanded && Array.isArray(breakdown) && breakdown.length > 0
+        ? breakdown
+        : [{ label: 'Coverage Gap', percent: gap }];
+
+    const grid = `
+        <div class="roc-treemap-grid">
+            ${items.map(item => `
+                <div class="roc-treemap-item">
+                    <strong>${formatNumber(item.percent, 2)}%</strong>
+                    <span>${escapeHtml(item.label)}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    container.innerHTML = grid;
+    // Toggle between the single gap tile and the expanded breakdown view.
+    container.onclick = () => {
+        container.dataset.expanded = expanded ? 'false' : 'true';
+        renderCoverageTreemap(container, breakdown, coverageValue);
+    };
+    container.onkeydown = (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            container.click();
+        }
+    };
+}
+
+function renderRiskBurndown(points) {
+    const container = document.getElementById('rocRiskBurndown');
+    if (!container) return;
+
+    if (!Array.isArray(points) || points.length === 0) {
+        container.innerHTML = createEmptyState('No burn-down data available');
+        return;
+    }
+
+    const sorted = points
+        .slice()
+        .sort((a, b) => new Date(a.TimeGenerated) - new Date(b.TimeGenerated));
+    const identified = sorted.map(point => ({ time: point.TimeGenerated, count: point.Identified }));
+    const remediated = sorted.map(point => ({ time: point.TimeGenerated, count: point.Remediated }));
+
+    renderMultiLineChart('rocRiskBurndown', [
+        { id: 'identified', name: 'Risks Identified', data: identified },
+        { id: 'remediated', name: 'Risks Remediated', data: remediated }
+    ]);
+}
+
+function renderRiskDebtTrend(points) {
+    const container = document.getElementById('rocRiskDebtTrend');
+    if (!container) return;
+
+    if (!Array.isArray(points) || points.length === 0) {
+        container.innerHTML = createEmptyState('No risk debt data available');
+        return;
+    }
+
+    const formatted = points
+        .slice()
+        .sort((a, b) => new Date(a.TimeGenerated) - new Date(b.TimeGenerated))
+        .map(point => ({
+            time: point.TimeGenerated,
+            count: point.RiskDebt ?? point.riskDebt ?? 0
+        }));
+
+    renderLineChart('rocRiskDebtTrend', { data: formatted, labelMode: 'date' });
+}
+
+function renderPolicyExceptions(items) {
+    const container = document.getElementById('rocPolicyExceptions');
+    if (!container) return;
+
+    if (!Array.isArray(items) || items.length === 0) {
+        container.innerHTML = createEmptyState('No policy exceptions available');
+        return;
+    }
+
+    const html = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Risk</th>
+                    <th>Owner</th>
+                    <th>Approved By</th>
+                    <th>Decision Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${sorted.map(item => `
+                    <tr>
+                        <td>${escapeHtml(item.Risk || item.risk || '—')}</td>
+                        <td>${escapeHtml(item.Owner || item.owner || '—')}</td>
+                        <td>${escapeHtml(item.ApprovedBy || item.approvedBy || '—')}</td>
+                        <td>${formatDateTime(item.ApprovedDate || item.approvedDate)}</td>
+                        <td>${escapeHtml(item.Status || item.status || 'Accepted')}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    container.innerHTML = html;
+}
+
+function renderRemediationRoi(items) {
+    const element = document.getElementById('rocRemediationRoi');
+    if (!element) return;
+
+    if (!Array.isArray(items) || items.length === 0) {
+        element.textContent = '—';
+        return;
+    }
+
+    const total = items.reduce((sum, item) => sum + (item.LossAvoided ?? item.lossAvoided ?? 0), 0);
+    element.textContent = formatCurrency(total);
+}
+
+function renderSlaHealth(items) {
+    const container = document.getElementById('rocSlaHealth');
+    if (!container) return;
+
+    if (!Array.isArray(items) || items.length === 0) {
+        container.innerHTML = createEmptyState('No SLA health data available');
+        return;
+    }
+
+    const totals = {};
+    items.forEach(item => {
+        const dept = item.Department || item.department || 'Unknown';
+        totals[dept] = totals[dept] || { total: 0, within: 0 };
+        totals[dept].total += item.Total ?? item.total ?? 0;
+        totals[dept].within += item.WithinTarget ?? item.withinTarget ?? 0;
+    });
+
+    const rows = Object.entries(totals).map(([dept, value]) => {
+        const rawPercent = value.total > 0 ? (value.within / value.total) * 100 : 0;
+        const percent = Math.min(100, Math.max(0, rawPercent));
+        return { category: dept, percent };
+    }).sort((a, b) => b.percent - a.percent);
+
+    const html = `
+        <div class="bar-chart">
+            ${rows.map(item => `
+                <div class="bar-item">
+                    <div class="bar-label">${escapeHtml(item.category)}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill severity-informational" style="width: ${item.percent}%">
+                            <span class="bar-value">${formatNumber(item.percent, 0)}%</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
 function renderPlaceholder(elementId, data) {
     const container = document.getElementById(elementId);
     
@@ -927,6 +1407,118 @@ function renderPlaceholder(elementId, data) {
             'placeholder'
         );
     }
+}
+
+function getRocWindowEnd() {
+    const sources = [
+        rocData?.riskExposure,
+        rocData?.riskBurndown,
+        rocData?.riskScore
+    ].filter(Boolean);
+
+    for (const source of sources) {
+        const value = source.windowEnd || source.generatedAt;
+        if (value) {
+            const date = new Date(value);
+            if (!Number.isNaN(date.getTime())) {
+                return date;
+            }
+        }
+    }
+
+    return null;
+}
+
+function getDateRange(windowEnd, days) {
+    const end = new Date(windowEnd);
+    const start = new Date(end);
+    start.setUTCDate(start.getUTCDate() - Math.max(0, days - 1));
+    return { start, end };
+}
+
+function updateRocDateRangeDisplay(start, end) {
+    const element = document.getElementById('rocDateRange');
+    if (!element || !start || !end) return;
+    const format = (value) => value.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    element.textContent = `${format(start)} - ${format(end)}`;
+}
+
+function filterByRange(items, timeKeys, start, end) {
+    if (!Array.isArray(items) || !start || !end) return [];
+    return items.filter(item => {
+        const dateValue = getItemDate(item, timeKeys);
+        if (!dateValue) return false;
+        return dateValue >= start && dateValue <= end;
+    });
+}
+
+function getItemDate(item, keys) {
+    for (const key of keys) {
+        const value = item[key];
+        if (!value) continue;
+        const date = new Date(value);
+        if (!Number.isNaN(date.getTime())) {
+            return date;
+        }
+    }
+    return null;
+}
+
+function getDriverTotals(entries, fallback, rangeDays) {
+    if (Array.isArray(entries) && entries.length > 0) {
+        const totals = {};
+        entries.forEach(item => {
+            const title = item.Title || item.title || 'Unknown';
+            const count = item.IncidentCount ?? item.count ?? 0;
+            totals[title] = (totals[title] || 0) + count;
+        });
+        return Object.entries(totals)
+            .map(([title, count]) => ({ title, count }))
+            .sort((a, b) => b.count - a.count);
+    }
+
+    if (fallback && Array.isArray(fallback.data)) {
+        const ratio = Math.min(1, rangeDays / 30);
+        return fallback.data.map(item => ({
+            title: item.Title || item.title || 'Unknown',
+            count: Math.round((item.IncidentCount ?? item.count ?? 0) * ratio)
+        })).sort((a, b) => b.count - a.count);
+    }
+
+    return [];
+}
+
+function scaleCount(value, rangeDays, baseDays = 30) {
+    const ratio = Math.min(1, rangeDays / baseDays);
+    return Math.round(value * ratio);
+}
+
+function getAgeBucketCounts(details, fallbackBuckets) {
+    if (Array.isArray(details) && details.length > 0) {
+        const counts = {};
+        details.forEach(item => {
+            const bucket = item.AgeBucket || item.ageBucket || 'Unknown';
+            counts[bucket] = (counts[bucket] || 0) + 1;
+        });
+        const ordered = ['0-7 Days', '8-30 Days', '30+ Days'];
+        return ordered.map(bucket => ({
+            category: bucket,
+            count: counts[bucket] || 0
+        })).filter(item => item.count > 0);
+    }
+
+    if (Array.isArray(fallbackBuckets)) {
+        return fallbackBuckets.map(item => ({
+            category: item.AgeBucket || item.ageBucket || 'Unknown',
+            count: item.IncidentCount ?? item.count ?? 0
+        }));
+    }
+
+    return [];
 }
 
 // Utility Functions
@@ -989,6 +1581,28 @@ function formatNumber(num, decimals = 0) {
     });
 }
 
+function formatCompactNumber(num) {
+    if (num === null || num === undefined) return '—';
+    if (num >= 1000) {
+        return `${(num / 1000).toFixed(2)}K`;
+    }
+    return formatNumber(num);
+}
+
+function formatCurrency(value) {
+    if (value === null || value === undefined) return '—';
+    return value.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    });
+}
+
+function getCssVar(name, fallback) {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return value || fallback;
+}
+
 function formatDateTime(value) {
     if (!value) return '—';
     const date = new Date(value);
@@ -1029,7 +1643,7 @@ function getScalarMetricValue(data, keys) {
     return null;
 }
 
-function renderRocDonutChart(container, items, label) {
+function renderRocDonutChart(container, items, label, options = {}) {
     const total = items.reduce((sum, item) => sum + item.count, 0);
     if (total === 0) {
         container.innerHTML = createEmptyState('No data available');
@@ -1040,13 +1654,14 @@ function renderRocDonutChart(container, items, label) {
     const circumference = 2 * Math.PI * radius;
     let offset = 0;
 
+    const fallbackColor = getCssVar('--accent-primary', '#6366f1');
     const segments = items.map(item => {
         const length = (item.count / total) * circumference;
         const segment = `
             <circle
                 class="roc-donut-segment"
                 cx="60" cy="60" r="${radius}"
-                stroke="${item.color || '#0078d4'}"
+                stroke="${item.color || fallbackColor}"
                 stroke-dasharray="${length} ${circumference - length}"
                 stroke-dashoffset="${-offset}"
             />
@@ -1055,13 +1670,19 @@ function renderRocDonutChart(container, items, label) {
         return segment;
     }).join('');
 
-    const legend = items.map(item => `
-        <div class="roc-donut-legend-item">
-            <span class="roc-donut-legend-dot" style="background: ${item.color || '#0078d4'}"></span>
-            <span>${item.label}</span>
-            <span>${formatNumber(item.count)}</span>
-        </div>
-    `).join('');
+    const legend = items.map(item => {
+        const percent = total > 0 ? (item.count / total) * 100 : 0;
+        return `
+            <div class="roc-donut-legend-item">
+                <span class="roc-donut-legend-dot" style="background: ${item.color || fallbackColor}"></span>
+                <span>${item.label}</span>
+                <span>${formatNumber(item.count)} (${formatNumber(percent, 2)}%)</span>
+            </div>
+        `;
+    }).join('');
+
+    const centerValue = options.centerValue || formatNumber(total);
+    const centerLabel = options.centerLabel || label;
 
     container.innerHTML = `
         <div class="roc-donut-wrapper">
@@ -1072,8 +1693,8 @@ function renderRocDonutChart(container, items, label) {
                     ${segments}
                 </svg>
                 <div class="roc-donut-center">
-                    <span class="roc-donut-value">${formatNumber(total)}</span>
-                    <span class="roc-donut-label">${label}</span>
+                    <span class="roc-donut-value">${centerValue}</span>
+                    <span class="roc-donut-label">${centerLabel}</span>
                 </div>
             </div>
             <div class="roc-donut-legend">

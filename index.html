@@ -96,6 +96,18 @@
                         <h3>Top Affected Entities</h3>
                         <div id="topEntities" class="table-container"></div>
                     </div>
+
+                    <!-- Repeated Detections -->
+                    <div class="card card-span-2">
+                        <h3>Repeated Detections (7d)</h3>
+                        <div id="repeatedDetections" class="table-container"></div>
+                    </div>
+
+                    <!-- Top 5 High-Volume Security Risks -->
+                    <div class="card">
+                        <h3>Top 5 High-Volume Security Risks</h3>
+                        <div id="socHighVolumeRisks" class="chart-container"></div>
+                    </div>
                 </div>
             </div>
 
@@ -322,71 +334,83 @@
 
             <!-- ROC Dashboard -->
             <div id="dashboard-roc" class="dashboard">
+                <div class="roc-toolbar">
+                    <div class="roc-window">
+                        <span class="roc-window-label">Reporting Window</span>
+                        <div class="roc-window-controls">
+                            <select id="rocRangePreset">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                            </select>
+                            <span class="roc-window-dates" id="rocDateRange">—</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="roc-tab-panel active" data-roc-panel="executive">
                     <div class="section-header">
-                        <h3 class="section-title">Risk Scoring</h3>
-                        <p class="section-subtitle">30-day weighted risk view from closed and open incidents.</p>
+                        <h3 class="section-title">Executive Overview</h3>
+                        <p class="section-subtitle">30-day executive summary of exposure, remediation velocity, and coverage.</p>
                     </div>
-                    <div class="grid">
-                        <div class="card">
-                            <h3>Risk Score (30d)</h3>
-                            <span class="badge badge-live">Live (Sentinel)</span>
-                            <div class="metrics-group">
-                                <div class="metric">
-                                    <span class="metric-label">Weighted severity sum</span>
-                                    <span class="metric-value" id="rocRiskScore">—</span>
-                                </div>
-                            </div>
+                    <div class="grid roc-overview-grid">
+                        <div class="card roc-hero-card">
+                            <h3>Total Risk Exposure</h3>
+                            <div class="roc-hero-value" id="rocRiskScore">—</div>
+                            <div class="roc-hero-label">Weighted severity sum (30d)</div>
                         </div>
 
                         <div class="card">
-                            <h3>Avg High/Critical MTTR</h3>
-                            <span class="badge badge-live">Live (Sentinel)</span>
+                            <h3>Avg. Days to Fix High Risks</h3>
                             <div class="metrics-group">
                                 <div class="metric">
-                                    <span class="metric-label">Days to remediate</span>
+                                    <span class="metric-label">Average days</span>
                                     <span class="metric-value" id="rocAvgHighRisk">—</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card">
-                            <h3>Attack Surface Coverage</h3>
-                            <span class="badge badge-live">Live (Sentinel)</span>
-                            <div class="metrics-group">
-                                <div class="metric">
-                                    <span class="metric-label">Onboarded devices</span>
-                                    <span class="metric-value" id="rocAttackSurfaceCoverage">—</span>
+                            <h3>Daily Risk Intensity (30-Day Trend)</h3>
+                            <div id="rocRiskExposure" class="chart-container roc-bar-trend"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Primary Risk Drivers</h3>
+                        <p class="section-subtitle">Top contributors to exposure over the reporting window.</p>
+                    </div>
+                    <div class="grid roc-drivers-grid">
+                        <div class="card card-span-2">
+                            <h3>Primary Risk Drivers</h3>
+                            <div id="rocPrimaryRiskDrivers" class="chart-container"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Attack Surface Coverage %</h3>
+                            <div class="roc-coverage-layout">
+                                <div class="roc-gauge-block">
+                                    <div id="rocAttackSurfaceCoverage" class="roc-gauge"></div>
+                                    <div class="roc-gauge-caption">Onboarded assets</div>
+                                </div>
+                                <div class="roc-treemap-block">
+                                    <div class="roc-treemap-header">
+                                        <span>Asset Coverage Gap Analysis</span>
+                                        <span class="roc-treemap-hint">Click to expand</span>
+                                    </div>
+                                    <div id="rocCoverageTreemap" class="roc-treemap" role="button" tabindex="0" aria-pressed="false"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="section-header">
-                        <h3 class="section-title">Risk Exposure</h3>
-                        <p class="section-subtitle">Daily exposure trend based on weighted severity.</p>
+                        <h3 class="section-title">Strategic Risk Management</h3>
+                        <p class="section-subtitle">Are remediation efforts keeping pace with new risks?</p>
                     </div>
                     <div class="grid">
-                        <div class="card card-span-2">
-                            <h3>Risk Exposure Trend (30d)</h3>
-                            <span class="badge badge-live">Live (Sentinel)</span>
-                            <div id="rocRiskExposure" class="chart-container chart-line"></div>
-                        </div>
-
-                        <div class="card">
-                            <h3>Top Incident Drivers (30d)</h3>
-                            <div id="rocIncidentCount" class="table-container"></div>
-                        </div>
-                    </div>
-
-                    <div class="section-header">
-                        <h3 class="section-title">Detections</h3>
-                    </div>
-                    <div class="grid">
-                        <div class="card card-span-2">
-                            <h3>Repeated Detections (7d)</h3>
-                            <span class="badge badge-live">Live (Sentinel)</span>
-                            <div id="repeatedDetections" class="table-container"></div>
+                        <div class="card card-span-3">
+                            <h3>Risk Burn-down Rate</h3>
+                            <div id="rocRiskBurndown" class="chart-container chart-line"></div>
                         </div>
                     </div>
                 </div>
@@ -398,7 +422,7 @@
                     </div>
                     <div class="grid">
                         <div class="card card-span-3">
-                            <h3>Executive Actions (30d)</h3>
+                            <h3>30-Day Remediation History & Accountability</h3>
                             <div id="rocExecutiveActions" class="table-container"></div>
                         </div>
                     </div>
@@ -411,10 +435,26 @@
                             <h3>Workload Volume by Severity</h3>
                             <div id="rocWorkloadBySeverity" class="chart-container"></div>
                         </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Strategic Actions</h3>
+                        <p class="section-subtitle">Accepted risks and remediation value insights.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Remediation ROI (Loss Avoided)</h3>
+                            <div class="metrics-group">
+                                <div class="metric">
+                                    <span class="metric-label">Estimated savings</span>
+                                    <span class="metric-value" id="rocRemediationRoi">—</span>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="card card-span-2">
-                            <h3>Top 5 High-Volume Security Risks</h3>
-                            <div id="rocHighVolumeRisks" class="chart-container"></div>
+                            <h3>Policy Exception Tracker</h3>
+                            <div id="rocPolicyExceptions" class="table-container"></div>
                         </div>
                     </div>
                 </div>
@@ -458,6 +498,22 @@
                         <div class="card">
                             <h3>Target Outliers (&gt; 2 days)</h3>
                             <div id="rocTargetOutliers" class="table-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3 class="section-title">Risk Debt & SLA Health</h3>
+                        <p class="section-subtitle">Operational debt and business-unit SLA performance.</p>
+                    </div>
+                    <div class="grid">
+                        <div class="card card-span-2">
+                            <h3>Risk Debt Growth</h3>
+                            <div id="rocRiskDebtTrend" class="chart-container chart-line"></div>
+                        </div>
+
+                        <div class="card">
+                            <h3>SLA Health by Business Unit</h3>
+                            <div id="rocSlaHealth" class="chart-container"></div>
                         </div>
                     </div>
 

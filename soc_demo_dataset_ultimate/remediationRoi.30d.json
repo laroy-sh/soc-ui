@@ -1,0 +1,38 @@
+{
+  "metricName": "remediationRoi",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "Risk": "Credential Dumping Detected",
+      "Severity": "High",
+      "ClosedTime": "2025-12-26T16:00:00Z",
+      "LossAvoided": 180000
+    },
+    {
+      "Risk": "Data Exfiltration Alert",
+      "Severity": "High",
+      "ClosedTime": "2025-12-30T16:00:00Z",
+      "LossAvoided": 220000
+    },
+    {
+      "Risk": "Ransomware Containment",
+      "Severity": "Critical",
+      "ClosedTime": "2026-01-03T16:00:00Z",
+      "LossAvoided": 450000
+    },
+    {
+      "Risk": "Privileged Role Assignment Review",
+      "Severity": "Medium",
+      "ClosedTime": "2026-01-07T16:00:00Z",
+      "LossAvoided": 90000
+    },
+    {
+      "Risk": "Suspicious OAuth Consent",
+      "Severity": "Medium",
+      "ClosedTime": "2026-01-11T16:00:00Z",
+      "LossAvoided": 75000
+    }
+  ]
+}

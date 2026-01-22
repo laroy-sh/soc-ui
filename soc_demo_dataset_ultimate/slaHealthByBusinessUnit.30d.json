@@ -1,0 +1,308 @@
+{
+  "metricName": "slaHealthByBusinessUnit",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Department": "Finance",
+      "Total": 39,
+      "WithinTarget": 27
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Department": "HR",
+      "Total": 21,
+      "WithinTarget": 17
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Department": "IT",
+      "Total": 54,
+      "WithinTarget": 37
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Department": "Operations",
+      "Total": 27,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2025-12-24T00:00:00Z",
+      "Department": "Sales",
+      "Total": 29,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Department": "Finance",
+      "Total": 40,
+      "WithinTarget": 28
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Department": "HR",
+      "Total": 22,
+      "WithinTarget": 18
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Department": "IT",
+      "Total": 55,
+      "WithinTarget": 38
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Department": "Operations",
+      "Total": 28,
+      "WithinTarget": 22
+    },
+    {
+      "TimeGenerated": "2025-12-27T00:00:00Z",
+      "Department": "Sales",
+      "Total": 30,
+      "WithinTarget": 20
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Department": "Finance",
+      "Total": 41,
+      "WithinTarget": 29
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Department": "HR",
+      "Total": 23,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Department": "IT",
+      "Total": 56,
+      "WithinTarget": 39
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Department": "Operations",
+      "Total": 29,
+      "WithinTarget": 23
+    },
+    {
+      "TimeGenerated": "2025-12-30T00:00:00Z",
+      "Department": "Sales",
+      "Total": 31,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Department": "Finance",
+      "Total": 39,
+      "WithinTarget": 27
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Department": "HR",
+      "Total": 21,
+      "WithinTarget": 17
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Department": "IT",
+      "Total": 54,
+      "WithinTarget": 37
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Department": "Operations",
+      "Total": 27,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-02T00:00:00Z",
+      "Department": "Sales",
+      "Total": 29,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Department": "Finance",
+      "Total": 40,
+      "WithinTarget": 28
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Department": "HR",
+      "Total": 22,
+      "WithinTarget": 18
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Department": "IT",
+      "Total": 55,
+      "WithinTarget": 38
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Department": "Operations",
+      "Total": 28,
+      "WithinTarget": 22
+    },
+    {
+      "TimeGenerated": "2026-01-05T00:00:00Z",
+      "Department": "Sales",
+      "Total": 30,
+      "WithinTarget": 20
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Department": "Finance",
+      "Total": 41,
+      "WithinTarget": 29
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Department": "HR",
+      "Total": 23,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Department": "IT",
+      "Total": 56,
+      "WithinTarget": 39
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Department": "Operations",
+      "Total": 29,
+      "WithinTarget": 23
+    },
+    {
+      "TimeGenerated": "2026-01-08T00:00:00Z",
+      "Department": "Sales",
+      "Total": 31,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Department": "Finance",
+      "Total": 39,
+      "WithinTarget": 27
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Department": "HR",
+      "Total": 21,
+      "WithinTarget": 17
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Department": "IT",
+      "Total": 54,
+      "WithinTarget": 37
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Department": "Operations",
+      "Total": 27,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-11T00:00:00Z",
+      "Department": "Sales",
+      "Total": 29,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Department": "Finance",
+      "Total": 40,
+      "WithinTarget": 28
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Department": "HR",
+      "Total": 22,
+      "WithinTarget": 18
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Department": "IT",
+      "Total": 55,
+      "WithinTarget": 38
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Department": "Operations",
+      "Total": 28,
+      "WithinTarget": 22
+    },
+    {
+      "TimeGenerated": "2026-01-14T00:00:00Z",
+      "Department": "Sales",
+      "Total": 30,
+      "WithinTarget": 20
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Department": "Finance",
+      "Total": 41,
+      "WithinTarget": 29
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Department": "HR",
+      "Total": 23,
+      "WithinTarget": 19
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Department": "IT",
+      "Total": 56,
+      "WithinTarget": 39
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Department": "Operations",
+      "Total": 29,
+      "WithinTarget": 23
+    },
+    {
+      "TimeGenerated": "2026-01-17T00:00:00Z",
+      "Department": "Sales",
+      "Total": 31,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Department": "Finance",
+      "Total": 39,
+      "WithinTarget": 27
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Department": "HR",
+      "Total": 21,
+      "WithinTarget": 17
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Department": "IT",
+      "Total": 54,
+      "WithinTarget": 37
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Department": "Operations",
+      "Total": 27,
+      "WithinTarget": 21
+    },
+    {
+      "TimeGenerated": "2026-01-20T00:00:00Z",
+      "Department": "Sales",
+      "Total": 29,
+      "WithinTarget": 19
+    }
+  ]
+}

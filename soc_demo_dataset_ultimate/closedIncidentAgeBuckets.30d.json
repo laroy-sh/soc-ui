@@ -1,20 +1,20 @@
 {
   "metricName": "closedIncidentAgeBuckets",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "windowStart": "2025-12-20T00:00:00Z",
-  "windowEnd": "2026-01-19T23:59:59Z",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
   "data": [
     {
       "AgeBucket": "0-7 Days",
-      "IncidentCount": 18
+      "IncidentCount": 100
     },
     {
       "AgeBucket": "8-30 Days",
-      "IncidentCount": 22
+      "IncidentCount": 6
     },
     {
       "AgeBucket": "30+ Days",
-      "IncidentCount": 5
+      "IncidentCount": 3
     }
   ]
 }

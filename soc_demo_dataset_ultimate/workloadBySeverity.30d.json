@@ -1,0 +1,20 @@
+{
+  "metricName": "workloadBySeverity",
+  "generatedAt": "2026-01-22T10:15:00Z",
+  "windowStart": "2025-12-24T00:00:00Z",
+  "windowEnd": "2026-01-22T23:59:59Z",
+  "data": [
+    {
+      "Category": "Low",
+      "Count": 297
+    },
+    {
+      "Category": "Medium",
+      "Count": 33
+    },
+    {
+      "Category": "High",
+      "Count": 18
+    }
+  ]
+}

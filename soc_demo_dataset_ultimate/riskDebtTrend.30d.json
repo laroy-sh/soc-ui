@@ -1,129 +1,128 @@
 {
-  "metricName": "riskExposure",
+  "metricName": "riskDebtTrend",
   "generatedAt": "2026-01-22T10:15:00Z",
   "windowStart": "2025-12-24T00:00:00Z",
   "windowEnd": "2026-01-22T23:59:59Z",
-  "threshold": 125,
   "data": [
     {
       "TimeGenerated": "2025-12-24T00:00:00Z",
-      "DailyRiskScore": 10
+      "RiskDebt": 483
     },
     {
       "TimeGenerated": "2025-12-25T00:00:00Z",
-      "DailyRiskScore": 1
+      "RiskDebt": 484
     },
     {
       "TimeGenerated": "2025-12-26T00:00:00Z",
-      "DailyRiskScore": 1
+      "RiskDebt": 490
     },
     {
       "TimeGenerated": "2025-12-27T00:00:00Z",
-      "DailyRiskScore": 10
+      "RiskDebt": 496
     },
     {
       "TimeGenerated": "2025-12-28T00:00:00Z",
-      "DailyRiskScore": 40
+      "RiskDebt": 507
     },
     {
       "TimeGenerated": "2025-12-29T00:00:00Z",
-      "DailyRiskScore": 60
+      "RiskDebt": 508
     },
     {
       "TimeGenerated": "2025-12-30T00:00:00Z",
-      "DailyRiskScore": 15
+      "RiskDebt": 514
     },
     {
       "TimeGenerated": "2025-12-31T00:00:00Z",
-      "DailyRiskScore": 50
+      "RiskDebt": 520
     },
     {
       "TimeGenerated": "2026-01-01T00:00:00Z",
-      "DailyRiskScore": 110
+      "RiskDebt": 531
     },
     {
       "TimeGenerated": "2026-01-02T00:00:00Z",
-      "DailyRiskScore": 45
+      "RiskDebt": 532
     },
     {
       "TimeGenerated": "2026-01-03T00:00:00Z",
-      "DailyRiskScore": 120
+      "RiskDebt": 538
     },
     {
       "TimeGenerated": "2026-01-04T00:00:00Z",
-      "DailyRiskScore": 95
+      "RiskDebt": 544
     },
     {
       "TimeGenerated": "2026-01-05T00:00:00Z",
-      "DailyRiskScore": 100
+      "RiskDebt": 555
     },
     {
       "TimeGenerated": "2026-01-06T00:00:00Z",
-      "DailyRiskScore": 470
+      "RiskDebt": 556
     },
     {
       "TimeGenerated": "2026-01-07T00:00:00Z",
-      "DailyRiskScore": 330
+      "RiskDebt": 562
     },
     {
       "TimeGenerated": "2026-01-08T00:00:00Z",
-      "DailyRiskScore": 210
+      "RiskDebt": 568
     },
     {
       "TimeGenerated": "2026-01-09T00:00:00Z",
-      "DailyRiskScore": 25
+      "RiskDebt": 579
     },
     {
       "TimeGenerated": "2026-01-10T00:00:00Z",
-      "DailyRiskScore": 22
+      "RiskDebt": 580
     },
     {
       "TimeGenerated": "2026-01-11T00:00:00Z",
-      "DailyRiskScore": 20
+      "RiskDebt": 586
     },
     {
       "TimeGenerated": "2026-01-12T00:00:00Z",
-      "DailyRiskScore": 18
+      "RiskDebt": 592
     },
     {
       "TimeGenerated": "2026-01-13T00:00:00Z",
-      "DailyRiskScore": 18
+      "RiskDebt": 603
     },
     {
       "TimeGenerated": "2026-01-14T00:00:00Z",
-      "DailyRiskScore": 20
+      "RiskDebt": 604
     },
     {
       "TimeGenerated": "2026-01-15T00:00:00Z",
-      "DailyRiskScore": 25
+      "RiskDebt": 610
     },
     {
       "TimeGenerated": "2026-01-16T00:00:00Z",
-      "DailyRiskScore": 28
+      "RiskDebt": 616
     },
     {
       "TimeGenerated": "2026-01-17T00:00:00Z",
-      "DailyRiskScore": 16
+      "RiskDebt": 627
     },
     {
       "TimeGenerated": "2026-01-18T00:00:00Z",
-      "DailyRiskScore": 12
+      "RiskDebt": 628
     },
     {
       "TimeGenerated": "2026-01-19T00:00:00Z",
-      "DailyRiskScore": 10
+      "RiskDebt": 634
     },
     {
       "TimeGenerated": "2026-01-20T00:00:00Z",
-      "DailyRiskScore": 8
+      "RiskDebt": 640
     },
     {
       "TimeGenerated": "2026-01-21T00:00:00Z",
-      "DailyRiskScore": 6
+      "RiskDebt": 651
     },
     {
       "TimeGenerated": "2026-01-22T00:00:00Z",
-      "DailyRiskScore": 5
+      "RiskDebt": 652
     }
   ]
 }
