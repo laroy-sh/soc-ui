@@ -81,6 +81,7 @@ This checklist validates that all requirements from the original specification h
 
 ### Metrics Implemented ✅
 - [x] Ingestion volume by table - Table with records and size
+- [x] Detection coverage - Percent of critical assets & telemetry sources covered
 - [x] Tables with zero ingestion - Alert list
 - [x] Warning states for zero ingestion tables
 - [x] Clear health indicators
@@ -92,6 +93,7 @@ This checklist validates that all requirements from the original specification h
 - [x] Success message when all tables healthy
 
 **Test Files**:
+- `detectionCoverage.latest.json`
 - `ingestionVolumeByTable.24h.json`
 - `zeroIngestionTables.latest.json`
 
@@ -236,7 +238,7 @@ This checklist validates that all requirements from the original specification h
 ## 11. Demo Dataset Integration
 
 ### Dataset Usage ✅
-- [x] All 16 JSON files recognized
+- [x] All 17 JSON files recognized
 - [x] Files read from soc_demo_dataset/
 - [x] Filenames not changed
 - [x] Realistic SOC activity rendered
@@ -246,6 +248,7 @@ This checklist validates that all requirements from the original specification h
 |------|-----------|--------|
 | activeAlertsBySeverity.latest.json | Analyst | ✅ |
 | businessRiskPosture.latest.json | ROC | ✅ (placeholder) |
+| detectionCoverage.latest.json | Telemetry | ✅ |
 | customer_incidentsBySeverity.latest.json | Customer | ✅ |
 | incidentAging.latest.json | Analyst | ✅ |
 | incidentClosureRate.24h.json | Lead | ✅ |

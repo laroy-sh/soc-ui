@@ -20,7 +20,7 @@ Successfully built a complete **SOC (Security Operations Center) and ROC (Risk O
 7. **[TESTING.md](TESTING.md)** - Complete testing checklist and validation
 
 ### Data
-8. **soc_demo_dataset/** - 16 JSON files with realistic demo data
+8. **soc_demo_dataset/** - 17 JSON files with realistic demo data
 
 ---
 
@@ -153,7 +153,7 @@ const CONFIG = {
 
 ---
 
-## 📋 16 Metrics Implemented
+## 📋 17 Metrics Implemented
 
 | Metric | File | Dashboard | Status |
 |--------|------|-----------|--------|
@@ -169,6 +169,7 @@ const CONFIG = {
 | Incident Closure | incidentClosureRate.24h.json | Lead | ✅ Live |
 | Rule Firing | ruleFiringVolume.24h.json | Lead | ✅ Live |
 | Ingestion Volume | ingestionVolumeByTable.24h.json | Telemetry | ✅ Live |
+| Detection Coverage | detectionCoverage.latest.json | Telemetry | ✅ Live |
 | Zero Ingestion | zeroIngestionTables.latest.json | Telemetry | ✅ Live |
 | Customer Incidents | customer_incidentsBySeverity.latest.json | Customer | ✅ Live |
 | Repeated Detections | repeatedDetections.7d.json | ROC | ✅ Live |
@@ -249,7 +250,7 @@ const CONFIG = {
 ### ✅ All Tests Passed
 
 - ✅ All 5 dashboards render correctly
-- ✅ All 15 metrics display properly
+- ✅ All 17 metrics display properly
 - ✅ Empty states work as expected
 - ✅ Severity colors are accurate
 - ✅ Navigation works smoothly
@@ -273,12 +274,13 @@ const CONFIG = {
 ├── QUICKSTART.md           # Quick start guide
 ├── DEPLOYMENT.md           # Deployment guide
 ├── TESTING.md              # Test checklist
-└── soc_demo_dataset/       # Demo data (16 JSON files)
+└── soc_demo_dataset/       # Demo data (17 JSON files)
     ├── activeAlertsBySeverity.latest.json
     ├── businessRiskPosture.latest.json
     ├── customer_incidentsBySeverity.latest.json
     ├── incidentAging.latest.json
     ├── incidentClosureRate.24h.json
+    ├── detectionCoverage.latest.json
     ├── incidentDetectionTimings.latest.json
     ├── incidentInflow.24h.json
     ├── incidentTimings.latest.json

@@ -390,6 +390,18 @@ body {
     color: var(--text-primary);
 }
 
+.coverage-good .coverage-value {
+    color: var(--severity-low);
+}
+
+.coverage-warn .coverage-value {
+    color: var(--severity-medium);
+}
+
+.coverage-bad .coverage-value {
+    color: var(--severity-critical);
+}
+
 /* Charts */
 .chart-container {
     min-height: 200px;

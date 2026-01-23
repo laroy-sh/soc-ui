@@ -128,6 +128,7 @@ async function loadAllData() {
             incidentClosureRate,
             ruleFiringVolume,
             ingestionVolume,
+            detectionCoverage,
             zeroIngestion,
             customerIncidents,
             repeatedDetections,
@@ -174,6 +175,7 @@ async function loadAllData() {
             fetchMetric('incidentClosureRate.24h.json'),
             fetchMetric('ruleFiringVolume.24h.json'),
             fetchMetric('ingestionVolumeByTable.24h.json'),
+            fetchMetric('detectionCoverage.latest.json'),
             fetchMetric('zeroIngestionTables.latest.json'),
             fetchMetric('customer_incidentsBySeverity.latest.json'),
             fetchMetric('repeatedDetections.7d.json'),
@@ -226,6 +228,7 @@ async function loadAllData() {
         
         // Render Telemetry Health Dashboard
         renderIngestionVolume(ingestionVolume);
+        renderDetectionCoverage(detectionCoverage);
         renderZeroIngestionTables(zeroIngestion);
         
         // Render Customer Dashboard
@@ -707,6 +710,78 @@ function renderIngestionVolume(data) {
     `;
     
     container.innerHTML = html;
+}
+
+function renderDetectionCoverage(data) {
+    const container = document.getElementById('detectionCoverage');
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        container.innerHTML = createEmptyState('No detection coverage data available');
+        applyCoverageStatusClass(container, null);
+        return;
+    }
+
+    const payload = data.data || {};
+    let coverageValue = getScalarMetricValue(data, ['coveragePercent', 'CoveragePercent']);
+    const coveredAssets = payload.coveredCriticalAssets ?? payload.coveredAssets ?? payload.criticalAssetsCovered;
+    const totalAssets = payload.totalCriticalAssets ?? payload.totalAssets ?? payload.criticalAssetsTotal;
+    const coveredSources = payload.coveredTelemetrySources ?? payload.coveredSources ?? payload.sourcesCovered;
+    const totalSources = payload.totalTelemetrySources ?? payload.totalSources ?? payload.sourcesTotal;
+
+    if (coverageValue === null || coverageValue === undefined) {
+        const coveredTotal = (Number(coveredAssets) || 0) + (Number(coveredSources) || 0);
+        const totalTotal = (Number(totalAssets) || 0) + (Number(totalSources) || 0);
+        if (totalTotal > 0) {
+            coverageValue = (coveredTotal / totalTotal) * 100;
+        } else if (Number(totalAssets) > 0) {
+            coverageValue = ((Number(coveredAssets) || 0) / Number(totalAssets)) * 100;
+        }
+    }
+
+    const coverageDisplay = coverageValue === null || coverageValue === undefined
+        ? '—'
+        : `${formatNumber(coverageValue, Number.isInteger(coverageValue) ? 0 : 1)}%`;
+    const assetDisplay = totalAssets === null || totalAssets === undefined
+        ? '—'
+        : `${formatNumber(coveredAssets || 0)} / ${formatNumber(totalAssets)}`;
+    const sourceDisplay = totalSources === null || totalSources === undefined
+        ? '—'
+        : `${formatNumber(coveredSources || 0)} / ${formatNumber(totalSources)}`;
+
+    const status = getCoverageStatus(coverageValue);
+    applyCoverageStatusClass(container, status);
+
+    container.innerHTML = `
+        <div class="metric">
+            <span class="metric-label">Coverage</span>
+            <span class="metric-value coverage-value">${coverageDisplay}</span>
+        </div>
+        <div class="metric">
+            <span class="metric-label">Critical assets</span>
+            <span class="metric-value">${assetDisplay}</span>
+        </div>
+        <div class="metric">
+            <span class="metric-label">Telemetry sources</span>
+            <span class="metric-value">${sourceDisplay}</span>
+        </div>
+    `;
+}
+
+function getCoverageStatus(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return null;
+    if (numeric >= 90) return 'good';
+    if (numeric >= 75) return 'warn';
+    return 'bad';
+}
+
+function applyCoverageStatusClass(element, status) {
+    if (!element) return;
+    element.classList.remove('coverage-good', 'coverage-warn', 'coverage-bad');
+    if (status) {
+        element.classList.add(`coverage-${status}`);
+    }
 }
 
 function renderZeroIngestionTables(data) {
