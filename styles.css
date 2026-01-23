@@ -402,6 +402,86 @@ body {
     color: var(--severity-critical);
 }
 
+/* Detection Coverage Pie Charts */
+.coverage-pie-grid {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: stretch;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.coverage-pie-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.35);
+    min-width: 220px;
+    flex: 1 1 0;
+}
+
+.coverage-pie-title {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.coverage-pie-card .roc-donut {
+    width: 140px;
+    height: 140px;
+}
+
+.coverage-pie-card .roc-donut svg {
+    width: 140px;
+    height: 140px;
+}
+
+.coverage-pie-card .roc-donut-legend {
+    justify-content: center;
+}
+
+.coverage-pie-card .roc-donut-wrapper {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+.coverage-pie-card .roc-donut-legend {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.coverage-pie-card .roc-donut-legend-item {
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: var(--spacing-xs);
+    row-gap: 2px;
+    align-items: start;
+}
+
+.coverage-pie-card .roc-donut-legend-dot {
+    grid-row: 1 / span 2;
+    align-self: center;
+}
+
+.coverage-pie-card .roc-donut-legend-item span:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.coverage-pie-card .roc-donut-legend-item span:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    color: var(--text-secondary);
+}
+
 /* Charts */
 .chart-container {
     min-height: 200px;
@@ -743,6 +823,7 @@ tbody tr:hover {
     .roc-coverage-layout {
         grid-template-columns: 1fr;
     }
+
 }
 
 @media (max-width: 900px) {
@@ -767,6 +848,7 @@ tbody tr:hover {
     .roc-drivers-grid {
         grid-template-columns: 1fr;
     }
+
 
     .frameworks-embed iframe {
         height: 75vh;

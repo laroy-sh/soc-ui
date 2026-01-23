@@ -727,6 +727,40 @@ function renderIngestionVolume(data) {
     container.innerHTML = html;
 }
 
+function renderCoveragePieChart(container, options) {
+    if (!container) return;
+
+    const total = Number(options.total);
+    const covered = Number(options.covered);
+
+    if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(covered)) {
+        container.innerHTML = createEmptyState(options.emptyMessage || 'No coverage data available');
+        return;
+    }
+
+    const safeCovered = Math.min(Math.max(covered, 0), total);
+    const uncovered = Math.max(0, total - safeCovered);
+    const percent = total > 0 ? (safeCovered / total) * 100 : 0;
+
+    const items = [
+        {
+            label: options.coveredLabel || 'Covered',
+            count: safeCovered,
+            color: options.coveredColor || getCssVar('--severity-low', '#22c55e')
+        },
+        {
+            label: options.uncoveredLabel || 'Uncovered',
+            count: uncovered,
+            color: options.uncoveredColor || getCssVar('--severity-high', '#f97316')
+        }
+    ];
+
+    renderRocDonutChart(container, items, options.label, {
+        centerValue: options.centerValue || `${formatNumber(percent, Number.isInteger(percent) ? 0 : 1)}%`,
+        centerLabel: options.centerLabel || options.label
+    });
+}
+
 function renderDetectionCoverage(data) {
     const container = document.getElementById('detectionCoverage');
     if (!container) return;
@@ -754,33 +788,84 @@ function renderDetectionCoverage(data) {
         }
     }
 
-    const coverageDisplay = coverageValue === null || coverageValue === undefined
-        ? '—'
-        : `${formatNumber(coverageValue, Number.isInteger(coverageValue) ? 0 : 1)}%`;
-    const assetDisplay = totalAssets === null || totalAssets === undefined
-        ? '—'
-        : `${formatNumber(coveredAssets || 0)} / ${formatNumber(totalAssets)}`;
-    const sourceDisplay = totalSources === null || totalSources === undefined
-        ? '—'
-        : `${formatNumber(coveredSources || 0)} / ${formatNumber(totalSources)}`;
-
     const status = getCoverageStatus(coverageValue);
     applyCoverageStatusClass(container, status);
 
+    const coverageDisplay = coverageValue === null || coverageValue === undefined
+        ? '—'
+        : `${formatNumber(coverageValue, Number.isInteger(coverageValue) ? 0 : 1)}%`;
+
+    const coverageColor = status === 'good'
+        ? getCssVar('--severity-low', '#22c55e')
+        : status === 'warn'
+            ? getCssVar('--severity-medium', '#f59e0b')
+            : status === 'bad'
+                ? getCssVar('--severity-critical', '#ef4444')
+                : getCssVar('--accent-primary', '#6366f1');
+
     container.innerHTML = `
-        <div class="metric">
-            <span class="metric-label">Coverage</span>
-            <span class="metric-value coverage-value">${coverageDisplay}</span>
-        </div>
-        <div class="metric">
-            <span class="metric-label">Critical assets</span>
-            <span class="metric-value">${assetDisplay}</span>
-        </div>
-        <div class="metric">
-            <span class="metric-label">Telemetry sources</span>
-            <span class="metric-value">${sourceDisplay}</span>
+        <div class="coverage-pie-grid">
+            <div class="coverage-pie-card">
+                <div class="coverage-pie-title">Overall coverage</div>
+                <div class="coverage-pie-chart" data-coverage-chart="overall"></div>
+            </div>
+            <div class="coverage-pie-card">
+                <div class="coverage-pie-title">Critical assets</div>
+                <div class="coverage-pie-chart" data-coverage-chart="assets"></div>
+            </div>
+            <div class="coverage-pie-card">
+                <div class="coverage-pie-title">Telemetry sources</div>
+                <div class="coverage-pie-chart" data-coverage-chart="sources"></div>
+            </div>
         </div>
     `;
+
+    const overallChart = container.querySelector('[data-coverage-chart="overall"]');
+    const assetsChart = container.querySelector('[data-coverage-chart="assets"]');
+    const sourcesChart = container.querySelector('[data-coverage-chart="sources"]');
+
+    if (coverageValue === null || coverageValue === undefined) {
+        if (overallChart) {
+            overallChart.innerHTML = createEmptyState('No coverage data available');
+        }
+    } else {
+        const clampedCoverage = Math.min(100, Math.max(0, Number(coverageValue)));
+        renderCoveragePieChart(overallChart, {
+            covered: clampedCoverage,
+            total: 100,
+            label: 'Coverage',
+            centerValue: coverageDisplay,
+            centerLabel: 'Coverage',
+            coveredColor: coverageColor,
+            uncoveredColor: getCssVar('--text-muted', '#6b7280'),
+            coveredLabel: 'Covered',
+            uncoveredLabel: 'Gap'
+        });
+    }
+
+    renderCoveragePieChart(assetsChart, {
+        covered: coveredAssets ?? 0,
+        total: totalAssets ?? 0,
+        label: 'Assets',
+        centerLabel: 'Assets',
+        coveredLabel: 'Covered',
+        uncoveredLabel: 'Uncovered',
+        coveredColor: getCssVar('--severity-low', '#22c55e'),
+        uncoveredColor: getCssVar('--severity-high', '#f97316'),
+        emptyMessage: 'No asset coverage data available'
+    });
+
+    renderCoveragePieChart(sourcesChart, {
+        covered: coveredSources ?? 0,
+        total: totalSources ?? 0,
+        label: 'Sources',
+        centerLabel: 'Sources',
+        coveredLabel: 'Covered',
+        uncoveredLabel: 'Uncovered',
+        coveredColor: getCssVar('--severity-low', '#22c55e'),
+        uncoveredColor: getCssVar('--severity-high', '#f97316'),
+        emptyMessage: 'No source coverage data available'
+    });
 }
 
 function renderStorageTierDistribution(data) {
