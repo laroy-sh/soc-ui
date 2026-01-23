@@ -1014,14 +1014,14 @@ function renderStorageTierDistribution(data) {
                         </div>
                     </div>
                 </div>
-                <div class="metrics-group">
+                <div class="metrics-group storage-tier-metrics-group">
                     <div class="metric">
                         <span class="metric-label">Hot storage</span>
                         <span class="metric-value">${hotDisplay}</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Cost-effective storage</span>
-                        <span class="metric-value">${coldDisplay}</span>
+                        <div class="metric" style="margin-top: var(--spacing-md);">
+                            <span class="metric-label">Cost-effective storage</span>
+                            <span class="metric-value">${coldDisplay}</span>
+                        </div>
                     </div>
                 </div>
             </div>

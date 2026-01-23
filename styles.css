@@ -793,6 +793,12 @@ tbody tr:hover {
     background: rgba(16, 185, 129, 0.95);
 }
 
+.storage-tier-metrics-group {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: fit-content;
+}
+
 @media (max-width: 900px) {
     .storage-tier-chart {
         width: 140px;
