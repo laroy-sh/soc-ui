@@ -1054,26 +1054,31 @@ function renderRepeatedDetections(data) {
         container.innerHTML = createEmptyState('No repeated detections found');
         return;
     }
-    
+
+    const items = data.data;
+    const maxValue = Math.max(...items.map(item => item.count || 0), 0);
+
     const html = `
-        <table>
-            <thead>
-                <tr>
-                    <th>Alert Name</th>
-                    <th>Detections (7d)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${data.data.map(detection => `
-                    <tr>
-                        <td>${escapeHtml(detection.alertName || 'Unknown')}</td>
-                        <td>${detection.count || 0}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
+        <div class="bar-chart repeated-detections-chart">
+            ${items.map(detection => {
+                const label = escapeHtml(detection.alertName || 'Unknown');
+                const count = detection.count || 0;
+                const percentage = maxValue > 0 ? (count / maxValue) * 100 : 0;
+
+                return `
+                    <div class="bar-item">
+                        <div class="bar-label repeated-detections-label">${label}</div>
+                        <div class="bar-track">
+                            <div class="bar-fill repeated-detections-fill" style="width: ${percentage}%">
+                                <span class="bar-value">${count}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
     `;
-    
+
     container.innerHTML = html;
 }
 
