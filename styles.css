@@ -1647,6 +1647,121 @@ tbody tr:hover {
     margin-top: var(--spacing-xs);
 }
 
+/* Alert Volume Baseline Comparison */
+.alert-volume-compare {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.alert-volume-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.volume-block {
+    padding: var(--spacing-sm);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.6);
+    text-align: center;
+}
+
+.volume-label {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.volume-value {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.volume-bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.volume-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.volume-bar-label {
+    width: 70px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.volume-bar-track {
+    flex: 1;
+    height: 10px;
+    background: linear-gradient(180deg, var(--chart-track) 0%, rgba(15, 23, 42, 0.45) 100%);
+    border: 1px solid var(--chart-track-border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.volume-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+}
+
+.volume-bar-fill.baseline {
+    background: linear-gradient(90deg, rgba(148, 163, 184, 0.9) 0%, rgba(148, 163, 184, 0.4) 100%);
+}
+
+.volume-bar-fill.current {
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.95) 0%, rgba(16, 185, 129, 0.35) 100%);
+}
+
+.volume-delta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.delta-pill {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.65);
+    color: var(--text-secondary);
+}
+
+.volume-delta.improved .delta-pill {
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.35);
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.volume-delta.worse .delta-pill {
+    color: #f97316;
+    border-color: rgba(249, 115, 22, 0.35);
+    background: rgba(249, 115, 22, 0.12);
+}
+
+.delta-text {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
 /* Supporting Metrics Section */
 .section-supporting .section-title {
     font-size: var(--font-size-md);

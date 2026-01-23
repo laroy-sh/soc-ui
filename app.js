@@ -162,7 +162,8 @@ async function loadAllData() {
             customerIncidentTimeBuckets,
             customerTopAlertRules,
             customerIncidentsByStatus,
-            alertNoiseTrend
+            alertNoiseTrend,
+            alertVolumeBaseline
         ] = await Promise.all([
             fetchMetric('openIncidentsBySeverity.latest.json'),
             fetchMetric('openIncidentsByStatus.latest.json'),
@@ -210,7 +211,8 @@ async function loadAllData() {
             fetchMetric('customerIncidentTimeBuckets.latest.json'),
             fetchMetric('customerTopAlertRules.latest.json'),
             fetchMetric('customerIncidentsByStatus.latest.json'),
-            fetchMetric('alertNoiseTrend.7d.json')
+            fetchMetric('alertNoiseTrend.7d.json'),
+            fetchMetric('alertVolumeBaseline.30d.json')
         ]);
         
         // Render SOC Analyst Dashboard
@@ -248,6 +250,7 @@ async function loadAllData() {
         renderCustomerTopAlertRules(customerTopAlertRules);
         renderCustomerIncidentAging(customerIncidentAging);
         renderAlertNoiseTrend(alertNoiseTrend);
+        renderAlertVolumeComparison(alertNoiseTrend, alertVolumeBaseline);
         
         // Render ROC Dashboard
         rocData = {
@@ -2239,5 +2242,78 @@ function renderAlertNoiseTrend(data) {
         </div>
     `;
     
+    container.innerHTML = html;
+}
+
+function renderAlertVolumeComparison(currentData, baselineData) {
+    const container = document.getElementById('alertVolumeBaseline');
+    if (!container) return;
+
+    const baselineItems = Array.isArray(baselineData?.data) ? baselineData.data : [];
+    const currentItems = Array.isArray(currentData?.data) ? currentData.data : [];
+
+    if (baselineItems.length === 0 && currentItems.length === 0) {
+        container.innerHTML = createEmptyState('No alert volume data available');
+        return;
+    }
+
+    if (baselineItems.length === 0) {
+        container.innerHTML = createEmptyState('No baseline alert volume available');
+        return;
+    }
+
+    const baselineAvg = baselineItems.reduce((sum, item) => sum + (item.alertCount || 0), 0) / baselineItems.length;
+    const currentAvg = currentItems.length
+        ? currentItems.reduce((sum, item) => sum + (item.alertCount || 0), 0) / currentItems.length
+        : null;
+
+    const maxValue = Math.max(baselineAvg, currentAvg || 0);
+    const baselineWidth = maxValue > 0 ? (baselineAvg / maxValue) * 100 : 0;
+    const currentWidth = maxValue > 0 ? ((currentAvg || 0) / maxValue) * 100 : 0;
+
+    const delta = currentAvg === null ? null : currentAvg - baselineAvg;
+    const percentChange = delta === null || baselineAvg === 0 ? null : (delta / baselineAvg) * 100;
+    const deltaClass = delta === null ? 'neutral' : (delta < 0 ? 'improved' : (delta > 0 ? 'worse' : 'neutral'));
+    const deltaPill = percentChange === null ? '—' : `${delta < 0 ? '↓' : '↑'} ${Math.abs(percentChange).toFixed(1)}%`;
+    const deltaText = delta === null
+        ? 'Current data unavailable'
+        : `${delta < 0 ? 'Reduction' : 'Increase'} of ${formatNumber(Math.abs(Math.round(delta)))} alerts/day`;
+
+    const baselineLabel = `Pre-tuning (${baselineItems.length}d avg)`;
+    const currentLabel = currentItems.length ? `Current (${currentItems.length}d avg)` : 'Current (no data)';
+
+    const html = `
+        <div class="alert-volume-compare">
+            <div class="alert-volume-summary">
+                <div class="volume-block baseline">
+                    <span class="volume-label">${baselineLabel}</span>
+                    <span class="volume-value">${formatNumber(Math.round(baselineAvg))}</span>
+                </div>
+                <div class="volume-block current">
+                    <span class="volume-label">${currentLabel}</span>
+                    <span class="volume-value">${currentAvg === null ? '—' : formatNumber(Math.round(currentAvg))}</span>
+                </div>
+            </div>
+            <div class="volume-bars">
+                <div class="volume-bar">
+                    <span class="volume-bar-label">Baseline</span>
+                    <div class="volume-bar-track">
+                        <div class="volume-bar-fill baseline" style="width: ${baselineWidth}%"></div>
+                    </div>
+                </div>
+                <div class="volume-bar">
+                    <span class="volume-bar-label">Current</span>
+                    <div class="volume-bar-track">
+                        <div class="volume-bar-fill current" style="width: ${currentWidth}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="volume-delta ${deltaClass}">
+                <span class="delta-pill">${deltaPill}</span>
+                <span class="delta-text">${deltaText}</span>
+            </div>
+        </div>
+    `;
+
     container.innerHTML = html;
 }
