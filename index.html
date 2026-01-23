@@ -233,6 +233,20 @@
                         <p class="card-subtitle">Percent of logs in cost-effective vs hot storage</p>
                         <div id="storageTierDistribution" class="storage-tier"></div>
                     </div>
+
+                    <!-- Alert Volume Trend -->
+                    <div class="card">
+                        <h3>Alert Volume Trend</h3>
+                        <p class="card-subtitle">Daily alert counts over time</p>
+                        <div id="alertNoiseTrend" class="chart-container chart-trend"></div>
+                    </div>
+
+                    <!-- Alert Volume Before Tuning -->
+                    <div class="card">
+                        <h3>Alert Volume Before Tuning</h3>
+                        <p class="card-subtitle">30-day baseline vs current 7-day average</p>
+                        <div id="alertVolumeBaseline" class="chart-container chart-trend"></div>
+                    </div>
                 </div>
             </div>
 
@@ -368,25 +382,6 @@
                     </div>
                 </div>
 
-                <!-- Section: Supporting Metrics (De-emphasized) -->
-                <div class="section-header section-supporting">
-                    <h3 class="section-title">Supporting Metrics</h3>
-                </div>
-                <div class="grid customer-grid customer-supporting">
-                    <!-- Alert Noise Trend -->
-                    <div class="card card-muted">
-                        <h3>Alert Volume Trend</h3>
-                        <p class="card-subtitle">Daily alert counts (informational)</p>
-                        <div id="alertNoiseTrend" class="chart-container chart-trend"></div>
-                    </div>
-
-                    <!-- Alert Volume Before Tuning -->
-                    <div class="card card-muted">
-                        <h3>Alert Volume Before Tuning</h3>
-                        <p class="card-subtitle">30-day baseline vs current 7-day average</p>
-                        <div id="alertVolumeBaseline" class="chart-container chart-trend"></div>
-                    </div>
-                </div>
             </div>
 
             <!-- ROC Dashboard -->

@@ -244,6 +244,8 @@ async function loadAllData() {
         renderDetectionCoverage(detectionCoverage);
         renderStorageTierDistribution(storageTierDistribution);
         renderZeroIngestionTables(zeroIngestion);
+        renderAlertNoiseTrend(alertNoiseTrend);
+        renderAlertVolumeComparison(alertNoiseTrend, alertVolumeBaseline);
         
         // Render Customer Dashboard
         renderBarChart('customerIncidentsBySeverity', customerIncidents, 'severity');
@@ -258,8 +260,6 @@ async function loadAllData() {
         renderCustomerTopEntities(customerTopEntities);
         renderCustomerTopAlertRules(customerTopAlertRules);
         renderCustomerIncidentAging(customerIncidentAging);
-        renderAlertNoiseTrend(alertNoiseTrend);
-        renderAlertVolumeComparison(alertNoiseTrend, alertVolumeBaseline);
         
         // Render ROC Dashboard
         rocData = {
@@ -964,25 +964,55 @@ function renderStorageTierDistribution(data) {
     }
 
     const total = (Number.isFinite(hotValue) ? hotValue : 0) + (Number.isFinite(coldValue) ? coldValue : 0);
-    const hotWidth = total > 0 && Number.isFinite(hotValue) ? (hotValue / total) * 100 : 0;
-    const coldWidth = total > 0 && Number.isFinite(coldValue) ? (coldValue / total) * 100 : 0;
     const hotDisplay = Number.isFinite(hotValue)
         ? `${formatNumber(hotValue, Number.isInteger(hotValue) ? 0 : 1)}%`
         : '—';
     const coldDisplay = Number.isFinite(coldValue)
         ? `${formatNumber(coldValue, Number.isInteger(coldValue) ? 0 : 1)}%`
         : '—';
+    const totalDisplay = total > 0
+        ? `${formatNumber(total, Number.isInteger(total) ? 0 : 1)}%`
+        : '—';
+
+    const hotColor = getCssVar('--severity-high', '#f97316');
+    const coldColor = getCssVar('--severity-low', '#22c55e');
+
+    const radius = 40;
+    const circumference = 2 * Math.PI * radius;
+    let offset = 0;
+    const segments = [
+        { label: 'Hot', value: Number.isFinite(hotValue) ? hotValue : 0, color: hotColor },
+        { label: 'Cost-effective', value: Number.isFinite(coldValue) ? coldValue : 0, color: coldColor }
+    ].map(item => {
+        const length = total > 0 ? (item.value / total) * circumference : 0;
+        const segment = `
+            <circle
+                class="roc-donut-segment"
+                cx="60" cy="60" r="${radius}"
+                stroke="${item.color}"
+                stroke-dasharray="${length} ${circumference - length}"
+                stroke-dashoffset="${-offset}"
+            />
+        `;
+        offset += length;
+        return segment;
+    }).join('');
 
     container.innerHTML = `
         <div class="storage-tier-metrics">
             <div class="storage-tier-row">
                 <div class="storage-tier-chart">
-                    <div
-                        class="storage-tier-pie"
-                        role="img"
-                        aria-label="Storage tier distribution: Hot ${hotDisplay}, Cost-effective ${coldDisplay}"
-                        style="--hot-percent: ${hotWidth.toFixed(2)}%; --cold-percent: ${coldWidth.toFixed(2)}%;"
-                    ></div>
+                    <div class="roc-donut storage-tier-donut" role="img" aria-label="Storage tier distribution: Hot ${hotDisplay}, Cost-effective ${coldDisplay}">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="roc-donut-hole" cx="60" cy="60" r="30"></circle>
+                            <circle class="roc-donut-ring" cx="60" cy="60" r="${radius}"></circle>
+                            ${segments}
+                        </svg>
+                        <div class="roc-donut-center">
+                            <span class="roc-donut-value">${totalDisplay}</span>
+                            <span class="roc-donut-label">Total logs</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="metrics-group">
                     <div class="metric">
@@ -997,11 +1027,11 @@ function renderStorageTierDistribution(data) {
             </div>
             <div class="storage-tier-legend">
                 <div class="storage-tier-legend-item">
-                    <span class="storage-tier-legend-dot hot"></span>
+                    <span class="storage-tier-legend-dot hot" style="background: ${hotColor};"></span>
                     <span>Hot</span>
                 </div>
                 <div class="storage-tier-legend-item">
-                    <span class="storage-tier-legend-dot cold"></span>
+                    <span class="storage-tier-legend-dot cold" style="background: ${coldColor};"></span>
                     <span>Cost-effective</span>
                 </div>
             </div>
