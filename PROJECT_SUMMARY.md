@@ -47,6 +47,8 @@ Answers: "Is the SOC keeping up?"
 #### 3. SOC Telemetry Health Dashboard
 Answers: "Is Sentinel healthy?"
 - Ingestion volume by table
+- Detection coverage (assets + telemetry sources)
+- Storage tier distribution (hot vs cost-effective)
 - Tables with zero ingestion (alerts)
 
 #### 4. SOC Customer Dashboard
@@ -153,7 +155,7 @@ const CONFIG = {
 
 ---
 
-## 📋 17 Metrics Implemented
+## 📋 18 Metrics Implemented
 
 | Metric | File | Dashboard | Status |
 |--------|------|-----------|--------|
@@ -170,6 +172,7 @@ const CONFIG = {
 | Rule Firing | ruleFiringVolume.24h.json | Lead | ✅ Live |
 | Ingestion Volume | ingestionVolumeByTable.24h.json | Telemetry | ✅ Live |
 | Detection Coverage | detectionCoverage.latest.json | Telemetry | ✅ Live |
+| Storage Tier Distribution | storageTierDistribution.latest.json | Telemetry | ✅ Live |
 | Zero Ingestion | zeroIngestionTables.latest.json | Telemetry | ✅ Live |
 | Customer Incidents | customer_incidentsBySeverity.latest.json | Customer | ✅ Live |
 | Repeated Detections | repeatedDetections.7d.json | ROC | ✅ Live |

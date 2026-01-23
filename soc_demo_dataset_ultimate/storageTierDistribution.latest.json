@@ -1,0 +1,10 @@
+{
+  "metricName": "storageTierDistribution",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": {
+    "hotStoragePercent": 58.9,
+    "coldStoragePercent": 41.1,
+    "hotStorageGB": 1420,
+    "coldStorageGB": 990
+  }
+}

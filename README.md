@@ -32,6 +32,8 @@ Primary question: "Is the SOC keeping up?"
 Primary question: "Is Sentinel healthy?"
 
 - Ingestion volume by table (24h)
+- Detection coverage (critical assets + telemetry sources)
+- Storage tier distribution (hot vs cost-effective)
 - Tables with zero ingestion (alerts)
 
 #### 4. **Customer Dashboard**

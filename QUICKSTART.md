@@ -87,7 +87,7 @@ The current dashboard uses demo data from:
 ```
 
 This dataset contains:
-- ✅ 15 JSON metric files
+- ✅ 18 JSON metric files
 - ✅ Realistic SOC activity data
 - ✅ Some metrics marked as "not_implemented"
 - ✅ All required data fields
@@ -109,7 +109,8 @@ This dataset contains:
 ### Test 3: Monitor Telemetry Health
 1. Click "Telemetry Health" in sidebar
 2. Check ingestion volume table
-3. Look for zero-ingestion alerts (should show tables with no data)
+3. Review storage tier distribution (hot vs cost-effective)
+4. Look for zero-ingestion alerts (should show tables with no data)
 
 ### Test 4: Verify Empty States
 1. Click "ROC" in sidebar

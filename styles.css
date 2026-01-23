@@ -637,6 +637,73 @@ tbody tr:hover {
     margin-bottom: var(--spacing-md);
 }
 
+.storage-tier {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.storage-tier-row {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.storage-tier-chart {
+    width: 160px;
+    height: 160px;
+    flex: 0 0 auto;
+}
+
+.storage-tier-pie {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+        rgba(249, 115, 22, 0.95) 0% var(--hot-percent),
+        rgba(16, 185, 129, 0.95) var(--hot-percent) 100%
+    );
+    border: 1px solid var(--chart-track-border);
+    box-shadow: inset 0 0 0 8px rgba(15, 23, 42, 0.35);
+}
+
+.storage-tier-legend {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.storage-tier-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.storage-tier-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.storage-tier-legend-dot.hot {
+    background: rgba(249, 115, 22, 0.95);
+}
+
+.storage-tier-legend-dot.cold {
+    background: rgba(16, 185, 129, 0.95);
+}
+
+@media (max-width: 900px) {
+    .storage-tier-chart {
+        width: 140px;
+        height: 140px;
+    }
+}
+
 /* Dashboard Visibility */
 .dashboard {
     display: none;

@@ -82,6 +82,7 @@ This checklist validates that all requirements from the original specification h
 ### Metrics Implemented ✅
 - [x] Ingestion volume by table - Table with records and size
 - [x] Detection coverage - Percent of critical assets & telemetry sources covered
+- [x] Storage tier distribution - Hot vs cost-effective storage share
 - [x] Tables with zero ingestion - Alert list
 - [x] Warning states for zero ingestion tables
 - [x] Clear health indicators
@@ -95,6 +96,7 @@ This checklist validates that all requirements from the original specification h
 **Test Files**:
 - `detectionCoverage.latest.json`
 - `ingestionVolumeByTable.24h.json`
+- `storageTierDistribution.latest.json`
 - `zeroIngestionTables.latest.json`
 
 ---
@@ -394,6 +396,8 @@ This checklist validates that all requirements from the original specification h
 
 4. **Telemetry Health Dashboard**
    - [ ] Ingestion volume table displays
+   - [ ] Detection coverage metrics render
+   - [ ] Storage tier distribution renders (hot vs cost-effective)
    - [ ] Numbers are formatted with commas
    - [ ] MB values are reasonable
    - [ ] Zero ingestion alerts (if any) show in red

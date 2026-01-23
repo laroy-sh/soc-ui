@@ -132,6 +132,7 @@ async function loadAllData() {
             ruleFiringVolume,
             ingestionVolume,
             detectionCoverage,
+            storageTierDistribution,
             zeroIngestion,
             customerIncidents,
             repeatedDetections,
@@ -183,6 +184,7 @@ async function loadAllData() {
             fetchMetric('ruleFiringVolume.24h.json'),
             fetchMetric('ingestionVolumeByTable.24h.json'),
             fetchMetric('detectionCoverage.latest.json'),
+            fetchMetric('storageTierDistribution.latest.json'),
             fetchMetric('zeroIngestionTables.latest.json'),
             fetchMetric('customer_incidentsBySeverity.latest.json'),
             fetchMetric('repeatedDetections.7d.json'),
@@ -240,6 +242,7 @@ async function loadAllData() {
         // Render Telemetry Health Dashboard
         renderIngestionVolume(ingestionVolume);
         renderDetectionCoverage(detectionCoverage);
+        renderStorageTierDistribution(storageTierDistribution);
         renderZeroIngestionTables(zeroIngestion);
         
         // Render Customer Dashboard
@@ -776,6 +779,147 @@ function renderDetectionCoverage(data) {
         <div class="metric">
             <span class="metric-label">Telemetry sources</span>
             <span class="metric-value">${sourceDisplay}</span>
+        </div>
+    `;
+}
+
+function renderStorageTierDistribution(data) {
+    const container = document.getElementById('storageTierDistribution');
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        container.innerHTML = createEmptyState('No storage tier data available');
+        return;
+    }
+
+    const payload = data.data || {};
+    const parsePercent = value => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) ? numeric : null;
+    };
+
+    let hotValue = parsePercent(getScalarMetricValue(data, [
+        'hotPercent',
+        'hotStoragePercent',
+        'hotStoragePct',
+        'hotStoragePercentage',
+        'hotStorageShare',
+        'hotPercentOfLogs',
+        'hotPct'
+    ]));
+    let coldValue = parsePercent(getScalarMetricValue(data, [
+        'coldPercent',
+        'coldStoragePercent',
+        'coldStoragePct',
+        'coldStoragePercentage',
+        'coldStorageShare',
+        'coldPercentOfLogs',
+        'coldPct',
+        'costEffectiveStoragePercent',
+        'costEffectivePercent',
+        'costEffectivePct'
+    ]));
+
+    const tierEntries = Array.isArray(payload)
+        ? payload
+        : Array.isArray(payload.tiers)
+            ? payload.tiers
+            : Array.isArray(payload.storageTiers)
+                ? payload.storageTiers
+                : Array.isArray(payload.distribution)
+                    ? payload.distribution
+                    : Array.isArray(payload.tierDistribution)
+                        ? payload.tierDistribution
+                        : null;
+
+    if (tierEntries) {
+        tierEntries.forEach(entry => {
+            const name = String(entry.tier ?? entry.name ?? entry.storageTier ?? entry.label ?? '').toLowerCase();
+            const percentValue = parsePercent(entry.percent ?? entry.percentage ?? entry.pct ?? entry.value);
+            if (!Number.isFinite(hotValue) && name.includes('hot')) {
+                hotValue = percentValue;
+            }
+            if (!Number.isFinite(coldValue) && (name.includes('cold') || name.includes('cool') || name.includes('cost'))) {
+                coldValue = percentValue;
+            }
+        });
+    }
+
+    const hotVolume = parsePercent(payload.hotGB ?? payload.hotStorageGB ?? payload.hotVolumeGB ?? payload.hotStorageGiB);
+    const coldVolume = parsePercent(payload.coldGB ?? payload.coldStorageGB ?? payload.costEffectiveGB ?? payload.costEffectiveStorageGB ?? payload.coldStorageGiB ?? payload.costEffectiveStorageGiB);
+    const hotBytes = parsePercent(payload.hotBytes ?? payload.hotStorageBytes ?? payload.hotStorageSizeBytes);
+    const coldBytes = parsePercent(payload.coldBytes ?? payload.coldStorageBytes ?? payload.coldStorageSizeBytes ?? payload.costEffectiveBytes ?? payload.costEffectiveStorageBytes ?? payload.costEffectiveStorageSizeBytes);
+
+    if ((!Number.isFinite(hotValue) || !Number.isFinite(coldValue)) && Number.isFinite(hotVolume) && Number.isFinite(coldVolume)) {
+        const totalVolume = hotVolume + coldVolume;
+        if (totalVolume > 0) {
+            hotValue = (hotVolume / totalVolume) * 100;
+            coldValue = (coldVolume / totalVolume) * 100;
+        }
+    }
+
+    if ((!Number.isFinite(hotValue) || !Number.isFinite(coldValue)) && Number.isFinite(hotBytes) && Number.isFinite(coldBytes)) {
+        const totalBytes = hotBytes + coldBytes;
+        if (totalBytes > 0) {
+            hotValue = (hotBytes / totalBytes) * 100;
+            coldValue = (coldBytes / totalBytes) * 100;
+        }
+    }
+
+    if (Number.isFinite(hotValue) && !Number.isFinite(coldValue)) {
+        coldValue = Math.max(0, 100 - hotValue);
+    }
+    if (Number.isFinite(coldValue) && !Number.isFinite(hotValue)) {
+        hotValue = Math.max(0, 100 - coldValue);
+    }
+
+    if (!Number.isFinite(hotValue) && !Number.isFinite(coldValue)) {
+        container.innerHTML = createEmptyState('No storage tier data available');
+        return;
+    }
+
+    const total = (Number.isFinite(hotValue) ? hotValue : 0) + (Number.isFinite(coldValue) ? coldValue : 0);
+    const hotWidth = total > 0 && Number.isFinite(hotValue) ? (hotValue / total) * 100 : 0;
+    const coldWidth = total > 0 && Number.isFinite(coldValue) ? (coldValue / total) * 100 : 0;
+    const hotDisplay = Number.isFinite(hotValue)
+        ? `${formatNumber(hotValue, Number.isInteger(hotValue) ? 0 : 1)}%`
+        : '—';
+    const coldDisplay = Number.isFinite(coldValue)
+        ? `${formatNumber(coldValue, Number.isInteger(coldValue) ? 0 : 1)}%`
+        : '—';
+
+    container.innerHTML = `
+        <div class="storage-tier-metrics">
+            <div class="storage-tier-row">
+                <div class="storage-tier-chart">
+                    <div
+                        class="storage-tier-pie"
+                        role="img"
+                        aria-label="Storage tier distribution: Hot ${hotDisplay}, Cost-effective ${coldDisplay}"
+                        style="--hot-percent: ${hotWidth.toFixed(2)}%; --cold-percent: ${coldWidth.toFixed(2)}%;"
+                    ></div>
+                </div>
+                <div class="metrics-group">
+                    <div class="metric">
+                        <span class="metric-label">Hot storage</span>
+                        <span class="metric-value">${hotDisplay}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Cost-effective storage</span>
+                        <span class="metric-value">${coldDisplay}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="storage-tier-legend">
+                <div class="storage-tier-legend-item">
+                    <span class="storage-tier-legend-dot hot"></span>
+                    <span>Hot</span>
+                </div>
+                <div class="storage-tier-legend-item">
+                    <span class="storage-tier-legend-dot cold"></span>
+                    <span>Cost-effective</span>
+                </div>
+            </div>
         </div>
     `;
 }
