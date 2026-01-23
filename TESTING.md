@@ -53,6 +53,7 @@ This checklist validates that all requirements from the original specification h
 ## 3. SOC Lead Dashboard
 
 ### Metrics Implemented ✅
+- [x] MTTD - Median and P95 (formatted as time)
 - [x] MTTA - Median and P95 (formatted as time)
 - [x] MTTR - Median and P95 (formatted as time)
 - [x] Incident inflow (24h) - Line chart with area
@@ -68,6 +69,7 @@ This checklist validates that all requirements from the original specification h
 - [x] Ranked tables for rules
 
 **Test Files**:
+- `incidentDetectionTimings.latest.json`
 - `incidentTimings.latest.json`
 - `incidentInflow.24h.json`
 - `incidentClosureRate.24h.json`
@@ -234,7 +236,7 @@ This checklist validates that all requirements from the original specification h
 ## 11. Demo Dataset Integration
 
 ### Dataset Usage ✅
-- [x] All 15 JSON files recognized
+- [x] All 16 JSON files recognized
 - [x] Files read from soc_demo_dataset/
 - [x] Filenames not changed
 - [x] Realistic SOC activity rendered
@@ -247,6 +249,7 @@ This checklist validates that all requirements from the original specification h
 | customer_incidentsBySeverity.latest.json | Customer | ✅ |
 | incidentAging.latest.json | Analyst | ✅ |
 | incidentClosureRate.24h.json | Lead | ✅ |
+| incidentDetectionTimings.latest.json | Lead | ✅ |
 | incidentInflow.24h.json | Lead | ✅ |
 | incidentTimings.latest.json | Lead | ✅ |
 | ingestionVolumeByTable.24h.json | Telemetry | ✅ |

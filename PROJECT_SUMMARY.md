@@ -20,7 +20,7 @@ Successfully built a complete **SOC (Security Operations Center) and ROC (Risk O
 7. **[TESTING.md](TESTING.md)** - Complete testing checklist and validation
 
 ### Data
-8. **soc_demo_dataset/** - 15 JSON files with realistic demo data
+8. **soc_demo_dataset/** - 16 JSON files with realistic demo data
 
 ---
 
@@ -153,7 +153,7 @@ const CONFIG = {
 
 ---
 
-## 📋 15 Metrics Implemented
+## 📋 16 Metrics Implemented
 
 | Metric | File | Dashboard | Status |
 |--------|------|-----------|--------|
@@ -164,6 +164,7 @@ const CONFIG = {
 | Incident Aging | incidentAging.latest.json | Analyst | ✅ Live |
 | Top Entities | topEntities.latest.json | Analyst | ✅ Live |
 | Incident Timings | incidentTimings.latest.json | Lead | ✅ Live |
+| Incident Detection Timings | incidentDetectionTimings.latest.json | Lead | ✅ Live |
 | Incident Inflow | incidentInflow.24h.json | Lead | ✅ Live |
 | Incident Closure | incidentClosureRate.24h.json | Lead | ✅ Live |
 | Rule Firing | ruleFiringVolume.24h.json | Lead | ✅ Live |
@@ -272,12 +273,13 @@ const CONFIG = {
 ├── QUICKSTART.md           # Quick start guide
 ├── DEPLOYMENT.md           # Deployment guide
 ├── TESTING.md              # Test checklist
-└── soc_demo_dataset/       # Demo data (15 JSON files)
+└── soc_demo_dataset/       # Demo data (16 JSON files)
     ├── activeAlertsBySeverity.latest.json
     ├── businessRiskPosture.latest.json
     ├── customer_incidentsBySeverity.latest.json
     ├── incidentAging.latest.json
     ├── incidentClosureRate.24h.json
+    ├── incidentDetectionTimings.latest.json
     ├── incidentInflow.24h.json
     ├── incidentTimings.latest.json
     ├── ingestionVolumeByTable.24h.json

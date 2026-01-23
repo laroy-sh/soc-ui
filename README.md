@@ -205,6 +205,7 @@ SOC UI/
     ├── customer_incidentsBySeverity.latest.json
     ├── incidentAging.latest.json
     ├── incidentClosureRate.24h.json
+    ├── incidentDetectionTimings.latest.json
     ├── incidentInflow.24h.json
     ├── incidentTimings.latest.json
     ├── ingestionVolumeByTable.24h.json

@@ -1,0 +1,10 @@
+{
+  "metricName": "incidentDetectionTimings",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": {
+    "mttd": {
+      "medianMinutes": 18,
+      "p95Minutes": 60
+    }
+  }
+}

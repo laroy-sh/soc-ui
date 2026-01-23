@@ -123,6 +123,7 @@ async function loadAllData() {
             incidentAging,
             topEntities,
             incidentTimings,
+            incidentDetectionTimings,
             incidentInflow,
             incidentClosureRate,
             ruleFiringVolume,
@@ -168,6 +169,7 @@ async function loadAllData() {
             fetchMetric('incidentAging.latest.json'),
             fetchMetric('topEntities.latest.json'),
             fetchMetric('incidentTimings.latest.json'),
+            fetchMetric('incidentDetectionTimings.latest.json'),
             fetchMetric('incidentInflow.24h.json'),
             fetchMetric('incidentClosureRate.24h.json'),
             fetchMetric('ruleFiringVolume.24h.json'),
@@ -217,7 +219,7 @@ async function loadAllData() {
         renderRepeatedDetections(repeatedDetections);
         
         // Render SOC Lead Dashboard
-        renderIncidentTimings(incidentTimings);
+        renderIncidentTimings(incidentTimings, incidentDetectionTimings);
         renderLineChart('incidentInflow', incidentInflow);
         renderLineChart('incidentClosureRate', incidentClosureRate);
         renderRuleFiringVolume(ruleFiringVolume);
@@ -449,22 +451,31 @@ function renderTopEntities(data) {
     container.innerHTML = html;
 }
 
-function renderIncidentTimings(data) {
+function renderIncidentTimings(data, detectionData) {
     if (!data || data.status === 'not_implemented' || !data.data) {
         document.getElementById('mttaMedian').textContent = '—';
         document.getElementById('mttaP95').textContent = '—';
         document.getElementById('mttrMedian').textContent = '—';
         document.getElementById('mttrP95').textContent = '—';
+    } else {
+        const mtta = data.data.mtta || {};
+        const mttr = data.data.mttr || {};
+
+        document.getElementById('mttaMedian').textContent = formatMinutes(mtta.medianMinutes);
+        document.getElementById('mttaP95').textContent = formatMinutes(mtta.p95Minutes);
+        document.getElementById('mttrMedian').textContent = formatMinutes(mttr.medianMinutes);
+        document.getElementById('mttrP95').textContent = formatMinutes(mttr.p95Minutes);
+    }
+
+    if (!detectionData || detectionData.status === 'not_implemented' || !detectionData.data) {
+        document.getElementById('mttdMedian').textContent = '—';
+        document.getElementById('mttdP95').textContent = '—';
         return;
     }
-    
-    const mtta = data.data.mtta || {};
-    const mttr = data.data.mttr || {};
-    
-    document.getElementById('mttaMedian').textContent = formatMinutes(mtta.medianMinutes);
-    document.getElementById('mttaP95').textContent = formatMinutes(mtta.p95Minutes);
-    document.getElementById('mttrMedian').textContent = formatMinutes(mttr.medianMinutes);
-    document.getElementById('mttrP95').textContent = formatMinutes(mttr.p95Minutes);
+
+    const mttd = detectionData.data.mttd || {};
+    document.getElementById('mttdMedian').textContent = formatMinutes(mttd.medianMinutes);
+    document.getElementById('mttdP95').textContent = formatMinutes(mttd.p95Minutes);
 }
 
 function renderLineChart(elementId, data) {
