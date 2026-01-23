@@ -540,6 +540,26 @@ body {
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
+.ingestion-chart {
+    padding: var(--spacing-md);
+}
+
+.ingestion-chart .bar-label {
+    min-width: 160px;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ingestion-chart .bar-track {
+    height: 26px;
+}
+
+.ingestion-fill {
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.95) 0%, rgba(14, 116, 144, 0.9) 100%);
+}
+
 .repeated-detections-chart {
     gap: var(--spacing-sm);
 }

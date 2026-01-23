@@ -705,26 +705,43 @@ function renderIngestionVolume(data) {
         return;
     }
     
+    const items = data.data.map(item => {
+        const label = item.table || item.tableName || 'Unknown';
+        const gb = Number(item.ingestedGB ?? (item.sizeBytes ? item.sizeBytes / (1024 * 1024 * 1024) : 0));
+        return {
+            label: String(label),
+            gb: Number.isFinite(gb) ? gb : 0
+        };
+    }).sort((a, b) => b.gb - a.gb);
+
+    const maxVolume = Math.max(...items.map(item => item.gb), 0);
+
     const html = `
-        <table>
-            <thead>
-                <tr>
-                    <th>Table</th>
-                    <th>Ingested (GB)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${data.data.map(item => `
-                    <tr>
-                        <td>${escapeHtml(item.table || item.tableName || 'Unknown')}</td>
-                        <td>${formatNumber(item.ingestedGB || (item.sizeBytes ? item.sizeBytes / (1024 * 1024 * 1024) : 0), 2)}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
+        <div class="bar-chart ingestion-chart">
+            ${items.map(item => {
+                const width = maxVolume > 0 ? (item.gb / maxVolume) * 100 : 0;
+                const label = escapeHtml(item.label);
+                return `
+                    <div class="bar-item">
+                        <div class="bar-label" title="${label}">${label}</div>
+                        <div class="bar-track">
+                            <div class="bar-fill ingestion-fill" style="width: 0%;" data-width="${width}">
+                                <span class="bar-value">${formatNumber(item.gb, 2)} GB</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
     `;
-    
+
     container.innerHTML = html;
+
+    requestAnimationFrame(() => {
+        container.querySelectorAll('.ingestion-fill').forEach(fill => {
+            fill.style.width = `${fill.dataset.width}%`;
+        });
+    });
 }
 
 function renderCoveragePieChart(container, options) {
