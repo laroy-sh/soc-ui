@@ -13,6 +13,7 @@ let rocData = null;
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     initializeNavigation();
+    initializeFilterBar();
     initializeRocFilters();
     loadAllData();
     startAutoRefresh();
@@ -54,6 +55,7 @@ function switchDashboard(dashboardName) {
         'lead': 'SOC Lead Dashboard',
         'telemetry': 'SOC Telemetry Health Dashboard',
         'customer': 'SOC Customer Dashboard',
+        'outsourcer': 'Outsourcer Oversight SOC Dashboard',
         'roc': 'Risk Operations Center Dashboard',
         'essential8': 'Essential Eight Framework'
     };
@@ -109,6 +111,64 @@ function initializeRocFilters() {
         rocRangeDays = parseInt(rangeSelect.value, 10) || 30;
         renderRocDashboard();
     });
+}
+
+function initializeFilterBar() {
+    const filterInputs = Array.from(document.querySelectorAll('[data-filter-key]'));
+    if (filterInputs.length === 0) return;
+
+    const defaultValues = new Map();
+    filterInputs.forEach(input => {
+        defaultValues.set(input.dataset.filterKey, input.value);
+    });
+
+    const applyFiltersFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        filterInputs.forEach(input => {
+            const key = input.dataset.filterKey;
+            if (!key) return;
+            const value = params.get(key);
+            if (!value) return;
+            const hasOption = Array.from(input.options || []).some(option => option.value === value);
+            if (hasOption) {
+                input.value = value;
+            }
+        });
+    };
+
+    const updateUrlParam = (key, value) => {
+        const url = new URL(window.location.href);
+        const defaultValue = defaultValues.get(key);
+        if (!value || value === defaultValue) {
+            url.searchParams.delete(key);
+        } else {
+            url.searchParams.set(key, value);
+        }
+        history.replaceState(null, '', url);
+    };
+
+    filterInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            updateUrlParam(input.dataset.filterKey, input.value);
+        });
+    });
+
+    const resetButton = document.getElementById('filterReset');
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            filterInputs.forEach(input => {
+                const key = input.dataset.filterKey;
+                const defaultValue = defaultValues.get(key);
+                if (defaultValue !== undefined) {
+                    input.value = defaultValue;
+                    updateUrlParam(key, input.value);
+                }
+            });
+        });
+    }
+
+    applyFiltersFromUrl();
+    window.addEventListener('popstate', applyFiltersFromUrl);
 }
 
 // Data Loading
