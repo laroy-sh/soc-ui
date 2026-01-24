@@ -129,6 +129,7 @@ async function loadAllData() {
             alertEscalationRate,
             alertToIncidentRatio,
             falsePositiveRate,
+            benignPositiveRate,
             truePositiveRate,
             falseNegativeRate,
             alertsPerAnalystBySeverity,
@@ -184,6 +185,7 @@ async function loadAllData() {
             fetchMetric('alertEscalationRate.7d.json'),
             fetchMetric('alertToIncidentRatio.7d.json'),
             fetchMetric('falsePositiveRate.7d.json'),
+            fetchMetric('benignPositiveRate.7d.json'),
             fetchMetric('truePositiveRate.7d.json'),
             fetchMetric('falseNegativeRate.7d.json'),
             fetchMetric('alertsPerAnalystBySeverity.24h.json'),
@@ -243,6 +245,7 @@ async function loadAllData() {
         renderAlertEscalationRate(alertEscalationRate);
         renderAlertToIncidentRatio(alertToIncidentRatio);
         renderFalsePositiveRate(falsePositiveRate);
+        renderBenignPositiveRate(benignPositiveRate);
         renderTruePositiveRate(truePositiveRate);
         renderFalseNegativeRate(falseNegativeRate);
         renderAlertsPerAnalystBySeverity(alertsPerAnalystBySeverity);
@@ -2547,6 +2550,48 @@ function renderFalsePositiveRate(data) {
 
     if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
         container.innerHTML = createEmptyState('No false positive rate data available');
+        return;
+    }
+
+    const items = data.data;
+    const maxRate = Math.max(...items.map(item => item.rate || 0));
+    const avgRate = items.reduce((sum, item) => sum + (item.rate || 0), 0) / items.length;
+
+    const html = `
+        <div class="rate-trend-chart">
+            <div class="rate-summary">
+                <span class="rate-avg">7-Day Avg: <strong>${(avgRate * 100).toFixed(1)}%</strong></span>
+            </div>
+            <div class="rate-bars">
+                ${items.map(item => {
+                    const date = item.date ? new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }) : '';
+                    const rate = item.rate || 0;
+                    const heightPercent = maxRate > 0 ? (rate / maxRate) * 100 : 0;
+
+                    return `
+                        <div class="rate-bar-column">
+                            <div class="rate-bar-value">${(rate * 100).toFixed(0)}%</div>
+                            <div class="rate-bar-track">
+                                <div class="rate-bar-fill" style="height: ${heightPercent}%"></div>
+                            </div>
+                            <div class="rate-bar-label">${date}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+function renderBenignPositiveRate(data) {
+    const container = document.getElementById('benignPositiveRate');
+
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
+        container.innerHTML = createEmptyState('No benign positive rate data available');
         return;
     }
 
