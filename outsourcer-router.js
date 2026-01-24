@@ -1,6 +1,7 @@
 import { buildHomeView } from './pages/home.js';
 import { buildPrivilegedView } from './pages/privileged.js';
 import { buildChangeLedgerView } from './pages/changeLedger.js';
+import { buildMonitoringIntegrityView } from './pages/monitoringIntegrity.js';
 
 const drilldownTargets = [
     {
@@ -44,7 +45,7 @@ const routes = {
     '/monitoring-integrity': {
         title: 'Monitoring Integrity',
         subtitle: 'Audit plane continuity and provider telemetry gaps.',
-        content: () => buildStandardContent('Monitoring Integrity')
+        content: () => buildMonitoringIntegrityView()
     },
     '/ueba': {
         title: 'UEBA',
