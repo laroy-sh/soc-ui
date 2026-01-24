@@ -9,8 +9,11 @@ const defaultFilters = {
     severity: 'all'
 };
 
+const defaultSelectedTimeWindow = null;
+
 const appState = {
-    filters: { ...defaultFilters }
+    filters: { ...defaultFilters },
+    selectedTimeWindow: defaultSelectedTimeWindow
 };
 
 const listeners = new Set();
@@ -32,6 +35,20 @@ function readFiltersFromUrl() {
     return filters;
 }
 
+function readSelectedTimeWindowFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const startParam = params.get('windowStart');
+    const endParam = params.get('windowEnd');
+    const start = startParam ? Number.parseInt(startParam, 10) : null;
+    const end = endParam ? Number.parseInt(endParam, 10) : null;
+
+    if (Number.isNaN(start) || Number.isNaN(end) || start == null || end == null) {
+        return defaultSelectedTimeWindow;
+    }
+
+    return { start, end };
+}
+
 function syncUrlFilters() {
     const url = new URL(window.location.href);
     Object.entries(appState.filters).forEach(([key, value]) => {
@@ -41,17 +58,29 @@ function syncUrlFilters() {
             url.searchParams.set(key, value);
         }
     });
+
+    if (appState.selectedTimeWindow) {
+        url.searchParams.set('windowStart', appState.selectedTimeWindow.start);
+        url.searchParams.set('windowEnd', appState.selectedTimeWindow.end);
+    } else {
+        url.searchParams.delete('windowStart');
+        url.searchParams.delete('windowEnd');
+    }
     history.replaceState({}, '', url);
 }
 
 export function initStateFromUrl() {
     appState.filters = readFiltersFromUrl();
+    appState.selectedTimeWindow = readSelectedTimeWindowFromUrl();
     notify();
 }
 
 export function getAppState() {
     return {
-        filters: { ...appState.filters }
+        filters: { ...appState.filters },
+        selectedTimeWindow: appState.selectedTimeWindow
+            ? { ...appState.selectedTimeWindow }
+            : defaultSelectedTimeWindow
     };
 }
 
@@ -66,6 +95,20 @@ export function setFilter(key, value) {
 
 export function resetFilters() {
     appState.filters = { ...defaultFilters };
+    appState.selectedTimeWindow = defaultSelectedTimeWindow;
+    syncUrlFilters();
+    notify();
+}
+
+export function setSelectedTimeWindow(window) {
+    if (!window || window.start == null || window.end == null) {
+        appState.selectedTimeWindow = defaultSelectedTimeWindow;
+    } else {
+        appState.selectedTimeWindow = {
+            start: window.start,
+            end: window.end
+        };
+    }
     syncUrlFilters();
     notify();
 }
@@ -77,5 +120,6 @@ export function onStateChange(listener) {
 
 window.addEventListener('popstate', () => {
     appState.filters = readFiltersFromUrl();
+    appState.selectedTimeWindow = readSelectedTimeWindowFromUrl();
     notify();
 });

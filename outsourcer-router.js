@@ -1,3 +1,5 @@
+import { buildHomeView } from './pages/home.js';
+
 const drilldownTargets = [
     {
         path: '/drilldown/operator-timeline',
@@ -25,7 +27,7 @@ const routes = {
     '/home': {
         title: 'Outsourcer Oversight SOC Dashboard',
         subtitle: 'Identity-first monitoring of outsourced privileged behavior.',
-        content: () => buildStandardContent('Home Control Surface')
+        content: () => buildHomeView()
     },
     '/privileged': {
         title: 'Privileged Access',
@@ -191,7 +193,15 @@ function renderRoute(routePath) {
     }
 
     if (view) {
-        view.innerHTML = route.content();
+        const content = route.content();
+        if (typeof content === 'string') {
+            view.innerHTML = content;
+        } else if (content instanceof Node) {
+            view.innerHTML = '';
+            view.appendChild(content);
+        } else {
+            view.innerHTML = '';
+        }
     }
 
     updateNavActive(routePath in routes ? routePath : '/home');
