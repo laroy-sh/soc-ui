@@ -140,6 +140,7 @@ async function loadAllData() {
             detectionCoverage,
             storageTierDistribution,
             zeroIngestion,
+            siemCostEffectiveness,
             customerIncidents,
             repeatedDetections,
             rocRiskScore,
@@ -198,6 +199,7 @@ async function loadAllData() {
             fetchMetric('detectionCoverage.latest.json'),
             fetchMetric('storageTierDistribution.latest.json'),
             fetchMetric('zeroIngestionTables.latest.json'),
+            fetchMetric('siemCostEffectiveness.latest.json'),
             fetchMetric('customer_incidentsBySeverity.latest.json'),
             fetchMetric('repeatedDetections.7d.json'),
             fetchMetric('riskScore.30d.json'),
@@ -264,6 +266,7 @@ async function loadAllData() {
         renderZeroIngestionTables(zeroIngestion);
         renderAlertNoiseTrend(alertNoiseTrend);
         renderAlertVolumeComparison(alertNoiseTrend, alertVolumeBaseline);
+        renderSiemCostEffectiveness(siemCostEffectiveness);
         
         // Render Customer Dashboard
         renderBarChart('customerIncidentsBySeverity', customerIncidents, 'severity');
@@ -1239,6 +1242,83 @@ function renderStorageTierDistribution(data) {
             </div>
         </div>
     `;
+}
+
+function renderSiemCostEffectiveness(data) {
+    const container = document.getElementById('siemCostEffectiveness');
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        container.innerHTML = createEmptyState('No SIEM cost effectiveness data available');
+        return;
+    }
+
+    const payload = data.data || {};
+    const toNumber = value => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) ? numeric : null;
+    };
+    const formatCost = (value, decimals = 0) => {
+        if (value === null || value === undefined) return '—';
+        return value.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    };
+    const formatCostAuto = value => {
+        if (value === null || value === undefined) return '—';
+        const decimals = value < 10 ? 2 : value < 100 ? 1 : 0;
+        return formatCost(value, decimals);
+    };
+
+    const totalCost = toNumber(payload.totalCostUSD ?? payload.totalCost ?? payload.costUSD ?? payload.cost ?? payload.spendUSD ?? payload.spend);
+    const totalAlerts = toNumber(payload.totalAlerts ?? payload.alerts ?? payload.alertCount ?? payload.alertsCount);
+    const totalIncidents = toNumber(payload.totalIncidents ?? payload.incidents ?? payload.incidentCount ?? payload.incidentsCount);
+    const ingestedGB = toNumber(payload.ingestedGB ?? payload.totalIngestedGB ?? payload.ingestionGB ?? payload.ingestionVolumeGB);
+
+    const costPerAlert = toNumber(payload.costPerAlert ?? (totalCost !== null && totalAlerts ? totalCost / totalAlerts : null));
+    const costPerIncident = toNumber(payload.costPerIncident ?? (totalCost !== null && totalIncidents ? totalCost / totalIncidents : null));
+    const costPerGB = toNumber(payload.costPerGB ?? (totalCost !== null && ingestedGB ? totalCost / ingestedGB : null));
+
+    const periodLabel = payload.periodLabel
+        || (payload.periodStart && payload.periodEnd
+            ? `${new Date(payload.periodStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${new Date(payload.periodEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+            : 'Last 24h');
+
+    const html = `
+        <div class="cost-effectiveness-summary">
+            <div>
+                <div class="cost-primary">${formatCostAuto(costPerAlert)}</div>
+                <div class="cost-primary-label">Cost per alert</div>
+            </div>
+            <div class="cost-meta">
+                <span>${escapeHtml(periodLabel)}</span>
+                <span>${totalCost === null ? '—' : `${formatCurrency(totalCost)} total`}</span>
+            </div>
+        </div>
+        <div class="cost-effectiveness-grid">
+            <div class="metric">
+                <span class="metric-label">Cost per incident</span>
+                <span class="metric-value">${formatCostAuto(costPerIncident)}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Alerts</span>
+                <span class="metric-value">${totalAlerts === null ? '—' : formatNumber(totalAlerts)}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Incidents</span>
+                <span class="metric-value">${totalIncidents === null ? '—' : formatNumber(totalIncidents)}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Cost per GB</span>
+                <span class="metric-value">${formatCostAuto(costPerGB)}</span>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
 }
 
 function getCoverageStatus(value) {

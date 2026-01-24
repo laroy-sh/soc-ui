@@ -1,0 +1,14 @@
+{
+  "metricName": "siemCostEffectiveness",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": {
+    "periodLabel": "Last 24h",
+    "totalCostUSD": 18450,
+    "totalAlerts": 12680,
+    "totalIncidents": 134,
+    "ingestedGB": 410,
+    "costPerAlert": 1.46,
+    "costPerIncident": 137.7,
+    "costPerGB": 45.0
+  }
+}

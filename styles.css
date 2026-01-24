@@ -426,6 +426,48 @@ body {
     color: var(--text-secondary);
 }
 
+.cost-effectiveness {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+.cost-effectiveness-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--spacing-md);
+}
+
+.cost-primary {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.cost-primary-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.cost-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: right;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.cost-effectiveness-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-lg);
+}
+
 .coverage-good .coverage-value {
     color: var(--severity-low);
 }
@@ -2256,6 +2298,19 @@ tbody tr:hover {
     .sla-row-status {
         align-items: flex-start;
         text-align: left;
+    }
+
+    .cost-effectiveness-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cost-meta {
+        text-align: left;
+    }
+
+    .cost-effectiveness-grid {
+        grid-template-columns: 1fr;
     }
 
     .customer-grid {
