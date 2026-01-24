@@ -390,6 +390,42 @@ body {
     color: var(--text-primary);
 }
 
+.conversion-container {
+    padding: var(--spacing-md);
+}
+
+.conversion-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.conversion-metrics {
+    align-items: flex-start;
+}
+
+.conversion-value {
+    color: var(--accent);
+}
+
+.conversion-footnote {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.conversion-footnote.positive {
+    color: var(--severity-low);
+}
+
+.conversion-footnote.negative {
+    color: var(--severity-high);
+}
+
+.conversion-footnote.muted {
+    color: var(--text-secondary);
+}
+
 .coverage-good .coverage-value {
     color: var(--severity-low);
 }

@@ -1,0 +1,13 @@
+{
+  "metricName": "alertToIncidentRatio",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "window": "7d",
+  "data": {
+    "alerts": 9840,
+    "incidents": 1890,
+    "ratio": 0.192,
+    "priorRatio": 0.205,
+    "windowStart": "2026-01-13T00:00:00Z",
+    "windowEnd": "2026-01-19T23:59:59Z"
+  }
+}

@@ -127,6 +127,7 @@ async function loadAllData() {
             incidentInflow,
             incidentClosureRate,
             alertEscalationRate,
+            alertToIncidentRatio,
             falsePositiveRate,
             falseNegativeRate,
             alertsPerAnalystBySeverity,
@@ -180,6 +181,7 @@ async function loadAllData() {
             fetchMetric('incidentInflow.24h.json'),
             fetchMetric('incidentClosureRate.24h.json'),
             fetchMetric('alertEscalationRate.7d.json'),
+            fetchMetric('alertToIncidentRatio.7d.json'),
             fetchMetric('falsePositiveRate.7d.json'),
             fetchMetric('falseNegativeRate.7d.json'),
             fetchMetric('alertsPerAnalystBySeverity.24h.json'),
@@ -237,6 +239,7 @@ async function loadAllData() {
         renderLineChart('incidentInflow', incidentInflow);
         renderLineChart('incidentClosureRate', incidentClosureRate);
         renderAlertEscalationRate(alertEscalationRate);
+        renderAlertToIncidentRatio(alertToIncidentRatio);
         renderFalsePositiveRate(falsePositiveRate);
         renderFalseNegativeRate(falseNegativeRate);
         renderAlertsPerAnalystBySeverity(alertsPerAnalystBySeverity);
@@ -2443,6 +2446,56 @@ function renderCustomerAlertToIncidentRate(data) {
         </div>
     `;
     
+    container.innerHTML = html;
+}
+
+function renderAlertToIncidentRatio(data) {
+    const container = document.getElementById('alertToIncidentRatio');
+
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        container.innerHTML = createEmptyState('No alert-to-incident ratio data available');
+        return;
+    }
+
+    const payload = Array.isArray(data.data) ? data.data[0] : data.data;
+    const alerts = payload.alerts ?? payload.totalAlerts ?? payload.alertCount ?? payload.alertsCount ?? payload.Alerts ?? payload.AlertCount ?? null;
+    const incidents = payload.incidents ?? payload.totalIncidents ?? payload.incidentCount ?? payload.incidentsCount ?? payload.Incidents ?? payload.IncidentCount ?? null;
+    let ratio = payload.ratio ?? payload.conversionRate ?? payload.alertToIncidentRatio ?? null;
+
+    if ((ratio === null || ratio === undefined) && alerts !== null && incidents !== null) {
+        ratio = alerts > 0 ? incidents / alerts : 0;
+    }
+
+    const priorRatio = payload.priorRatio ?? payload.previousRatio ?? payload.baselineRatio ?? null;
+    const delta = ratio !== null && priorRatio !== null ? ratio - priorRatio : null;
+    const deltaText = delta === null
+        ? (alerts !== null && incidents ? `1 incident per ${formatNumber(Math.round(alerts / incidents))} alerts` : '—')
+        : `${delta >= 0 ? 'Up' : 'Down'} ${formatNumber(Math.abs(delta) * 100, 1)} pts vs prior`;
+    const deltaClass = delta === null ? 'muted' : (delta >= 0 ? 'positive' : 'negative');
+    const ratioDisplay = ratio === null ? '—' : `${formatNumber(ratio * 100, 1)}%`;
+
+    const html = `
+        <div class="conversion-summary">
+            <div class="metrics-group conversion-metrics">
+                <div class="metric conversion-primary">
+                    <span class="metric-label">Conversion</span>
+                    <span class="metric-value conversion-value">${ratioDisplay}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Alerts</span>
+                    <span class="metric-value">${alerts === null ? '—' : formatNumber(alerts)}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Incidents</span>
+                    <span class="metric-value">${incidents === null ? '—' : formatNumber(incidents)}</span>
+                </div>
+            </div>
+            <div class="conversion-footnote ${deltaClass}">${deltaText}</div>
+        </div>
+    `;
+
     container.innerHTML = html;
 }
 
