@@ -65,6 +65,16 @@ a {
     margin-top: 4px;
 }
 
+.brand {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brand:hover p {
+    color: var(--text);
+}
+
 .nav {
     margin-top: 24px;
     display: flex;
