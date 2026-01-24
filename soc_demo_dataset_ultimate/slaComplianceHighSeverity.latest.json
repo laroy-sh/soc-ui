@@ -1,0 +1,22 @@
+{
+  "metricName": "slaComplianceHighSeverity",
+  "generatedAt": "2026-01-19T10:15:00Z",
+  "data": {
+    "severity": "High",
+    "windowHours": 24,
+    "sampleSize": 44,
+    "overallComplianceRate": 0.935,
+    "mtta": {
+      "medianMinutes": 8,
+      "p95Minutes": 25,
+      "slaMinutes": 30,
+      "withinTargetRate": 0.96
+    },
+    "mttr": {
+      "medianMinutes": 92,
+      "p95Minutes": 210,
+      "slaMinutes": 240,
+      "withinTargetRate": 0.91
+    }
+  }
+}

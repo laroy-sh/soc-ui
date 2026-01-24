@@ -124,6 +124,7 @@ async function loadAllData() {
             topEntities,
             incidentTimings,
             incidentDetectionTimings,
+            slaComplianceHighSeverity,
             incidentInflow,
             incidentClosureRate,
             alertEscalationRate,
@@ -181,6 +182,7 @@ async function loadAllData() {
             fetchMetric('topEntities.latest.json'),
             fetchMetric('incidentTimings.latest.json'),
             fetchMetric('incidentDetectionTimings.latest.json'),
+            fetchMetric('slaComplianceHighSeverity.latest.json'),
             fetchMetric('incidentInflow.24h.json'),
             fetchMetric('incidentClosureRate.24h.json'),
             fetchMetric('alertEscalationRate.7d.json'),
@@ -242,6 +244,7 @@ async function loadAllData() {
         
         // Render SOC Lead Dashboard
         renderIncidentTimings(incidentTimings, incidentDetectionTimings);
+        renderSlaComplianceHighSeverity(slaComplianceHighSeverity);
         renderLineChart('incidentInflow', incidentInflow);
         renderLineChart('incidentClosureRate', incidentClosureRate);
         renderAlertEscalationRate(alertEscalationRate);
@@ -509,6 +512,108 @@ function renderIncidentTimings(data, detectionData) {
     const mttd = detectionData.data.mttd || {};
     document.getElementById('mttdMedian').textContent = formatMinutes(mttd.medianMinutes);
     document.getElementById('mttdP95').textContent = formatMinutes(mttd.p95Minutes);
+}
+
+function renderSlaComplianceHighSeverity(data) {
+    const container = document.getElementById('slaComplianceHighSeverity');
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !data.data) {
+        container.innerHTML = createEmptyState('No high severity SLA compliance data available');
+        return;
+    }
+
+    const payload = data.data || {};
+    const severity = payload.severity || payload.severityLevel || 'High';
+    const windowLabel = payload.windowLabel
+        || (payload.windowHours ? `Last ${payload.windowHours}h` : (payload.window || 'Last 24h'));
+    const sampleSize = payload.sampleSize ?? payload.totalAlerts ?? payload.alerts ?? payload.count ?? null;
+
+    const mtta = payload.mtta || {};
+    const mttr = payload.mttr || {};
+
+    const mttaActual = mtta.p95Minutes ?? mtta.p95 ?? mtta.medianMinutes ?? mtta.median ?? null;
+    const mttaMedian = mtta.medianMinutes ?? mtta.median ?? null;
+    const mttaTarget = mtta.slaMinutes ?? mtta.slaThresholdMinutes ?? mtta.targetMinutes ?? null;
+    const mttaWithinRate = mtta.withinTargetRate ?? mtta.withinSlaRate ?? null;
+
+    const mttrActual = mttr.p95Minutes ?? mttr.p95 ?? mttr.medianMinutes ?? mttr.median ?? null;
+    const mttrMedian = mttr.medianMinutes ?? mttr.median ?? null;
+    const mttrTarget = mttr.slaMinutes ?? mttr.slaThresholdMinutes ?? mttr.targetMinutes ?? null;
+    const mttrWithinRate = mttr.withinTargetRate ?? mttr.withinSlaRate ?? null;
+
+    let overallRate = payload.overallComplianceRate ?? payload.overallRate ?? null;
+    if (overallRate === null || overallRate === undefined) {
+        const rates = [mttaWithinRate, mttrWithinRate].filter(value => value !== null && value !== undefined);
+        if (rates.length > 0) {
+            overallRate = rates.reduce((sum, value) => sum + value, 0) / rates.length;
+        }
+    }
+    if ((overallRate === null || overallRate === undefined)
+        && mttaActual !== null && mttaTarget !== null
+        && mttrActual !== null && mttrTarget !== null) {
+        overallRate = (mttaActual <= mttaTarget && mttrActual <= mttrTarget) ? 1 : 0;
+    }
+
+    const rateDisplay = overallRate === null || overallRate === undefined
+        ? '—'
+        : `${formatNumber(overallRate * 100, 1)}%`;
+    const progressWidth = overallRate === null || overallRate === undefined
+        ? 0
+        : Math.min(100, Math.max(0, overallRate * 100));
+
+    const getSlaStatus = (actual, target) => {
+        if (actual === null || target === null) {
+            return { label: 'No SLA target', className: 'sla-status-unknown' };
+        }
+        return actual <= target
+            ? { label: 'Within SLA', className: 'sla-status-good' }
+            : { label: 'Breach', className: 'sla-status-bad' };
+    };
+
+    const buildRow = (title, actual, target, median, status, withinRate) => {
+        const detail = `P95 ${formatMinutes(actual)} / SLA ${formatMinutes(target)}`;
+        const medianText = `Median ${formatMinutes(median)}`;
+        const withinText = withinRate === null || withinRate === undefined
+            ? '—'
+            : `${formatNumber(withinRate * 100, 0)}% within`;
+
+        return `
+            <div class="sla-row">
+                <div>
+                    <div class="sla-row-title">${title}</div>
+                    <div class="sla-row-detail">${detail}</div>
+                    <div class="sla-row-sub">${medianText}</div>
+                </div>
+                <div class="sla-row-status ${status.className}">
+                    <span class="sla-status-label">${status.label}</span>
+                    <span class="sla-status-detail">${withinText}</span>
+                </div>
+            </div>
+        `;
+    };
+
+    const html = `
+        <div class="sla-compliance-summary">
+            <div>
+                <div class="sla-rate">${rateDisplay}</div>
+                <div class="sla-label">${escapeHtml(severity)} severity within SLA</div>
+            </div>
+            <div class="sla-summary-meta">
+                <span>${escapeHtml(windowLabel)}</span>
+                <span>${sampleSize === null ? '—' : `${formatNumber(sampleSize)} alerts`}</span>
+            </div>
+        </div>
+        <div class="sla-progress">
+            <div class="sla-progress-bar" style="width: ${progressWidth}%"></div>
+        </div>
+        <div class="sla-rows">
+            ${buildRow('MTTA', mttaActual, mttaTarget, mttaMedian, getSlaStatus(mttaActual, mttaTarget), mttaWithinRate)}
+            ${buildRow('MTTR', mttrActual, mttrTarget, mttrMedian, getSlaStatus(mttrActual, mttrTarget), mttrWithinRate)}
+        </div>
+    `;
+
+    container.innerHTML = html;
 }
 
 function renderLineChart(elementId, data) {
