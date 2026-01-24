@@ -2,6 +2,7 @@ import { buildHomeView } from './pages/home.js';
 import { buildPrivilegedView } from './pages/privileged.js';
 import { buildChangeLedgerView } from './pages/changeLedger.js';
 import { buildMonitoringIntegrityView } from './pages/monitoringIntegrity.js';
+import { buildUebaView } from './pages/ueba.js';
 
 const drilldownTargets = [
     {
@@ -50,7 +51,7 @@ const routes = {
     '/ueba': {
         title: 'UEBA',
         subtitle: 'Operator-centric anomaly patterns across providers.',
-        content: () => buildStandardContent('Operator Behavior Signals')
+        content: () => buildUebaView()
     },
     '/blast-radius': {
         title: 'Blast Radius',
