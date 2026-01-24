@@ -1,4 +1,5 @@
 import { buildHomeView } from './pages/home.js';
+import { buildPrivilegedView } from './pages/privileged.js';
 
 const drilldownTargets = [
     {
@@ -32,7 +33,7 @@ const routes = {
     '/privileged': {
         title: 'Privileged Access',
         subtitle: 'Monitor outsourced privileged behavior and deviations from baseline.',
-        content: () => buildStandardContent('Privileged Oversight')
+        content: () => buildPrivilegedView()
     },
     '/change-ledger': {
         title: 'Change Ledger',
