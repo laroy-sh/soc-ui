@@ -623,11 +623,22 @@ td {
     color: var(--text-primary);
 }
 
+.table-numeric {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
 tr:last-child td {
     border-bottom: none;
 }
 
 tbody tr:hover {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.table-total td {
+    font-weight: 600;
+    color: var(--text-primary);
     background: rgba(99, 102, 241, 0.08);
 }
 

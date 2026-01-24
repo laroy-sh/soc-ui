@@ -129,6 +129,7 @@ async function loadAllData() {
             alertEscalationRate,
             falsePositiveRate,
             falseNegativeRate,
+            alertsPerAnalystBySeverity,
             ruleFiringVolume,
             ingestionVolume,
             detectionCoverage,
@@ -181,6 +182,7 @@ async function loadAllData() {
             fetchMetric('alertEscalationRate.7d.json'),
             fetchMetric('falsePositiveRate.7d.json'),
             fetchMetric('falseNegativeRate.7d.json'),
+            fetchMetric('alertsPerAnalystBySeverity.24h.json'),
             fetchMetric('ruleFiringVolume.24h.json'),
             fetchMetric('ingestionVolumeByTable.24h.json'),
             fetchMetric('detectionCoverage.latest.json'),
@@ -237,6 +239,7 @@ async function loadAllData() {
         renderAlertEscalationRate(alertEscalationRate);
         renderFalsePositiveRate(falsePositiveRate);
         renderFalseNegativeRate(falseNegativeRate);
+        renderAlertsPerAnalystBySeverity(alertsPerAnalystBySeverity);
         renderRuleFiringVolume(ruleFiringVolume);
         
         // Render Telemetry Health Dashboard
@@ -694,6 +697,71 @@ function renderRuleFiringVolume(data) {
         </table>
     `;
     
+    container.innerHTML = html;
+}
+
+function renderAlertsPerAnalystBySeverity(data) {
+    const container = document.getElementById('alertsPerAnalystBySeverity');
+    if (!container) return;
+
+    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
+        container.innerHTML = createEmptyState('No analyst alert data available');
+        return;
+    }
+
+    const severityOrder = Array.isArray(data.severityOrder)
+        ? data.severityOrder
+        : ['Critical', 'High', 'Medium', 'Low', 'Informational'];
+
+    const sample = data.data[0] || {};
+    const reservedKeys = new Set(['analyst', 'analystName', 'name', 'user']);
+    const severityKeys = severityOrder.filter(key => Object.prototype.hasOwnProperty.call(sample, key));
+    const extraKeys = Object.keys(sample).filter(key => !reservedKeys.has(key) && !severityOrder.includes(key));
+    const severities = [...severityKeys, ...extraKeys];
+
+    if (severities.length === 0) {
+        container.innerHTML = createEmptyState('No severity breakdown available');
+        return;
+    }
+
+    const rows = data.data.map(item => {
+        const analyst = item.analyst || item.analystName || item.name || item.user || 'Unknown';
+        const counts = severities.map(severity => Number(item[severity] ?? 0));
+        const total = counts.reduce((sum, value) => sum + value, 0);
+        return { analyst, counts, total };
+    });
+
+    const totalsBySeverity = severities.map((_, index) =>
+        rows.reduce((sum, row) => sum + (row.counts[index] || 0), 0)
+    );
+    const grandTotal = totalsBySeverity.reduce((sum, value) => sum + value, 0);
+
+    const html = `
+        <table class="alerts-analyst-table">
+            <thead>
+                <tr>
+                    <th>Analyst</th>
+                    ${severities.map(severity => `<th class="table-numeric">${severity}</th>`).join('')}
+                    <th class="table-numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map(row => `
+                    <tr>
+                        <td>${escapeHtml(row.analyst)}</td>
+                        ${row.counts.map(count => `<td class="table-numeric">${formatNumber(count)}</td>`).join('')}
+                        <td class="table-numeric">${formatNumber(row.total)}</td>
+                    </tr>
+                `).join('')}
+                <tr class="table-total">
+                    <td>Total</td>
+                    ${totalsBySeverity.map(total => `<td class="table-numeric">${formatNumber(total)}</td>`).join('')}
+                    <td class="table-numeric">${formatNumber(grandTotal)}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+
     container.innerHTML = html;
 }
 
