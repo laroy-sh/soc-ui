@@ -1415,6 +1415,67 @@ a {
     box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.18), var(--shadow);
 }
 
+.blast-shell {
+    display: grid;
+    gap: 18px;
+}
+
+.blast-banner {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.18), rgba(15, 23, 42, 0.85));
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: 0 0 24px rgba(248, 113, 113, 0.2), var(--shadow);
+    display: grid;
+    gap: 8px;
+}
+
+.blast-banner h3 {
+    font-size: 18px;
+}
+
+.blast-banner p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.blast-banner-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.blast-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
+.blast-tiles {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.action-tag--danger {
+    border-color: rgba(248, 113, 113, 0.5);
+    background: rgba(248, 113, 113, 0.16);
+    color: var(--danger);
+}
+
+.action-tag--warning {
+    border-color: rgba(251, 191, 36, 0.45);
+    background: rgba(251, 191, 36, 0.16);
+    color: var(--provider);
+}
+
+@media (max-width: 1100px) {
+    .blast-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .monitoring-card-header {
     display: flex;
     justify-content: space-between;

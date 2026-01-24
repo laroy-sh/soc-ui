@@ -3,6 +3,7 @@ import { buildPrivilegedView } from './pages/privileged.js';
 import { buildChangeLedgerView } from './pages/changeLedger.js';
 import { buildMonitoringIntegrityView } from './pages/monitoringIntegrity.js';
 import { buildUebaView } from './pages/ueba.js';
+import { buildBlastRadiusView } from './pages/blastRadius.js';
 
 const drilldownTargets = [
     {
@@ -56,7 +57,7 @@ const routes = {
     '/blast-radius': {
         title: 'Blast Radius',
         subtitle: 'Control drift and impact surface of provider actions.',
-        content: () => buildStandardContent('Blast Radius Scope')
+        content: () => buildBlastRadiusView()
     },
     '/evidence-export': {
         title: 'Evidence Export',
