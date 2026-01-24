@@ -1,5 +1,6 @@
 import { buildHomeView } from './pages/home.js';
 import { buildPrivilegedView } from './pages/privileged.js';
+import { buildChangeLedgerView } from './pages/changeLedger.js';
 
 const drilldownTargets = [
     {
@@ -38,7 +39,7 @@ const routes = {
     '/change-ledger': {
         title: 'Change Ledger',
         subtitle: 'Security-impacting changes and loss-of-control signals.',
-        content: () => buildStandardContent('Change Risk Ledger')
+        content: () => buildChangeLedgerView()
     },
     '/monitoring-integrity': {
         title: 'Monitoring Integrity',
