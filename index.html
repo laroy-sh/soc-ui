@@ -114,46 +114,67 @@
             <!-- SOC Lead Dashboard -->
             <div id="dashboard-lead" class="dashboard">
                 <div class="grid">
-                    <!-- MTTD -->
-                    <div class="card">
-                        <h3>MTTD (Mean Time to Detect)</h3>
-                        <div class="metrics-group">
-                            <div class="metric">
-                                <span class="metric-label">Median</span>
-                                <span class="metric-value" id="mttdMedian">—</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label">P95</span>
-                                <span class="metric-value" id="mttdP95">—</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- MTTA/MTTR -->
-                    <div class="card">
-                        <h3>MTTA (Mean Time to Acknowledge)</h3>
-                        <div class="metrics-group">
-                            <div class="metric">
-                                <span class="metric-label">Median</span>
-                                <span class="metric-value" id="mttaMedian">—</span>
+                    <!-- SOC Performance Metrics (MTTD, MTTA, MTTR) -->
+                    <div class="card card-span-3">
+                        <h3>SOC Performance Metrics (24h)</h3>
+                        <div class="metrics-dashboard-row">
+                            <!-- MTTD -->
+                            <div class="metric-section">
+                                <div class="metric-header">
+                                    <h4>MTTD</h4>
+                                    <span class="metric-desc">Mean Time to Detect</span>
+                                </div>
+                                <div class="metric-values">
+                                    <div class="metric-box">
+                                        <span class="metric-label">Median</span>
+                                        <span class="metric-value-highlight" id="mttdMedian">—</span>
+                                    </div>
+                                    <div class="metric-box">
+                                        <span class="metric-label">P95</span>
+                                        <span class="metric-value-sub" id="mttdP95">—</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="metric">
-                                <span class="metric-label">P95</span>
-                                <span class="metric-value" id="mttaP95">—</span>
-                            </div>
-                        </div>
-                    </div>
+                            
+                            <div class="metric-separator"></div>
 
-                    <div class="card">
-                        <h3>MTTR (Mean Time to Resolve)</h3>
-                        <div class="metrics-group">
-                            <div class="metric">
-                                <span class="metric-label">Median</span>
-                                <span class="metric-value" id="mttrMedian">—</span>
+                            <!-- MTTA -->
+                            <div class="metric-section">
+                                <div class="metric-header">
+                                    <h4>MTTA</h4>
+                                    <span class="metric-desc">Mean Time to Acknowledge</span>
+                                </div>
+                                <div class="metric-values">
+                                    <div class="metric-box">
+                                        <span class="metric-label">Median</span>
+                                        <span class="metric-value-highlight" id="mttaMedian">—</span>
+                                    </div>
+                                    <div class="metric-box">
+                                        <span class="metric-label">P95</span>
+                                        <span class="metric-value-sub" id="mttaP95">—</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="metric">
-                                <span class="metric-label">P95</span>
-                                <span class="metric-value" id="mttrP95">—</span>
+
+                            <div class="metric-separator"></div>
+
+                            <!-- MTTR -->
+                            <div class="metric-section">
+                                <div class="metric-header">
+                                    <h4>MTTR</h4>
+                                    <span class="metric-desc">Mean Time to Resolve</span>
+                                </div>
+                                <div class="metric-values">
+                                    <div class="metric-box">
+                                        <span class="metric-label">Median</span>
+                                        <span class="metric-value-highlight" id="mttrMedian">—</span>
+                                    </div>
+                                    <div class="metric-box">
+                                        <span class="metric-label">P95</span>
+                                        <span class="metric-value-sub" id="mttrP95">—</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
