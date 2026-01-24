@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outsourcer Oversight SOC Dashboard</title>
+    <link rel="stylesheet" href="outsourcer.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>MBCTG</h1>
+                <p>Outsourcer Oversight</p>
+            </div>
+            <nav class="nav">
+                <div class="nav-section">Outsourcer Oversight</div>
+                <a class="nav-link" href="#/home" data-route="/home">Home</a>
+                <a class="nav-link" href="#/privileged" data-route="/privileged">Privileged Access</a>
+                <a class="nav-link" href="#/change-ledger" data-route="/change-ledger">Change Ledger</a>
+                <a class="nav-link" href="#/monitoring-integrity" data-route="/monitoring-integrity">Monitoring Integrity</a>
+                <a class="nav-link" href="#/ueba" data-route="/ueba">UEBA</a>
+                <a class="nav-link" href="#/blast-radius" data-route="/blast-radius">Blast Radius</a>
+                <a class="nav-link" href="#/evidence-export" data-route="/evidence-export">Evidence Export</a>
+                <div class="nav-section">Drilldowns</div>
+                <a class="nav-link" href="#/drilldown/operator-timeline" data-route="/drilldown/operator-timeline">Operator Timeline</a>
+                <a class="nav-link" href="#/drilldown/resource-impact" data-route="/drilldown/resource-impact">Resource Impact</a>
+                <a class="nav-link" href="#/drilldown/no-ticket" data-route="/drilldown/no-ticket">No Ticket</a>
+                <a class="nav-link" href="#/drilldown/provider-vs-internal" data-route="/drilldown/provider-vs-internal">Provider vs Internal</a>
+                <div class="nav-section">Back to SOC/ROC</div>
+                <a class="nav-link" href="index.html">SOC &amp; ROC Dashboard</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span>Static shell • Hash routed</span>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <p class="kicker">Control Panel</p>
+                    <h2 id="pageTitle">Outsourcer Oversight SOC Dashboard</h2>
+                    <p id="pageSubtitle" class="subtitle">Identity-first monitoring of outsourced privileged behavior.</p>
+                </div>
+                <div class="header-meta">
+                    <span class="meta-chip">Customer-controlled audit plane</span>
+                    <span class="meta-chip">Provider-operated management plane</span>
+                </div>
+            </header>
+
+            <section id="filterBarMount"></section>
+
+            <section id="routeView" class="route-view"></section>
+        </main>
+    </div>
+
+    <script type="module" src="outsourcer-main.js"></script>
+</body>
+</html>

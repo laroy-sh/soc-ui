@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeNavigation() {
     const navLinks = document.querySelectorAll('.sidebar .nav-link');
     navLinks.forEach(link => {
+        if (link.classList.contains('nav-link-external')) {
+            return;
+        }
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const dashboard = link.dataset.dashboard;

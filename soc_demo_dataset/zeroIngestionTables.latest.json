@@ -1,9 +1,0 @@
-{
-  "metricName": "zeroIngestionTables",
-  "generatedAt": "2026-01-19T10:15:00Z",
-  "data": [
-    {
-      "table": "AzureActivity"
-    }
-  ]
-}
