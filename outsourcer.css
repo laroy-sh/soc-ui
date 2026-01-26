@@ -1287,6 +1287,115 @@ a {
     box-shadow: var(--shadow);
 }
 
+.confidence-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 12px;
+}
+
+.confidence-banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.confidence-banner-header h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.confidence-banner-header p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.confidence-banner-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.confidence-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.confidence-item {
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.confidence-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.confidence-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-soft);
+}
+
+.confidence-value,
+.confidence-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid transparent;
+}
+
+.confidence-value--good,
+.confidence-summary--good {
+    color: #34d399;
+    border-color: rgba(52, 211, 153, 0.4);
+    background: rgba(52, 211, 153, 0.12);
+}
+
+.confidence-value--warn,
+.confidence-summary--warn {
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(251, 191, 36, 0.12);
+}
+
+.confidence-value--bad,
+.confidence-summary--bad {
+    color: var(--danger);
+    border-color: rgba(248, 113, 113, 0.45);
+    background: rgba(248, 113, 113, 0.12);
+}
+
+.confidence-value--neutral,
+.confidence-summary--neutral {
+    color: var(--text-muted);
+    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(148, 163, 184, 0.12);
+}
+
+.confidence-helper {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 .control-banner-header,
 .timeline-header,
 .review-header {

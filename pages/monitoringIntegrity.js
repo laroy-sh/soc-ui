@@ -76,6 +76,9 @@ const ROUTES = {
     resourceImpact: '/drilldown/resource-impact'
 };
 
+const EXPECTED_SCOPES = ['identity', 'change', 'data', 'privileged', 'endpoint', 'network'];
+const PROVIDER_AUDIT_WRITE_ACCESS = false;
+
 function getNowMs() {
     const parsed = Date.parse(mockNow);
     return Number.isNaN(parsed) ? Date.now() : parsed;
@@ -497,9 +500,177 @@ function buildEmptyState(message) {
     return empty;
 }
 
+function buildConfidenceItem({ label, value, status, helper, linkLabel, onClick }) {
+    const item = document.createElement('div');
+    item.className = 'confidence-item';
+
+    const top = document.createElement('div');
+    top.className = 'confidence-item-top';
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'confidence-label';
+    labelEl.textContent = label || '--';
+
+    const valueEl = document.createElement('span');
+    valueEl.className = `confidence-value confidence-value--${status || 'neutral'}`;
+    valueEl.textContent = value || '--';
+
+    top.appendChild(labelEl);
+    top.appendChild(valueEl);
+    item.appendChild(top);
+
+    if (helper) {
+        const helperEl = document.createElement('div');
+        helperEl.className = 'confidence-helper';
+        helperEl.textContent = helper;
+        item.appendChild(helperEl);
+    }
+
+    if (linkLabel && onClick) {
+        const link = document.createElement('button');
+        link.type = 'button';
+        link.className = 'action-tag action-tag--button';
+        link.textContent = linkLabel;
+        link.addEventListener('click', (event) => {
+            event.stopPropagation();
+            onClick();
+        });
+        item.appendChild(link);
+    }
+
+    return item;
+}
+
+function summarizeIngestion(items) {
+    const counts = { healthy: 0, degraded: 0, outage: 0 };
+    items.forEach((item) => {
+        if (!item?.status) {
+            return;
+        }
+        counts[item.status] = (counts[item.status] || 0) + 1;
+    });
+    const maxLag = Math.max(0, ...items.map((item) => item.lagMinutes || 0));
+    return { counts, maxLag };
+}
+
+function deriveIdentityConfidence(items) {
+    const identitySources = items.filter((item) => item.scope === 'identity');
+    if (identitySources.length === 0) {
+        return {
+            value: 'Low',
+            status: 'bad',
+            helper: 'No identity telemetry in view'
+        };
+    }
+    const { counts, maxLag } = summarizeIngestion(identitySources);
+    if (counts.outage > 0 || maxLag > 120) {
+        return {
+            value: 'Low',
+            status: 'bad',
+            helper: `${counts.outage} outage | max lag ${maxLag}m`
+        };
+    }
+    if (counts.degraded > 0 || maxLag > 30) {
+        return {
+            value: 'Med',
+            status: 'warn',
+            helper: `${counts.degraded} delayed | max lag ${maxLag}m`
+        };
+    }
+    return {
+        value: 'High',
+        status: 'good',
+        helper: `${counts.healthy} healthy | max lag ${maxLag}m`
+    };
+}
+
+function deriveFreshnessStatus(items) {
+    if (items.length === 0) {
+        return {
+            value: 'Unknown',
+            status: 'neutral',
+            helper: 'No ingestion sources in view'
+        };
+    }
+    const { counts, maxLag } = summarizeIngestion(items);
+    if (counts.outage > 0 || maxLag > 120) {
+        return {
+            value: 'Stale',
+            status: 'bad',
+            helper: `${counts.outage} outage | max lag ${maxLag}m`
+        };
+    }
+    if (counts.degraded > 0 || maxLag > 60) {
+        return {
+            value: 'Delayed',
+            status: 'warn',
+            helper: `${counts.degraded} delayed | max lag ${maxLag}m`
+        };
+    }
+    return {
+        value: 'Fresh',
+        status: 'good',
+        helper: `${counts.healthy} healthy | max lag ${maxLag}m`
+    };
+}
+
+function deriveUnmonitoredScopes(items) {
+    const presentScopes = new Set(items.map((item) => item.scope).filter(Boolean));
+    const missing = EXPECTED_SCOPES.filter((scope) => !presentScopes.has(scope));
+    if (missing.length === 0) {
+        return {
+            value: 'No',
+            status: 'good',
+            helper: 'All core scopes monitored'
+        };
+    }
+    const label = missing.map((scope) => formatLabel(scope)).join(', ');
+    return {
+        value: 'Yes',
+        status: 'bad',
+        helper: `${missing.length} scope(s) unmonitored: ${label}`
+    };
+}
+
+function deriveVisibilitySummary(items) {
+    if (items.some((item) => item.status === 'bad')) {
+        return { label: 'Visibility degraded', status: 'bad' };
+    }
+    if (items.some((item) => item.status === 'warn')) {
+        return { label: 'Visibility reduced', status: 'warn' };
+    }
+    return { label: 'Visibility strong', status: 'good' };
+}
+
 export function buildMonitoringIntegrityView() {
     const wrapper = document.createElement('div');
     wrapper.className = 'monitoring-integrity';
+
+    const confidenceBanner = document.createElement('section');
+    confidenceBanner.className = 'confidence-banner';
+
+    const confidenceHeader = document.createElement('div');
+    confidenceHeader.className = 'confidence-banner-header';
+    const confidenceHeading = document.createElement('div');
+    const confidenceTitle = document.createElement('h3');
+    confidenceTitle.textContent = 'Control Evidence Confidence';
+    const confidenceSubtitle = document.createElement('p');
+    confidenceSubtitle.textContent = 'Visibility grade for identity attribution and monitoring coverage.';
+    confidenceHeading.appendChild(confidenceTitle);
+    confidenceHeading.appendChild(confidenceSubtitle);
+
+    const confidenceMeta = document.createElement('div');
+    confidenceMeta.className = 'confidence-banner-meta';
+    const confidenceSummary = document.createElement('span');
+    confidenceSummary.className = 'confidence-summary';
+    confidenceMeta.appendChild(confidenceSummary);
+    confidenceHeader.appendChild(confidenceHeading);
+    confidenceHeader.appendChild(confidenceMeta);
+    confidenceBanner.appendChild(confidenceHeader);
+
+    const confidenceGrid = document.createElement('div');
+    confidenceGrid.className = 'confidence-grid';
+    confidenceBanner.appendChild(confidenceGrid);
 
     const stanceBanner = document.createElement('section');
     stanceBanner.className = 'monitoring-integrity-banner';
@@ -707,6 +878,7 @@ export function buildMonitoringIntegrityView() {
 
     planeGrid.appendChild(auditPlane);
     planeGrid.appendChild(providerPlane);
+    wrapper.appendChild(confidenceBanner);
     wrapper.appendChild(stanceBanner);
     wrapper.appendChild(planeGrid);
 
@@ -723,6 +895,73 @@ export function buildMonitoringIntegrityView() {
         const tamperSuccessCount = tampering.filter(
             (item) => TAMPER_OUTCOMES[item.id]?.status === 'success'
         ).length;
+
+        const identityConfidence = deriveIdentityConfidence(ingestion);
+        const freshness = deriveFreshnessStatus(ingestion);
+        const unmonitored = deriveUnmonitoredScopes(ingestion);
+        const auditWrite = {
+            value: PROVIDER_AUDIT_WRITE_ACCESS ? 'Yes' : 'No',
+            status: PROVIDER_AUDIT_WRITE_ACCESS ? 'bad' : 'good',
+            helper: 'Mocked field'
+        };
+        const summary = deriveVisibilitySummary([
+            identityConfidence,
+            freshness,
+            unmonitored,
+            auditWrite
+        ]);
+        confidenceSummary.textContent = summary.label;
+        confidenceSummary.className = `confidence-summary confidence-summary--${summary.status}`;
+
+        confidenceGrid.innerHTML = '';
+        confidenceGrid.appendChild(
+            buildConfidenceItem({
+                label: 'Identity attribution confidence',
+                value: identityConfidence.value,
+                status: identityConfidence.status,
+                helper: identityConfidence.helper,
+                linkLabel: 'Audit health map',
+                onClick: () => {
+                    healthCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            })
+        );
+        confidenceGrid.appendChild(
+            buildConfidenceItem({
+                label: 'Ingestion freshness status',
+                value: freshness.value,
+                status: freshness.status,
+                helper: freshness.helper,
+                linkLabel: 'Telemetry table',
+                onClick: () => {
+                    telemetryCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            })
+        );
+        confidenceGrid.appendChild(
+            buildConfidenceItem({
+                label: 'Unmonitored scope present',
+                value: unmonitored.value,
+                status: unmonitored.status,
+                helper: unmonitored.helper,
+                linkLabel: 'Retention drift',
+                onClick: () => {
+                    retentionCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            })
+        );
+        confidenceGrid.appendChild(
+            buildConfidenceItem({
+                label: 'Provider audit-plane write access',
+                value: auditWrite.value,
+                status: auditWrite.status,
+                helper: auditWrite.helper,
+                linkLabel: 'Tamper alerts',
+                onClick: () => {
+                    tamperCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            })
+        );
 
         auditIndicators.innerHTML = '';
         auditIndicators.appendChild(

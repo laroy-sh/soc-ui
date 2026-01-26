@@ -41,6 +41,8 @@
     --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.2);
     --chart-track: rgba(15, 23, 42, 0.75);
     --chart-track-border: rgba(255, 255, 255, 0.08);
+    --skeleton-base: rgba(255, 255, 255, 0.07);
+    --skeleton-highlight: rgba(255, 255, 255, 0.16);
     --audit-plane: #22d3ee;
     --audit-plane-soft: rgba(34, 211, 238, 0.16);
     --provider-plane: #fbbf24;
@@ -183,6 +185,14 @@ body {
     background: rgba(99, 102, 241, 0.2);
     color: var(--text-primary);
     border-left-color: var(--accent);
+}
+
+.nav-link:focus-visible {
+    outline: none;
+    background: rgba(99, 102, 241, 0.28);
+    color: var(--text-primary);
+    border-left-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--border-glow);
 }
 
 .sidebar-footer {
@@ -939,6 +949,11 @@ body {
     background: rgba(255, 255, 255, 0.02);
 }
 
+.table-container:focus-within {
+    border-color: rgba(99, 102, 241, 0.45);
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -977,6 +992,17 @@ tr:last-child td {
 
 tbody tr:hover {
     background: rgba(99, 102, 241, 0.08);
+}
+
+.keyboard-table:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.keyboard-table td:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    background: rgba(99, 102, 241, 0.2);
 }
 
 .table-total td {
@@ -1062,6 +1088,7 @@ tbody tr:hover {
     text-align: center;
     color: var(--text-secondary);
     min-height: 150px;
+    gap: var(--spacing-xs);
 }
 
 .empty-state-message {
@@ -1075,6 +1102,13 @@ tbody tr:hover {
     color: var(--text-secondary);
 }
 
+.empty-state-confidence {
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
 /* Success Empty State (healthy state) */
 .empty-state.success-state {
     background: rgba(16, 185, 129, 0.12);
@@ -1085,6 +1119,103 @@ tbody tr:hover {
 
 .empty-state.success-state .empty-state-message {
     color: #10b981;
+}
+
+.empty-state.no-visibility-state {
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: var(--card-radius);
+    color: #fbbf24;
+}
+
+.empty-state.no-visibility-state .empty-state-message {
+    color: #fbbf24;
+}
+
+.empty-state.no-events-state {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: var(--card-radius);
+    color: #93c5fd;
+}
+
+.empty-state.no-events-state .empty-state-message {
+    color: #93c5fd;
+}
+
+.empty-state.placeholder-state {
+    background: rgba(148, 163, 184, 0.1);
+    border: 1px dashed rgba(148, 163, 184, 0.35);
+    border-radius: var(--card-radius);
+}
+
+/* Confidence Note */
+.confidence-note {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.confidence-note-low {
+    color: #fbbf24;
+}
+
+.confidence-note-high {
+    color: #93c5fd;
+}
+
+/* Skeletons */
+.skeleton-root {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    min-height: 120px;
+    justify-content: center;
+}
+
+.skeleton-root.skeleton-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.skeleton-bar,
+.skeleton-line,
+.skeleton-pill,
+.skeleton-text {
+    background: linear-gradient(90deg, var(--skeleton-base), var(--skeleton-highlight), var(--skeleton-base));
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-bar {
+    height: 10px;
+    border-radius: 999px;
+}
+
+.skeleton-line {
+    height: 12px;
+    border-radius: 999px;
+}
+
+.skeleton-pill {
+    height: 28px;
+    border-radius: 14px;
+}
+
+.skeleton-text {
+    color: transparent;
+    border-radius: 6px;
+    min-width: 48px;
+    display: inline-block;
+    height: 1em;
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 0% 0%; }
+    100% { background-position: -200% 0%; }
 }
 
 /* Telemetry Dashboard Styles */

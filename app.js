@@ -1,7 +1,9 @@
 // Configuration
 const CONFIG = {
     dataPath: './soc_demo_dataset_ultimate/',
-    refreshInterval: 60000 // 1 minute
+    refreshInterval: 60000, // 1 minute
+    loadingDelayMin: 200,
+    loadingDelayMax: 500
 };
 
 // State
@@ -9,6 +11,7 @@ let currentDashboard = 'analyst';
 let refreshTimer = null;
 let rocRangeDays = 30;
 let rocData = null;
+let hasLoadedOnce = false;
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Navigation
 function initializeNavigation() {
-    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    const navLinks = Array.from(document.querySelectorAll('.sidebar .nav-link'));
     navLinks.forEach(link => {
         if (link.classList.contains('nav-link-external')) {
             return;
@@ -35,6 +38,42 @@ function initializeNavigation() {
             }
             switchDashboard(dashboard);
         });
+    });
+    enableNavKeyboardNavigation(navLinks);
+}
+
+function enableNavKeyboardNavigation(navLinks) {
+    const navMenu = document.querySelector('.nav-menu');
+    if (!navMenu) return;
+    const links = navLinks.filter(link => !link.classList.contains('nav-section'));
+    navMenu.addEventListener('keydown', event => {
+        const active = document.activeElement;
+        if (!links.includes(active)) return;
+        let nextIndex = links.indexOf(active);
+
+        switch (event.key) {
+            case 'ArrowDown':
+                nextIndex = Math.min(nextIndex + 1, links.length - 1);
+                break;
+            case 'ArrowUp':
+                nextIndex = Math.max(nextIndex - 1, 0);
+                break;
+            case 'Home':
+                nextIndex = 0;
+                break;
+            case 'End':
+                nextIndex = links.length - 1;
+                break;
+            case ' ':
+                event.preventDefault();
+                active.click();
+                return;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        links[nextIndex]?.focus();
     });
 }
 
@@ -176,6 +215,12 @@ function initializeFilterBar() {
 
 // Data Loading
 async function loadAllData() {
+    const isInitialLoad = !hasLoadedOnce;
+    if (isInitialLoad) {
+        setLoadingState(true);
+        showLoadingSkeletons();
+    }
+
     try {
         // Load all metrics in parallel
         const [
@@ -373,6 +418,11 @@ async function loadAllData() {
     } catch (error) {
         console.error('Error loading data:', error);
         showError('Failed to load dashboard data');
+    } finally {
+        if (isInitialLoad) {
+            setLoadingState(false);
+            hasLoadedOnce = true;
+        }
     }
 }
 
@@ -450,6 +500,7 @@ function renderRocDashboard() {
 
 async function fetchMetric(filename) {
     try {
+        await sleep(getRandomDelay(CONFIG.loadingDelayMin, CONFIG.loadingDelayMax));
         const response = await fetch(`${CONFIG.dataPath}${filename}`);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
@@ -461,24 +512,40 @@ async function fetchMetric(filename) {
     }
 }
 
+function getRandomDelay(min, max) {
+    const safeMin = Number.isFinite(min) ? min : 200;
+    const safeMax = Number.isFinite(max) ? max : 500;
+    return Math.floor(Math.random() * (safeMax - safeMin + 1)) + safeMin;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Rendering Functions
 
 function renderNewIncidents(data) {
+    const card = document.getElementById('newIncidents15m')?.closest('.card');
     if (!data || !data.data) {
-        showEmptyState('newIncidents15m', '—');
-        showEmptyState('newIncidents60m', '—');
+        setTextIfChanged(document.getElementById('newIncidents15m'), '—');
+        setTextIfChanged(document.getElementById('newIncidents60m'), '—');
+        setConfidenceNote(card, 'No visibility · Confidence: Low', 'low');
         return;
     }
-    
-    document.getElementById('newIncidents15m').textContent = data.data.last15m || 0;
-    document.getElementById('newIncidents60m').textContent = data.data.last60m || 0;
+
+    setConfidenceNote(card, null);
+    setTextIfChanged(document.getElementById('newIncidents15m'), String(data.data.last15m ?? 0));
+    setTextIfChanged(document.getElementById('newIncidents60m'), String(data.data.last60m ?? 0));
 }
 
 function renderBarChart(elementId, data, colorType) {
     const container = document.getElementById(elementId);
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState(data?.message || 'No data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No events',
+        noEventsDetail: 'No activity reported in this window',
+        noVisibilityDetail: data?.message || 'Metric unavailable'
+    })) {
         return;
     }
     
@@ -507,25 +574,31 @@ function renderBarChart(elementId, data, colorType) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderIncidentAging(data) {
     const container = document.getElementById('incidentAging');
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No aging data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No aging events',
+        noEventsDetail: 'No aging data reported in this window',
+        noVisibilityDetail: data?.message || 'Aging data unavailable'
+    })) {
         return;
     }
-    
+
     renderBarChart('incidentAging', data, 'aging');
 }
 
 function renderTopEntities(data) {
     const container = document.getElementById('topEntities');
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No entity data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No entities',
+        noEventsDetail: 'No affected entities reported in this window',
+        noVisibilityDetail: data?.message || 'Entity data unavailable'
+    })) {
         return;
     }
     
@@ -550,42 +623,55 @@ function renderTopEntities(data) {
         </table>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderIncidentTimings(data, detectionData) {
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        document.getElementById('mttaMedian').textContent = '—';
-        document.getElementById('mttaP95').textContent = '—';
-        document.getElementById('mttrMedian').textContent = '—';
-        document.getElementById('mttrP95').textContent = '—';
+    const metricsRow = document.querySelector('#dashboard-lead .metrics-dashboard-row');
+    const missingBase = !data || data.status === 'not_implemented' || !data.data;
+    const missingDetection = !detectionData || detectionData.status === 'not_implemented' || !detectionData.data;
+
+    if (missingBase) {
+        setTextIfChanged(document.getElementById('mttaMedian'), '—');
+        setTextIfChanged(document.getElementById('mttaP95'), '—');
+        setTextIfChanged(document.getElementById('mttrMedian'), '—');
+        setTextIfChanged(document.getElementById('mttrP95'), '—');
     } else {
         const mtta = data.data.mtta || {};
         const mttr = data.data.mttr || {};
 
-        document.getElementById('mttaMedian').textContent = formatMinutes(mtta.medianMinutes);
-        document.getElementById('mttaP95').textContent = formatMinutes(mtta.p95Minutes);
-        document.getElementById('mttrMedian').textContent = formatMinutes(mttr.medianMinutes);
-        document.getElementById('mttrP95').textContent = formatMinutes(mttr.p95Minutes);
+        setTextIfChanged(document.getElementById('mttaMedian'), formatMinutes(mtta.medianMinutes));
+        setTextIfChanged(document.getElementById('mttaP95'), formatMinutes(mtta.p95Minutes));
+        setTextIfChanged(document.getElementById('mttrMedian'), formatMinutes(mttr.medianMinutes));
+        setTextIfChanged(document.getElementById('mttrP95'), formatMinutes(mttr.p95Minutes));
     }
 
-    if (!detectionData || detectionData.status === 'not_implemented' || !detectionData.data) {
-        document.getElementById('mttdMedian').textContent = '—';
-        document.getElementById('mttdP95').textContent = '—';
+    if (missingDetection) {
+        setTextIfChanged(document.getElementById('mttdMedian'), '—');
+        setTextIfChanged(document.getElementById('mttdP95'), '—');
+    } else {
+        const mttd = detectionData.data.mttd || {};
+        setTextIfChanged(document.getElementById('mttdMedian'), formatMinutes(mttd.medianMinutes));
+        setTextIfChanged(document.getElementById('mttdP95'), formatMinutes(mttd.p95Minutes));
+    }
+
+    if (missingBase || missingDetection) {
+        setConfidenceNote(metricsRow, 'No visibility · Confidence: Low', 'low');
         return;
     }
 
-    const mttd = detectionData.data.mttd || {};
-    document.getElementById('mttdMedian').textContent = formatMinutes(mttd.medianMinutes);
-    document.getElementById('mttdP95').textContent = formatMinutes(mttd.p95Minutes);
+    setConfidenceNote(metricsRow, null);
 }
 
 function renderSlaComplianceHighSeverity(data) {
     const container = document.getElementById('slaComplianceHighSeverity');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        container.innerHTML = createEmptyState('No high severity SLA compliance data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No SLA events',
+        noEventsDetail: 'No high severity SLA data reported in this window',
+        noVisibilityDetail: data?.message || 'SLA compliance data unavailable'
+    })) {
         return;
     }
 
@@ -679,14 +765,17 @@ function renderSlaComplianceHighSeverity(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderLineChart(elementId, data) {
     const container = document.getElementById(elementId);
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState(data?.message || 'No data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No events',
+        noEventsDetail: 'No trend data reported in this window',
+        noVisibilityDetail: data?.message || 'Trend data unavailable'
+    })) {
         return;
     }
     
@@ -774,20 +863,26 @@ function renderLineChart(elementId, data) {
         </svg>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderMultiLineChart(elementId, series) {
     const container = document.getElementById(elementId);
 
     if (!Array.isArray(series) || series.length === 0) {
-        container.innerHTML = createEmptyState('No data available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Trend data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
     const baseSeries = series[0]?.data || [];
     if (baseSeries.length === 0) {
-        container.innerHTML = createEmptyState('No data available');
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No trend activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -841,21 +936,24 @@ function renderMultiLineChart(elementId, series) {
         </div>
     `;
 
-    container.innerHTML = `
+    setContainerHTML(container, `
         <svg class="multi-line-chart-svg" viewBox="0 0 ${width} ${height}">
             ${gridLines}
             ${paths}
             ${labels}
         </svg>
         ${legend}
-    `;
+    `);
 }
 
 function renderRuleFiringVolume(data) {
     const container = document.getElementById('ruleFiringVolume');
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No rule firing data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No rule firings',
+        noEventsDetail: 'No detections fired in this window',
+        noVisibilityDetail: data?.message || 'Rule firing data unavailable'
+    })) {
         return;
     }
     
@@ -880,15 +978,18 @@ function renderRuleFiringVolume(data) {
         </table>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAlertsPerAnalystBySeverity(data) {
     const container = document.getElementById('alertsPerAnalystBySeverity');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No analyst alert data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No analyst alerts',
+        noEventsDetail: 'No analyst alert activity reported in this window',
+        noVisibilityDetail: data?.message || 'Analyst alert data unavailable'
+    })) {
         return;
     }
 
@@ -903,7 +1004,10 @@ function renderAlertsPerAnalystBySeverity(data) {
     const severities = [...severityKeys, ...extraKeys];
 
     if (severities.length === 0) {
-        container.innerHTML = createEmptyState('No severity breakdown available');
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No severity breakdown reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -945,14 +1049,17 @@ function renderAlertsPerAnalystBySeverity(data) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderIngestionVolume(data) {
     const container = document.getElementById('ingestionVolumeByTable');
-    
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No ingestion data available');
+
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No ingestion events',
+        noEventsDetail: 'No ingestion data reported in this window',
+        noVisibilityDetail: data?.message || 'Ingestion data unavailable'
+    })) {
         return;
     }
     
@@ -986,13 +1093,14 @@ function renderIngestionVolume(data) {
         </div>
     `;
 
-    container.innerHTML = html;
-
-    requestAnimationFrame(() => {
-        container.querySelectorAll('.ingestion-fill').forEach(fill => {
-            fill.style.width = `${fill.dataset.width}%`;
+    const updated = setContainerHTML(container, html);
+    if (updated) {
+        requestAnimationFrame(() => {
+            container.querySelectorAll('.ingestion-fill').forEach(fill => {
+                fill.style.width = `${fill.dataset.width}%`;
+            });
         });
-    });
+    }
 }
 
 function renderCoveragePieChart(container, options) {
@@ -1002,7 +1110,10 @@ function renderCoveragePieChart(container, options) {
     const covered = Number(options.covered);
 
     if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(covered)) {
-        container.innerHTML = createEmptyState(options.emptyMessage || 'No coverage data available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: options.emptyMessage || 'Coverage data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
@@ -1033,8 +1144,11 @@ function renderDetectionCoverage(data) {
     const container = document.getElementById('detectionCoverage');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        container.innerHTML = createEmptyState('No detection coverage data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No coverage events',
+        noEventsDetail: 'No coverage data reported in this window',
+        noVisibilityDetail: data?.message || 'Detection coverage data unavailable'
+    })) {
         applyCoverageStatusClass(container, null);
         return;
     }
@@ -1071,7 +1185,7 @@ function renderDetectionCoverage(data) {
                 ? getCssVar('--severity-critical', '#ef4444')
                 : getCssVar('--accent-primary', '#6366f1');
 
-    container.innerHTML = `
+    setContainerHTML(container, `
         <div class="coverage-pie-grid">
             <div class="coverage-pie-card">
                 <div class="coverage-pie-title">Overall coverage</div>
@@ -1086,7 +1200,7 @@ function renderDetectionCoverage(data) {
                 <div class="coverage-pie-chart" data-coverage-chart="sources"></div>
             </div>
         </div>
-    `;
+    `);
 
     const overallChart = container.querySelector('[data-coverage-chart="overall"]');
     const assetsChart = container.querySelector('[data-coverage-chart="assets"]');
@@ -1094,7 +1208,10 @@ function renderDetectionCoverage(data) {
 
     if (coverageValue === null || coverageValue === undefined) {
         if (overallChart) {
-            overallChart.innerHTML = createEmptyState('No coverage data available');
+            setContainerHTML(overallChart, createEmptyState('No visibility', 'no-visibility', {
+                detail: 'Coverage percentage unavailable',
+                confidence: 'Confidence: Low'
+            }), { force: true });
         }
     } else {
         const clampedCoverage = Math.min(100, Math.max(0, Number(coverageValue)));
@@ -1140,8 +1257,11 @@ function renderStorageTierDistribution(data) {
     const container = document.getElementById('storageTierDistribution');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        container.innerHTML = createEmptyState('No storage tier data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No storage tier events',
+        noEventsDetail: 'No storage tier data reported in this window',
+        noVisibilityDetail: data?.message || 'Storage tier data unavailable'
+    })) {
         return;
     }
 
@@ -1227,7 +1347,10 @@ function renderStorageTierDistribution(data) {
     }
 
     if (!Number.isFinite(hotValue) && !Number.isFinite(coldValue)) {
-        container.innerHTML = createEmptyState('No storage tier data available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Storage tier percentages unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
@@ -1266,7 +1389,7 @@ function renderStorageTierDistribution(data) {
         return segment;
     }).join('');
 
-    container.innerHTML = `
+    setContainerHTML(container, `
         <div class="storage-tier-metrics">
             <div class="storage-tier-row">
                 <div class="storage-tier-chart">
@@ -1304,15 +1427,18 @@ function renderStorageTierDistribution(data) {
                 </div>
             </div>
         </div>
-    `;
+    `);
 }
 
 function renderSiemCostEffectiveness(data) {
     const container = document.getElementById('siemCostEffectiveness');
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        container.innerHTML = createEmptyState('No SIEM cost effectiveness data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No cost signals',
+        noEventsDetail: 'No cost effectiveness data reported in this window',
+        noVisibilityDetail: data?.message || 'SIEM cost effectiveness unavailable'
+    })) {
         return;
     }
 
@@ -1381,7 +1507,7 @@ function renderSiemCostEffectiveness(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function getCoverageStatus(value) {
@@ -1403,8 +1529,19 @@ function applyCoverageStatusClass(element, status) {
 function renderZeroIngestionTables(data) {
     const container = document.getElementById('zeroIngestionTables');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('All tables receiving data', 'success');
+    if (!data || data.status === 'not_implemented') {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: data?.message || 'Ingestion coverage unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (!data.data || data.data.length === 0) {
+        setContainerHTML(container, createEmptyState('All tables receiving data', 'success', {
+            detail: 'No ingestion gaps detected',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
     
@@ -1418,15 +1555,18 @@ function renderZeroIngestionTables(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderRepeatedDetections(data) {
     const container = document.getElementById('repeatedDetections');
     if (!container) return;
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No repeated detections found');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No repeated detections',
+        noEventsDetail: 'No repeated detections reported in this window',
+        noVisibilityDetail: data?.message || 'Repeated detection data unavailable'
+    })) {
         return;
     }
 
@@ -1454,7 +1594,7 @@ function renderRepeatedDetections(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderRiskScore(data, options = {}) {
@@ -1468,7 +1608,7 @@ function renderRiskScore(data, options = {}) {
         value = getScalarMetricValue(data, ['RiskScore', 'riskScore']);
     }
 
-    element.textContent = value === null ? '—' : formatCompactNumber(value);
+    setTextIfChanged(element, value === null ? '—' : formatCompactNumber(value));
 }
 
 function renderAvgHighRisk(data, options = {}) {
@@ -1490,12 +1630,12 @@ function renderAvgHighRisk(data, options = {}) {
     }
 
     if (value === null) {
-        element.textContent = '—';
+        setTextIfChanged(element, '—');
         return;
     }
 
     const decimals = Number.isInteger(value) ? 0 : 1;
-    element.textContent = `${formatNumber(value, decimals)}d`;
+    setTextIfChanged(element, `${formatNumber(value, decimals)}d`);
 }
 
 function renderAttackSurfaceCoverage(data, options = {}) {
@@ -1504,8 +1644,14 @@ function renderAttackSurfaceCoverage(data, options = {}) {
     if (!gaugeContainer || !treemapContainer) return;
 
     if (!data || data.status === 'not_implemented' || !data.data) {
-        gaugeContainer.innerHTML = createEmptyState('No coverage data available');
-        treemapContainer.innerHTML = createEmptyState('No gap data available');
+        setContainerHTML(gaugeContainer, createEmptyState('No visibility', 'no-visibility', {
+            detail: data?.message || 'Coverage data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        setContainerHTML(treemapContainer, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Coverage gaps unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
@@ -1527,8 +1673,19 @@ function renderRiskExposure(points, threshold) {
     const container = document.getElementById('rocRiskExposure');
     if (!container) return;
 
-    if (!Array.isArray(points) || points.length === 0) {
-        container.innerHTML = createEmptyState('No risk exposure data available');
+    if (!Array.isArray(points)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Risk exposure data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (points.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No risk exposure events reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1560,7 +1717,7 @@ function renderRiskExposure(points, threshold) {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     });
 
-    container.innerHTML = `
+    setContainerHTML(container, `
         ${thresholdLine}
         <div class="roc-bar-trend-chart">
             ${bars}
@@ -1570,14 +1727,17 @@ function renderRiskExposure(points, threshold) {
             <span>${labels[1]}</span>
             <span>${labels[2]}</span>
         </div>
-    `;
+    `);
 }
 
 function renderIncidentCountByTitle(data) {
     const container = document.getElementById('rocIncidentCount');
 
-    if (!data || data.status === 'not_implemented' || !Array.isArray(data.data) || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No incident count data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No incidents',
+        noEventsDetail: 'No incident counts reported in this window',
+        noVisibilityDetail: data?.message || 'Incident count data unavailable'
+    })) {
         return;
     }
 
@@ -1604,14 +1764,25 @@ function renderIncidentCountByTitle(data) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderExecutiveActions(items) {
     const container = document.getElementById('rocExecutiveActions');
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No executive actions available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Executive actions unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No executive actions reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1645,7 +1816,7 @@ function renderExecutiveActions(items) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderIncidentAgeBuckets(buckets) {
@@ -1653,8 +1824,19 @@ function renderIncidentAgeBuckets(buckets) {
 
     if (!container) return;
 
-    if (!Array.isArray(buckets) || buckets.length === 0) {
-        container.innerHTML = createEmptyState('No closed incident aging data available');
+    if (!Array.isArray(buckets)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Closed incident aging unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (buckets.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No closed incidents reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1669,8 +1851,19 @@ function renderIncidentAgeBuckets(buckets) {
 function renderIncidentAgingDetails(items) {
     const container = document.getElementById('rocIncidentAgingDetails');
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No closed incident details available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Closed incident details unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No closed incidents reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1703,15 +1896,26 @@ function renderIncidentAgingDetails(items) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderWorkloadBySeverity(items) {
     const container = document.getElementById('rocWorkloadBySeverity');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No workload data available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Workload data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No workload activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1734,6 +1938,14 @@ function renderWorkloadBySeverity(items) {
         { label: 'High', count: counts.high || 0, color: getCssVar('--severity-high', '#f97316') }
     ].filter(item => item.count > 0);
 
+    if (donutItems.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No workload activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
+        return;
+    }
+
     renderRocDonutChart(container, donutItems, 'Incidents');
 }
 
@@ -1741,8 +1953,19 @@ function renderTopHighVolumeRisks(items) {
     const container = document.getElementById('socHighVolumeRisks');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No high-volume risk data available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'High-volume risk data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No high-volume risks reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1762,8 +1985,19 @@ function renderResolutionEfficiency(buckets) {
     const container = document.getElementById('rocResolutionEfficiency');
     if (!container) return;
 
-    if (!Array.isArray(buckets) || buckets.length === 0) {
-        container.innerHTML = createEmptyState('No resolution efficiency data available');
+    if (!Array.isArray(buckets)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Resolution efficiency unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (buckets.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No resolution efficiency data reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1796,21 +2030,32 @@ function renderAvgResolveAge(items) {
     if (!element) return;
 
     if (!Array.isArray(items) || items.length === 0) {
-        element.textContent = '—';
+        setTextIfChanged(element, '—');
         return;
     }
 
     const total = items.reduce((sum, item) => sum + (item.AgeDays ?? item.ageDays ?? 0), 0);
     const avg = total / items.length;
-    element.textContent = Number.isFinite(avg) ? formatNumber(avg, 2) : '—';
+    setTextIfChanged(element, Number.isFinite(avg) ? formatNumber(avg, 2) : '—');
 }
 
 function renderResolutionSpeed(items) {
     const container = document.getElementById('rocResolutionSpeed');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No resolution speed data available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Resolution speed data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No resolution speed data reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1834,7 +2079,10 @@ function renderResolutionSpeed(items) {
         }));
 
     if (points.length === 0) {
-        container.innerHTML = createEmptyState('No resolution speed data available');
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No resolution speed data reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1845,15 +2093,29 @@ function renderTargetOutliers(items) {
     const container = document.getElementById('rocTargetOutliers');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No outliers available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Outlier data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No outliers reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
     const outliers = items.filter(item => (item.AgeDays ?? item.ageDays ?? 0) > 2);
 
     if (outliers.length === 0) {
-        container.innerHTML = createEmptyState('No outliers above 2 days');
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No outliers above 2 days',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1883,15 +2145,26 @@ function renderTargetOutliers(items) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderPrimaryRiskDrivers(items) {
     const container = document.getElementById('rocPrimaryRiskDrivers');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No primary risk drivers available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Primary risk drivers unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No primary risk drivers reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1916,18 +2189,21 @@ function renderPrimaryRiskDrivers(items) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderCoverageGauge(container, value) {
     const percent = Number(value);
     if (!Number.isFinite(percent)) {
-        container.innerHTML = createEmptyState('No coverage data available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Coverage data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
     const clamped = Math.max(0, Math.min(100, percent));
-    container.innerHTML = `
+    setContainerHTML(container, `
         <div>
             <svg viewBox="0 0 200 120">
                 <path class="roc-gauge-track" d="M10 110 A90 90 0 0 1 190 110" pathLength="100" />
@@ -1935,7 +2211,7 @@ function renderCoverageGauge(container, value) {
             </svg>
             <div class="roc-gauge-value">${formatNumber(clamped, 2)}%</div>
         </div>
-    `;
+    `);
 }
 
 function renderCoverageTreemap(container, breakdown, coverageValue) {
@@ -1959,7 +2235,7 @@ function renderCoverageTreemap(container, breakdown, coverageValue) {
         </div>
     `;
 
-    container.innerHTML = grid;
+    setContainerHTML(container, grid);
     // Toggle between the single gap tile and the expanded breakdown view.
     container.onclick = () => {
         container.dataset.expanded = expanded ? 'false' : 'true';
@@ -1977,8 +2253,19 @@ function renderRiskBurndown(points) {
     const container = document.getElementById('rocRiskBurndown');
     if (!container) return;
 
-    if (!Array.isArray(points) || points.length === 0) {
-        container.innerHTML = createEmptyState('No burn-down data available');
+    if (!Array.isArray(points)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Risk burn-down data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (points.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No risk burn-down activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -1998,8 +2285,19 @@ function renderRiskDebtTrend(points) {
     const container = document.getElementById('rocRiskDebtTrend');
     if (!container) return;
 
-    if (!Array.isArray(points) || points.length === 0) {
-        container.innerHTML = createEmptyState('No risk debt data available');
+    if (!Array.isArray(points)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Risk debt data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (points.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No risk debt activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -2018,10 +2316,25 @@ function renderPolicyExceptions(items) {
     const container = document.getElementById('rocPolicyExceptions');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No policy exceptions available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Policy exception data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No policy exceptions reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
+        return;
+    }
+
+    const sorted = items
+        .slice()
+        .sort((a, b) => new Date(b.ApprovedDate || b.approvedDate) - new Date(a.ApprovedDate || a.approvedDate));
 
     const html = `
         <table>
@@ -2048,7 +2361,7 @@ function renderPolicyExceptions(items) {
         </table>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderRemediationRoi(items) {
@@ -2056,20 +2369,31 @@ function renderRemediationRoi(items) {
     if (!element) return;
 
     if (!Array.isArray(items) || items.length === 0) {
-        element.textContent = '—';
+        setTextIfChanged(element, '—');
         return;
     }
 
     const total = items.reduce((sum, item) => sum + (item.LossAvoided ?? item.lossAvoided ?? 0), 0);
-    element.textContent = formatCurrency(total);
+    setTextIfChanged(element, formatCurrency(total));
 }
 
 function renderSlaHealth(items) {
     const container = document.getElementById('rocSlaHealth');
     if (!container) return;
 
-    if (!Array.isArray(items) || items.length === 0) {
-        container.innerHTML = createEmptyState('No SLA health data available');
+    if (!Array.isArray(items)) {
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'SLA health data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
+        return;
+    }
+
+    if (items.length === 0) {
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No SLA health events reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -2102,17 +2426,17 @@ function renderSlaHealth(items) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderPlaceholder(elementId, data) {
     const container = document.getElementById(elementId);
     
     if (!data || data.status === 'not_implemented') {
-        container.innerHTML = createEmptyState(
+        setContainerHTML(container, createEmptyState(
             data?.message || 'Not implemented',
             'placeholder'
-        );
+        ), { force: true });
     }
 }
 
@@ -2151,7 +2475,7 @@ function updateRocDateRangeDisplay(start, end) {
         day: 'numeric',
         year: 'numeric'
     });
-    element.textContent = `${format(start)} - ${format(end)}`;
+    setTextIfChanged(element, `${format(start)} - ${format(end)}`);
 }
 
 function filterByRange(items, timeKeys, start, end) {
@@ -2230,6 +2554,250 @@ function getAgeBucketCounts(details, fallbackBuckets) {
 
 // Utility Functions
 
+function setTextIfChanged(element, value) {
+    if (!element) return false;
+    const nextValue = value ?? '';
+    if (element.textContent === nextValue) return false;
+    element.textContent = nextValue;
+    return true;
+}
+
+function setContainerHTML(container, html, options = {}) {
+    if (!container) return false;
+    const nextHtml = typeof html === 'string' ? html : String(html ?? '');
+    const nextKey = hashString(nextHtml);
+    if (!options.force && container.dataset.renderKey === nextKey) {
+        return false;
+    }
+    container.dataset.renderKey = nextKey;
+    container.innerHTML = nextHtml;
+    initTableKeyboardNavigation(container);
+    return true;
+}
+
+function hashString(value) {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+        hash = (hash << 5) - hash + value.charCodeAt(i);
+        hash |= 0;
+    }
+    return String(hash);
+}
+
+function setLoadingState(isLoading) {
+    document.body.classList.toggle('is-loading', isLoading);
+    document.body.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+
+    const valueSelectors = [
+        '.counter-value',
+        '.metric-value-highlight',
+        '.metric-value-sub',
+        '.metric-value',
+        '.customer-metric-value',
+        '.roc-hero-value'
+    ];
+
+    document.querySelectorAll(valueSelectors.join(',')).forEach(element => {
+        element.classList.toggle('skeleton-text', isLoading);
+    });
+}
+
+function showLoadingSkeletons() {
+    const skeletonTargets = [
+        { selector: '.chart-container', type: 'chart' },
+        { selector: '.chart-line', type: 'line' },
+        { selector: '.chart-trend', type: 'line' },
+        { selector: '.table-container', type: 'table' },
+        { selector: '.conversion-container', type: 'stats' },
+        { selector: '.sla-compliance', type: 'list' }
+    ];
+
+    skeletonTargets.forEach(target => {
+        document.querySelectorAll(target.selector).forEach(container => {
+            setContainerHTML(container, buildSkeleton(target.type), { force: true });
+        });
+    });
+}
+
+function buildSkeleton(type) {
+    const base = {
+        chart: `
+            <div class="skeleton-root">
+                <div class="skeleton-bar" style="width: 70%"></div>
+                <div class="skeleton-bar" style="width: 52%"></div>
+                <div class="skeleton-bar" style="width: 84%"></div>
+                <div class="skeleton-bar" style="width: 40%"></div>
+            </div>
+        `,
+        line: `
+            <div class="skeleton-root">
+                <div class="skeleton-line" style="width: 90%"></div>
+                <div class="skeleton-line" style="width: 68%"></div>
+                <div class="skeleton-line" style="width: 80%"></div>
+            </div>
+        `,
+        table: `
+            <div class="skeleton-root">
+                <div class="skeleton-line" style="width: 92%"></div>
+                <div class="skeleton-line" style="width: 88%"></div>
+                <div class="skeleton-line" style="width: 76%"></div>
+                <div class="skeleton-line" style="width: 84%"></div>
+            </div>
+        `,
+        stats: `
+            <div class="skeleton-root skeleton-stats">
+                <div class="skeleton-pill"></div>
+                <div class="skeleton-pill"></div>
+                <div class="skeleton-pill"></div>
+            </div>
+        `,
+        list: `
+            <div class="skeleton-root">
+                <div class="skeleton-line" style="width: 64%"></div>
+                <div class="skeleton-line" style="width: 86%"></div>
+                <div class="skeleton-line" style="width: 72%"></div>
+            </div>
+        `
+    };
+
+    return base[type] || base.chart;
+}
+
+function isEmptyPayload(payload) {
+    if (payload === null || payload === undefined) return true;
+    if (Array.isArray(payload)) return payload.length === 0;
+    if (typeof payload === 'object') return Object.keys(payload).length === 0;
+    return false;
+}
+
+function getEmptyStateHtml(data, options = {}) {
+    const {
+        noEventsMessage = 'No events',
+        noEventsDetail = 'No activity reported in this window',
+        noVisibilityMessage = 'No visibility',
+        noVisibilityDetail = 'Data source unavailable or not configured',
+        confidenceHigh = 'Confidence: High',
+        confidenceLow = 'Confidence: Low'
+    } = options;
+
+    if (!data) {
+        return createEmptyState(noVisibilityMessage, 'no-visibility', {
+            detail: noVisibilityDetail,
+            confidence: confidenceLow
+        });
+    }
+
+    if (data.status === 'not_implemented') {
+        return createEmptyState(noVisibilityMessage, 'no-visibility', {
+            detail: data.message || noVisibilityDetail,
+            confidence: confidenceLow
+        });
+    }
+
+    if (isEmptyPayload(data.data)) {
+        return createEmptyState(noEventsMessage, 'no-events', {
+            detail: noEventsDetail,
+            confidence: confidenceHigh
+        });
+    }
+
+    return null;
+}
+
+function renderEmptyState(container, data, options = {}) {
+    const html = getEmptyStateHtml(data, options);
+    if (!html) return false;
+    setContainerHTML(container, html, { force: true });
+    return true;
+}
+
+function initTableKeyboardNavigation(container) {
+    if (!container) return;
+    container.querySelectorAll('table').forEach(table => {
+        if (table.dataset.keyboardReady === 'true') return;
+        table.dataset.keyboardReady = 'true';
+        table.setAttribute('tabindex', '0');
+        table.classList.add('keyboard-table');
+
+        const bodyRows = Array.from(table.tBodies[0]?.rows || []);
+        const allCells = bodyRows.flatMap(row => Array.from(row.cells));
+        allCells.forEach(cell => cell.setAttribute('tabindex', '-1'));
+        if (allCells[0]) {
+            allCells[0].setAttribute('tabindex', '0');
+        }
+
+        const focusCell = (rowIndex, colIndex) => {
+            const row = bodyRows[rowIndex];
+            if (!row) return;
+            const cell = row.cells[colIndex];
+            if (!cell) return;
+            allCells.forEach(td => td.setAttribute('tabindex', '-1'));
+            cell.setAttribute('tabindex', '0');
+            cell.focus();
+        };
+
+        table.addEventListener('focus', event => {
+            if (event.target === table && allCells[0]) {
+                allCells[0].focus();
+            }
+        });
+
+        table.addEventListener('keydown', event => {
+            const activeCell = document.activeElement;
+            if (!activeCell || activeCell.tagName !== 'TD') return;
+            const rowIndex = activeCell.parentElement.rowIndex - 1;
+            const colIndex = activeCell.cellIndex;
+            let nextRow = rowIndex;
+            let nextCol = colIndex;
+
+            switch (event.key) {
+                case 'ArrowRight':
+                    nextCol = Math.min(colIndex + 1, activeCell.parentElement.cells.length - 1);
+                    break;
+                case 'ArrowLeft':
+                    nextCol = Math.max(colIndex - 1, 0);
+                    break;
+                case 'ArrowDown':
+                    nextRow = Math.min(rowIndex + 1, bodyRows.length - 1);
+                    break;
+                case 'ArrowUp':
+                    nextRow = Math.max(rowIndex - 1, 0);
+                    break;
+                case 'Home':
+                    nextCol = 0;
+                    break;
+                case 'End':
+                    nextCol = activeCell.parentElement.cells.length - 1;
+                    break;
+                default:
+                    return;
+            }
+
+            event.preventDefault();
+            focusCell(nextRow, nextCol);
+        });
+    });
+}
+
+function setConfidenceNote(container, text, variant = 'low') {
+    if (!container) return;
+    let note = container.querySelector('.confidence-note');
+    if (!text) {
+        if (note) {
+            note.remove();
+        }
+        return;
+    }
+    if (!note) {
+        note = document.createElement('div');
+        note.className = 'confidence-note';
+        container.appendChild(note);
+    }
+    note.textContent = text;
+    note.classList.toggle('confidence-note-low', variant === 'low');
+    note.classList.toggle('confidence-note-high', variant === 'high');
+}
+
 function getColorClass(label, type) {
     const normalized = label.toLowerCase();
     
@@ -2257,14 +2825,29 @@ function getColorClass(label, type) {
     return 'severity-informational';
 }
 
-function createEmptyState(message, type = 'default') {
-    const stateClass = type === 'success' ? 'empty-state success-state' : 'empty-state';
-    const messages = {
-        'success': '<p class="empty-state-message">✓ ' + message + '</p>',
-        'placeholder': '<p class="empty-state-message">' + message + '</p><p class="empty-state-detail">This metric will be available in a future release</p>',
-        'default': '<p class="empty-state-message">' + message + '</p>'
+function createEmptyState(message, type = 'default', options = {}) {
+    const stateClassMap = {
+        success: 'empty-state success-state',
+        placeholder: 'empty-state placeholder-state',
+        'no-events': 'empty-state no-events-state',
+        'no-visibility': 'empty-state no-visibility-state',
+        default: 'empty-state'
     };
-    
+    const stateClass = stateClassMap[type] || stateClassMap.default;
+    const safeMessage = message || 'No data available';
+    const detail = options.detail;
+    const confidence = options.confidence;
+    const detailHtml = detail ? `<p class="empty-state-detail">${detail}</p>` : '';
+    const confidenceHtml = confidence ? `<span class="empty-state-confidence">${confidence}</span>` : '';
+
+    const messages = {
+        success: `<p class="empty-state-message">✓ ${safeMessage}</p>${detailHtml}${confidenceHtml}`,
+        placeholder: `<p class="empty-state-message">${safeMessage}</p>` +
+            `<p class="empty-state-detail">This metric will be available in a future release</p>` +
+            confidenceHtml,
+        default: `<p class="empty-state-message">${safeMessage}</p>${detailHtml}${confidenceHtml}`
+    };
+
     return `<div class="${stateClass}">${messages[type] || messages.default}</div>`;
 }
 
@@ -2353,7 +2936,10 @@ function getScalarMetricValue(data, keys) {
 function renderRocDonutChart(container, items, label, options = {}) {
     const total = items.reduce((sum, item) => sum + item.count, 0);
     if (total === 0) {
-        container.innerHTML = createEmptyState('No data available');
+        setContainerHTML(container, createEmptyState('No events', 'no-events', {
+            detail: 'No activity reported in this window',
+            confidence: 'Confidence: High'
+        }), { force: true });
         return;
     }
 
@@ -2391,7 +2977,7 @@ function renderRocDonutChart(container, items, label, options = {}) {
     const centerValue = options.centerValue || formatNumber(total);
     const centerLabel = options.centerLabel || label;
 
-    container.innerHTML = `
+    setContainerHTML(container, `
         <div class="roc-donut-wrapper">
             <div class="roc-donut">
                 <svg viewBox="0 0 120 120">
@@ -2408,7 +2994,7 @@ function renderRocDonutChart(container, items, label, options = {}) {
                 ${legend}
             </div>
         </div>
-    `;
+    `);
 }
 
 function escapeHtml(text) {
@@ -2419,8 +3005,8 @@ function escapeHtml(text) {
 
 function updateTimestamp(isoString) {
     if (!isoString) {
-        document.getElementById('generatedAt').textContent = '—';
-        document.getElementById('lastUpdated').textContent = 'Last updated: —';
+        setTextIfChanged(document.getElementById('generatedAt'), '—');
+        setTextIfChanged(document.getElementById('lastUpdated'), 'Last updated: —');
         return;
     }
     
@@ -2434,8 +3020,8 @@ function updateTimestamp(isoString) {
         timeZoneName: 'short'
     });
     
-    document.getElementById('generatedAt').textContent = formatted;
-    document.getElementById('lastUpdated').textContent = `Last updated: ${formatted}`;
+    setTextIfChanged(document.getElementById('generatedAt'), formatted);
+    setTextIfChanged(document.getElementById('lastUpdated'), `Last updated: ${formatted}`);
 }
 
 function showError(message) {
@@ -2473,8 +3059,11 @@ window.addEventListener('beforeunload', () => {
 function renderCustomerIncidentTrend(data) {
     const container = document.getElementById('customerIncidentTrend');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No incident trend data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No incidents',
+        noEventsDetail: 'No incidents created in this window',
+        noVisibilityDetail: data?.message || 'Incident trend unavailable'
+    })) {
         return;
     }
     
@@ -2484,8 +3073,11 @@ function renderCustomerIncidentTrend(data) {
 function renderCustomerClosureTrend(data) {
     const container = document.getElementById('customerClosureTrend');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No closure trend data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No closures',
+        noEventsDetail: 'No incident closures in this window',
+        noVisibilityDetail: data?.message || 'Closure trend unavailable'
+    })) {
         return;
     }
     
@@ -2523,8 +3115,8 @@ function renderDailyTrendChart(container, data, label, chartClass) {
             <div class="trend-label">${label}</div>
         </div>
     `;
-    
-    container.innerHTML = html;
+
+    setContainerHTML(container, html);
 }
 
 function renderCustomerTimings(data) {
@@ -2532,29 +3124,38 @@ function renderCustomerTimings(data) {
     const mttaP95El = document.getElementById('customerMttaP95');
     const mttrMedianEl = document.getElementById('customerMttrMedian');
     const mttrP95El = document.getElementById('customerMttrP95');
+    const mttaCard = mttaMedianEl?.closest('.card');
+    const mttrCard = mttrMedianEl?.closest('.card');
     
     if (!data || data.status === 'not_implemented' || !data.data) {
-        if (mttaMedianEl) mttaMedianEl.textContent = '—';
-        if (mttaP95El) mttaP95El.textContent = '—';
-        if (mttrMedianEl) mttrMedianEl.textContent = '—';
-        if (mttrP95El) mttrP95El.textContent = '—';
+        if (mttaMedianEl) setTextIfChanged(mttaMedianEl, '—');
+        if (mttaP95El) setTextIfChanged(mttaP95El, '—');
+        if (mttrMedianEl) setTextIfChanged(mttrMedianEl, '—');
+        if (mttrP95El) setTextIfChanged(mttrP95El, '—');
+        setConfidenceNote(mttaCard, 'No visibility · Confidence: Low', 'low');
+        setConfidenceNote(mttrCard, 'No visibility · Confidence: Low', 'low');
         return;
     }
     
     const mtta = data.data.mtta || {};
     const mttr = data.data.mttr || {};
     
-    if (mttaMedianEl) mttaMedianEl.textContent = formatMinutes(mtta.medianMinutes);
-    if (mttaP95El) mttaP95El.textContent = formatMinutes(mtta.p95Minutes);
-    if (mttrMedianEl) mttrMedianEl.textContent = formatMinutes(mttr.medianMinutes);
-    if (mttrP95El) mttrP95El.textContent = formatMinutes(mttr.p95Minutes);
+    if (mttaMedianEl) setTextIfChanged(mttaMedianEl, formatMinutes(mtta.medianMinutes));
+    if (mttaP95El) setTextIfChanged(mttaP95El, formatMinutes(mtta.p95Minutes));
+    if (mttrMedianEl) setTextIfChanged(mttrMedianEl, formatMinutes(mttr.medianMinutes));
+    if (mttrP95El) setTextIfChanged(mttrP95El, formatMinutes(mttr.p95Minutes));
+    setConfidenceNote(mttaCard, null);
+    setConfidenceNote(mttrCard, null);
 }
 
 function renderCustomerTopEntities(data) {
     const container = document.getElementById('customerTopEntities');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No entity data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No entities',
+        noEventsDetail: 'No affected entities reported in this window',
+        noVisibilityDetail: data?.message || 'Entity data unavailable'
+    })) {
         return;
     }
     
@@ -2579,14 +3180,17 @@ function renderCustomerTopEntities(data) {
         </table>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderCustomerIncidentAging(data) {
     const container = document.getElementById('customerIncidentAging');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No aging data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No aging events',
+        noEventsDetail: 'No aging data reported in this window',
+        noVisibilityDetail: data?.message || 'Aging data unavailable'
+    })) {
         return;
     }
     
@@ -2614,15 +3218,18 @@ function renderCustomerIncidentAging(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 // Customer Dashboard Ultimate Metrics
 function renderCustomerSeverityTrend(data) {
     const container = document.getElementById('customerSeverityTrend');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No severity trend data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No severity events',
+        noEventsDetail: 'No severity trend activity reported in this window',
+        noVisibilityDetail: data?.message || 'Severity trend unavailable'
+    })) {
         return;
     }
     
@@ -2663,14 +3270,17 @@ function renderCustomerSeverityTrend(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderCustomerAlertToIncidentRate(data) {
     const container = document.getElementById('customerAlertToIncidentRate');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No alert-to-incident rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No conversions',
+        noEventsDetail: 'No alert-to-incident conversions reported in this window',
+        noVisibilityDetail: data?.message || 'Alert-to-incident rate unavailable'
+    })) {
         return;
     }
     
@@ -2703,7 +3313,7 @@ function renderCustomerAlertToIncidentRate(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAlertToIncidentRatio(data) {
@@ -2711,8 +3321,11 @@ function renderAlertToIncidentRatio(data) {
 
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data) {
-        container.innerHTML = createEmptyState('No alert-to-incident ratio data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No conversions',
+        noEventsDetail: 'No alert-to-incident activity reported in this window',
+        noVisibilityDetail: data?.message || 'Alert-to-incident ratio unavailable'
+    })) {
         return;
     }
 
@@ -2753,14 +3366,17 @@ function renderAlertToIncidentRatio(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAlertEscalationRate(data) {
     const container = document.getElementById('alertEscalationRate');
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No alert escalation rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No escalations',
+        noEventsDetail: 'No alert escalation activity reported in this window',
+        noVisibilityDetail: data?.message || 'Alert escalation rate unavailable'
+    })) {
         return;
     }
 
@@ -2793,14 +3409,17 @@ function renderAlertEscalationRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderFalsePositiveRate(data) {
     const container = document.getElementById('falsePositiveRate');
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No false positive rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No false positives',
+        noEventsDetail: 'No false positives reported in this window',
+        noVisibilityDetail: data?.message || 'False positive rate unavailable'
+    })) {
         return;
     }
 
@@ -2833,7 +3452,7 @@ function renderFalsePositiveRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderBenignPositiveRate(data) {
@@ -2841,8 +3460,11 @@ function renderBenignPositiveRate(data) {
 
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No benign positive rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No benign positives',
+        noEventsDetail: 'No benign positives reported in this window',
+        noVisibilityDetail: data?.message || 'Benign positive rate unavailable'
+    })) {
         return;
     }
 
@@ -2875,7 +3497,7 @@ function renderBenignPositiveRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAutomationRate(data) {
@@ -2883,8 +3505,11 @@ function renderAutomationRate(data) {
 
     if (!container) return;
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No automation rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No automation events',
+        noEventsDetail: 'No automation activity reported in this window',
+        noVisibilityDetail: data?.message || 'Automation rate unavailable'
+    })) {
         return;
     }
 
@@ -2917,14 +3542,17 @@ function renderAutomationRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderTruePositiveRate(data) {
     const container = document.getElementById('truePositiveRate');
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No true positive rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No true positives',
+        noEventsDetail: 'No true positives reported in this window',
+        noVisibilityDetail: data?.message || 'True positive rate unavailable'
+    })) {
         return;
     }
 
@@ -2957,14 +3585,17 @@ function renderTruePositiveRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderFalseNegativeRate(data) {
     const container = document.getElementById('falseNegativeRate');
 
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No false negative rate data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No false negatives',
+        noEventsDetail: 'No false negatives reported in this window',
+        noVisibilityDetail: data?.message || 'False negative rate unavailable'
+    })) {
         return;
     }
 
@@ -2997,14 +3628,17 @@ function renderFalseNegativeRate(data) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderCustomerTimeBuckets(data) {
     const container = document.getElementById('customerIncidentTimeBuckets');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No time bucket data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No time buckets',
+        noEventsDetail: 'No incident timing buckets reported in this window',
+        noVisibilityDetail: data?.message || 'Incident time buckets unavailable'
+    })) {
         return;
     }
     
@@ -3041,14 +3675,17 @@ function renderCustomerTimeBuckets(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderCustomerTopAlertRules(data) {
     const container = document.getElementById('customerTopAlertRules');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No alert rule data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No alert rules',
+        noEventsDetail: 'No alert rule activity reported in this window',
+        noVisibilityDetail: data?.message || 'Alert rule data unavailable'
+    })) {
         return;
     }
     
@@ -3071,14 +3708,17 @@ function renderCustomerTopAlertRules(data) {
         </table>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAlertNoiseTrend(data) {
     const container = document.getElementById('alertNoiseTrend');
     
-    if (!data || data.status === 'not_implemented' || !data.data || data.data.length === 0) {
-        container.innerHTML = createEmptyState('No alert noise data available');
+    if (renderEmptyState(container, data, {
+        noEventsMessage: 'No alert noise',
+        noEventsDetail: 'No alert noise trend reported in this window',
+        noVisibilityDetail: data?.message || 'Alert noise data unavailable'
+    })) {
         return;
     }
     
@@ -3111,7 +3751,7 @@ function renderAlertNoiseTrend(data) {
         </div>
     `;
     
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
 
 function renderAlertVolumeComparison(currentData, baselineData) {
@@ -3122,12 +3762,18 @@ function renderAlertVolumeComparison(currentData, baselineData) {
     const currentItems = Array.isArray(currentData?.data) ? currentData.data : [];
 
     if (baselineItems.length === 0 && currentItems.length === 0) {
-        container.innerHTML = createEmptyState('No alert volume data available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Alert volume data unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
     if (baselineItems.length === 0) {
-        container.innerHTML = createEmptyState('No baseline alert volume available');
+        setContainerHTML(container, createEmptyState('No visibility', 'no-visibility', {
+            detail: 'Baseline alert volume unavailable',
+            confidence: 'Confidence: Low'
+        }), { force: true });
         return;
     }
 
@@ -3184,5 +3830,5 @@ function renderAlertVolumeComparison(currentData, baselineData) {
         </div>
     `;
 
-    container.innerHTML = html;
+    setContainerHTML(container, html);
 }
