@@ -792,12 +792,28 @@ function renderNewIncidents(data, severityData, inflowData) {
             })
             .slice(0, 4);
         
-        severityMini.innerHTML = severities.map(s => `
-            <div class="severity-dot ${s.severity?.toLowerCase() || ''}">
-                <span class="severity-dot-icon"></span>
-                <span>${s.count}</span>
+        const severityLabels = {
+            critical: 'Crit',
+            high: 'High',
+            medium: 'Med',
+            low: 'Low'
+        };
+        
+        severityMini.innerHTML = `
+            <div class="incident-severity-mini-title">Open by Severity</div>
+            <div class="severity-pills">
+                ${severities.map(s => {
+                    const sev = s.severity?.toLowerCase() || '';
+                    return `
+                        <div class="severity-dot ${sev}">
+                            <span class="severity-dot-icon"></span>
+                            <span class="severity-dot-label">${severityLabels[sev] || sev}</span>
+                            <span class="severity-dot-count">${s.count}</span>
+                        </div>
+                    `;
+                }).join('')}
             </div>
-        `).join('');
+        `;
     }
     
     // Render sparkline if we have inflow data
