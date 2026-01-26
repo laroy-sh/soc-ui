@@ -618,6 +618,7 @@ function renderBarChart(elementId, data, colorType) {
     
     const items = data.data;
     const maxValue = Math.max(...items.map(item => item.count || 0));
+    const total = items.reduce((sum, item) => sum + (item.count || 0), 0);
     
     const html = `
         <div class="bar-chart">
@@ -625,13 +626,15 @@ function renderBarChart(elementId, data, colorType) {
                 const label = item.severity || item.status || item.category || 'Unknown';
                 const count = item.count || 0;
                 const percentage = maxValue > 0 ? (count / maxValue) * 100 : 0;
+                const percentOfTotal = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
                 const colorClass = getColorClass(label, colorType);
+                const tooltipText = `${label}: ${count} (${percentOfTotal}% of total)`;
                 
                 return `
-                    <div class="bar-item">
+                    <div class="bar-item" data-tooltip="${tooltipText}">
                         <div class="bar-label">${label}</div>
                         <div class="bar-track">
-                            <div class="bar-fill ${colorClass}" style="width: ${percentage}%">
+                            <div class="bar-fill ${colorClass}" style="width: ${percentage}%" title="${tooltipText}">
                                 <span class="bar-value">${count}</span>
                             </div>
                         </div>
