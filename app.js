@@ -728,10 +728,36 @@ function renderNewIncidents(data) {
     const card = document.getElementById('newIncidents15m')?.closest('.card');
     const el15m = document.getElementById('newIncidents15m');
     const el60m = document.getElementById('newIncidents60m');
+    const elPace = document.getElementById('newIncidentsPace');
+    const elMomentum = document.getElementById('newIncidentsMomentum');
+    const elSignal = document.getElementById('newIncidentsSignal');
+    const pulseFill = document.getElementById('newIncidentsPulseFill');
+    const pulseLabel = document.getElementById('newIncidentsPulseLabel');
+
+    const resetSignalPill = (text = '—') => {
+        if (!elSignal) return;
+        elSignal.textContent = text;
+        elSignal.classList.remove('signal-normal', 'signal-watch', 'signal-escalate');
+    };
+
+    const resetPulse = () => {
+        if (pulseFill) {
+            pulseFill.style.width = '0%';
+            pulseFill.classList.remove('is-watch', 'is-escalate');
+        }
+        if (pulseLabel) {
+            setTextIfChanged(pulseLabel, '—');
+            pulseLabel.removeAttribute('title');
+        }
+    };
     
     if (!data || !data.data) {
         setTextIfChanged(el15m, '—');
         setTextIfChanged(el60m, '—');
+        setTextIfChanged(elPace, '—');
+        setTextIfChanged(elMomentum, '—');
+        resetSignalPill();
+        resetPulse();
         setConfidenceNote(card, 'No visibility · Confidence: Low', 'low');
         return;
     }
@@ -743,8 +769,61 @@ function renderNewIncidents(data) {
     const prev15m = data.data.prev15m ?? null;
     const prev60m = data.data.prev60m ?? null;
     
-    renderValueWithTrend(el15m, current15m, prev15m, String);
-    renderValueWithTrend(el60m, current60m, prev60m, String);
+    renderValueWithTrend(el15m, current15m, prev15m, formatNumber);
+    renderValueWithTrend(el60m, current60m, prev60m, formatNumber);
+
+    const pacePerHour = current15m * 4;
+    if (elPace) {
+        renderValueWithTrend(elPace, pacePerHour, current60m, value => `${formatNumber(value)}/hr`);
+    }
+
+    if (elMomentum) {
+        const momentumHtml = createTrendIndicator(current15m, prev15m, { showPercent: true });
+        elMomentum.innerHTML = momentumHtml || '—';
+    }
+
+    const baseline15m = current60m > 0 ? current60m / 4 : null;
+    const ratio = baseline15m ? current15m / baseline15m : null;
+    let signalLabel = 'Normal';
+    let signalClass = 'signal-normal';
+
+    if (ratio !== null && current60m >= 8) {
+        if (ratio >= 1.5 && current15m >= 5) {
+            signalLabel = 'Escalate';
+            signalClass = 'signal-escalate';
+        } else if (ratio >= 1.2 && current15m >= 3) {
+            signalLabel = 'Watch';
+            signalClass = 'signal-watch';
+        }
+    }
+
+    if (elSignal) {
+        elSignal.textContent = signalLabel;
+        elSignal.classList.remove('signal-normal', 'signal-watch', 'signal-escalate');
+        elSignal.classList.add(signalClass);
+    }
+
+    if (pulseFill) {
+        const share = current60m > 0 ? Math.min(1, Math.max(0, current15m / current60m)) : 0;
+        pulseFill.style.width = `${Math.round(share * 100)}%`;
+        pulseFill.classList.remove('is-watch', 'is-escalate');
+        if (signalClass === 'signal-watch') {
+            pulseFill.classList.add('is-watch');
+        } else if (signalClass === 'signal-escalate') {
+            pulseFill.classList.add('is-escalate');
+        }
+    }
+
+    if (pulseLabel) {
+        if (current60m > 0) {
+            const sharePercent = Math.round((current15m / current60m) * 100);
+            setTextIfChanged(pulseLabel, `${sharePercent}%`);
+            pulseLabel.setAttribute('title', `${formatNumber(current15m)} of ${formatNumber(current60m)} incidents`);
+        } else {
+            setTextIfChanged(pulseLabel, '—');
+            pulseLabel.removeAttribute('title');
+        }
+    }
 }
 
 function renderBarChart(elementId, data, colorType) {
@@ -2855,7 +2934,8 @@ function setLoadingState(isLoading) {
         '.metric-value-sub',
         '.metric-value',
         '.customer-metric-value',
-        '.roc-hero-value'
+        '.roc-hero-value',
+        '.incident-kpi-value'
     ];
 
     document.querySelectorAll(valueSelectors.join(',')).forEach(element => {

@@ -65,18 +65,44 @@
             <div id="dashboard-analyst" class="dashboard active">
                 <div class="grid">
                     <!-- New Incidents Counter -->
-                    <div class="card card-highlight card-new-incidents">
-                        <div class="card-header-simple">
-                            <h3>New Incidents</h3>
-                        </div>
-                        <div class="new-incidents-grid">
-                            <div class="metric-block">
-                                <div class="metric-value-lg" id="newIncidents15m">—</div>
-                                <div class="metric-label">Last 15m</div>
+                    <div class="card card-span-2 card-highlight incident-pulse-card">
+                        <h3>New Incidents <span class="time-window">(Last 60 min)</span></h3>
+                        <div class="incident-pulse">
+                            <div class="incident-pulse-main">
+                                <span class="incident-pulse-label">Total in last hour</span>
+                                <div class="incident-pulse-value counter-value" id="newIncidents60m">—</div>
+                                <div class="incident-pulse-meta">
+                                    <span class="incident-pulse-meta-label">Pace</span>
+                                    <span class="incident-pulse-meta-value metric-value" id="newIncidentsPace">—</span>
+                                </div>
                             </div>
-                            <div class="metric-block">
-                                <div class="metric-value-lg" id="newIncidents60m">—</div>
-                                <div class="metric-label">Last Hour</div>
+                            <div class="incident-pulse-kpis">
+                                <div class="incident-kpi">
+                                    <span class="incident-kpi-label">Last 15 min</span>
+                                    <span class="incident-kpi-value" id="newIncidents15m">—</span>
+                                </div>
+                                <div class="incident-kpi">
+                                    <span class="incident-kpi-label">Momentum</span>
+                                    <span class="incident-kpi-value" id="newIncidentsMomentum">—</span>
+                                </div>
+                                <div class="incident-kpi">
+                                    <span class="incident-kpi-label">Signal</span>
+                                    <span class="incident-kpi-value signal-pill" id="newIncidentsSignal">—</span>
+                                </div>
+                                <div class="incident-kpi">
+                                    <span class="incident-kpi-label">15m share</span>
+                                    <span class="incident-kpi-value" id="newIncidentsPulseLabel">—</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="incident-pulse-rail">
+                            <div class="incident-pulse-bar">
+                                <span class="incident-pulse-fill is-normal" id="newIncidentsPulseFill"></span>
+                                <span class="incident-pulse-marker" aria-hidden="true"></span>
+                            </div>
+                            <div class="incident-pulse-legend">
+                                <span>Baseline: 25% per 15m</span>
+                                <span>Front-loaded activity</span>
                             </div>
                         </div>
                     </div>
@@ -99,16 +125,16 @@
                         <div id="activeAlertsBySeverity" class="chart-container"></div>
                     </div>
 
-                    <!-- Incident Aging -->
-                    <div class="card card-span-2">
-                        <h3>Incident Aging</h3>
-                        <div id="incidentAging" class="chart-container"></div>
-                    </div>
-
                     <!-- Top Affected Entities -->
                     <div class="card">
                         <h3>Top Affected Entities</h3>
                         <div id="topEntities" class="table-container"></div>
+                    </div>
+
+                    <!-- Incident Aging -->
+                    <div class="card card-span-2">
+                        <h3>Incident Aging</h3>
+                        <div id="incidentAging" class="chart-container"></div>
                     </div>
 
                     <!-- Repeated Detections -->
