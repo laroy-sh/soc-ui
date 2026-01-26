@@ -473,6 +473,13 @@ async function loadAllData() {
         // Update last updated timestamp
         updateTimestamp(openIncidentsBySeverity?.generatedAt);
         
+        // Update navigation badges
+        updateNavBadges({
+            openIncidents: openIncidentsBySeverity,
+            zeroIngestion: zeroIngestion,
+            riskScore: rocRiskScore
+        });
+        
     } catch (error) {
         console.error('Error loading data:', error);
         showError('Failed to load dashboard data');
@@ -3209,6 +3216,43 @@ function setRefreshing(isRefreshing) {
             updateRefreshBadge(badge, 'stale');
         } else {
             updateRefreshBadge(badge, 'live');
+        }
+    }
+}
+
+function updateNavBadges(data) {
+    // Update Analyst badge with total open incidents
+    const analystBadge = document.getElementById('navBadgeAnalyst');
+    if (analystBadge && data.openIncidents?.data) {
+        const total = data.openIncidents.data.reduce((sum, item) => sum + (item.count || 0), 0);
+        analystBadge.textContent = total > 0 ? total : '';
+        
+        // Change badge color based on severity
+        const hasCritical = data.openIncidents.data.some(item => 
+            (item.severity?.toLowerCase() === 'critical' || item.severity?.toLowerCase() === 'high') && item.count > 0
+        );
+        analystBadge.className = `nav-badge${hasCritical ? '' : ' nav-badge-warning'}`;
+    }
+    
+    // Update Telemetry badge with zero ingestion count
+    const telemetryBadge = document.getElementById('navBadgeTelemetry');
+    if (telemetryBadge && data.zeroIngestion?.data) {
+        const count = data.zeroIngestion.data.length || 0;
+        telemetryBadge.textContent = count > 0 ? count : '';
+    }
+    
+    // Update ROC badge with risk score if high
+    const rocBadge = document.getElementById('navBadgeRoc');
+    if (rocBadge && data.riskScore?.data) {
+        const score = data.riskScore.data.score || data.riskScore.data.totalScore || 0;
+        if (score > 100) {
+            rocBadge.textContent = score;
+            rocBadge.className = 'nav-badge';
+        } else if (score > 50) {
+            rocBadge.textContent = score;
+            rocBadge.className = 'nav-badge nav-badge-warning';
+        } else {
+            rocBadge.textContent = '';
         }
     }
 }
