@@ -821,24 +821,29 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgba(15, 23, 42, 0.75);
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
 }
 
 .ring-value {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .ring-label {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-primary);
+    background: rgba(99, 102, 241, 0.15);
+    padding: 2px 8px;
+    border-radius: 4px;
 }
 
 .new-incidents-details {
