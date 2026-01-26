@@ -64,39 +64,38 @@
             <!-- SOC Analyst Dashboard -->
             <div id="dashboard-analyst" class="dashboard active">
                 <div class="grid">
-                    <!-- New Incidents Counter -->
-                    <div class="card card-new-incidents">
-                        <div class="new-incidents-header">
-                            <div class="new-incidents-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                                    <line x1="12" y1="9" x2="12" y2="13"/>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
-                                </svg>
-                            </div>
-                            <h3>New Incidents</h3>
-                        </div>
-                        <div class="new-incidents-counters">
-                            <div class="new-incidents-counter new-incidents-primary">
-                                <div class="new-incidents-value" id="newIncidents15m">—</div>
-                                <div class="new-incidents-label">
-                                    <span class="new-incidents-time">15 min</span>
-                                    <span class="new-incidents-pulse"></span>
+                    <!-- New Incidents Counter - Redesigned -->
+                    <div class="card card-highlight new-incidents-card">
+                        <h3>New Incidents</h3>
+                        <div class="new-incidents-layout">
+                            <div class="new-incidents-primary">
+                                <div class="incident-ring" id="incidentRing">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="ring-bg" cx="60" cy="60" r="52" />
+                                        <circle class="ring-fill" cx="60" cy="60" r="52" id="incidentRingFill" />
+                                    </svg>
+                                    <div class="ring-content">
+                                        <div class="ring-value" id="newIncidents15m">—</div>
+                                        <div class="ring-label">Last 15m</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="new-incidents-divider"></div>
-                            <div class="new-incidents-counter new-incidents-secondary">
-                                <div class="new-incidents-value" id="newIncidents60m">—</div>
-                                <div class="new-incidents-label">
-                                    <span class="new-incidents-time">60 min</span>
+                            <div class="new-incidents-details">
+                                <div class="incident-stat">
+                                    <div class="incident-stat-value" id="newIncidents60m">—</div>
+                                    <div class="incident-stat-label">Last 60 min</div>
+                                </div>
+                                <div class="incident-stat">
+                                    <div class="incident-stat-value" id="newIncidents24h">—</div>
+                                    <div class="incident-stat-label">Last 24 hours</div>
+                                </div>
+                                <div class="incident-severity-mini" id="incidentSeverityMini">
+                                    <!-- Filled by JS -->
                                 </div>
                             </div>
                         </div>
-                        <div class="new-incidents-footer">
-                            <span class="new-incidents-status" id="newIncidentsStatus">
-                                <span class="status-dot"></span>
-                                Monitoring active
-                            </span>
+                        <div class="new-incidents-sparkline" id="incidentSparkline">
+                            <!-- SVG sparkline filled by JS -->
                         </div>
                     </div>
 

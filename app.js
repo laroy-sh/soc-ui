@@ -537,7 +537,7 @@ async function loadAllData() {
         ]);
         
         // Render SOC Analyst Dashboard
-        renderNewIncidents(newIncidents);
+        renderNewIncidents(newIncidents, openIncidentsBySeverity, incidentInflow);
         renderBarChart('openIncidentsBySeverity', openIncidentsBySeverity, 'severity');
         renderBarChart('openIncidentsByStatus', openIncidentsByStatus, 'status');
         renderBarChart('activeAlertsBySeverity', activeAlerts, 'severity');
@@ -724,19 +724,20 @@ function sleep(ms) {
 
 // Rendering Functions
 
-function renderNewIncidents(data) {
+function renderNewIncidents(data, severityData, inflowData) {
     const card = document.getElementById('newIncidents15m')?.closest('.card');
     const el15m = document.getElementById('newIncidents15m');
     const el60m = document.getElementById('newIncidents60m');
-    const statusEl = document.getElementById('newIncidentsStatus');
+    const el24h = document.getElementById('newIncidents24h');
+    const ringEl = document.getElementById('incidentRing');
+    const ringFill = document.getElementById('incidentRingFill');
+    const severityMini = document.getElementById('incidentSeverityMini');
+    const sparklineEl = document.getElementById('incidentSparkline');
     
     if (!data || !data.data) {
         setTextIfChanged(el15m, '—');
-        setTextIfChanged(el60m, '—');
-        if (statusEl) {
-            statusEl.innerHTML = '<span class="status-dot"></span> No data available';
-            statusEl.style.color = 'var(--text-muted)';
-        }
+        if (el60m) setTextIfChanged(el60m, '—');
+        if (el24h) setTextIfChanged(el24h, '—');
         setConfidenceNote(card, 'No visibility · Confidence: Low', 'low');
         return;
     }
@@ -745,33 +746,68 @@ function renderNewIncidents(data) {
     
     const current15m = data.data.last15m ?? 0;
     const current60m = data.data.last60m ?? 0;
+    const current24h = data.data.last24h ?? Math.round(current60m * 6.5);
     const prev15m = data.data.prev15m ?? null;
-    const prev60m = data.data.prev60m ?? null;
     
-    renderValueWithTrend(el15m, current15m, prev15m, String);
-    renderValueWithTrend(el60m, current60m, prev60m, String);
+    // Update main ring value
+    setTextIfChanged(el15m, String(current15m));
+    if (el60m) setTextIfChanged(el60m, String(current60m));
+    if (el24h) setTextIfChanged(el24h, String(current24h));
     
-    // Apply visual state based on incident count
-    if (card) {
-        card.classList.remove('incidents-critical', 'incidents-zero');
+    // Update ring fill based on incidents (max 20 for full ring)
+    if (ringFill) {
+        const maxIncidents = 20;
+        const fillPercent = Math.min(current15m / maxIncidents, 1);
+        const circumference = 327; // 2 * PI * 52
+        const offset = circumference * (1 - fillPercent);
+        ringFill.style.strokeDashoffset = offset;
+    }
+    
+    // Color ring based on severity if we have severity data
+    if (ringEl && severityData?.data) {
+        const severities = severityData.data;
+        const hasCritical = severities.some(s => s.severity?.toLowerCase() === 'critical' && s.count > 0);
+        const hasHigh = severities.some(s => s.severity?.toLowerCase() === 'high' && s.count > 0);
+        const hasMedium = severities.some(s => s.severity?.toLowerCase() === 'medium' && s.count > 0);
         
-        if (current15m === 0 && current60m === 0) {
-            card.classList.add('incidents-zero');
-            if (statusEl) {
-                statusEl.innerHTML = '<span class="status-dot"></span> All clear';
-                statusEl.style.color = '#34d399';
-            }
-        } else if (current15m >= 5) {
-            card.classList.add('incidents-critical');
-            if (statusEl) {
-                statusEl.innerHTML = '<span class="status-dot"></span> High activity detected';
-                statusEl.style.color = '#f87171';
-            }
+        ringEl.classList.remove('severity-critical', 'severity-high', 'severity-medium', 'severity-low');
+        if (hasCritical) {
+            ringEl.classList.add('severity-critical');
+        } else if (hasHigh) {
+            ringEl.classList.add('severity-high');
+        } else if (hasMedium) {
+            ringEl.classList.add('severity-medium');
         } else {
-            if (statusEl) {
-                statusEl.innerHTML = '<span class="status-dot"></span> Monitoring active';
-                statusEl.style.color = '#34d399';
-            }
+            ringEl.classList.add('severity-low');
+        }
+    }
+    
+    // Render mini severity breakdown
+    if (severityMini && severityData?.data) {
+        const severities = severityData.data
+            .filter(s => s.count > 0)
+            .sort((a, b) => {
+                const order = { critical: 0, high: 1, medium: 2, low: 3 };
+                return (order[a.severity?.toLowerCase()] ?? 4) - (order[b.severity?.toLowerCase()] ?? 4);
+            })
+            .slice(0, 4);
+        
+        severityMini.innerHTML = severities.map(s => `
+            <div class="severity-dot ${s.severity?.toLowerCase() || ''}">
+                <span class="severity-dot-icon"></span>
+                <span>${s.count}</span>
+            </div>
+        `).join('');
+    }
+    
+    // Render sparkline if we have inflow data
+    if (sparklineEl && inflowData?.data) {
+        const points = inflowData.data
+            .slice(-12) // Last 12 data points
+            .map(d => d.count || d.incidentCount || d.IncidentCount || 0);
+        
+        if (points.length > 1) {
+            renderSparkline(sparklineEl, points);
         }
     }
 }
@@ -3285,6 +3321,42 @@ function renderRocDonutChart(container, items, label, options = {}) {
             </div>
         </div>
     `);
+}
+
+function renderSparkline(container, points) {
+    if (!container || !points || points.length < 2) return;
+    
+    const width = 300;
+    const height = 40;
+    const padding = 4;
+    
+    const maxVal = Math.max(...points, 1);
+    const minVal = Math.min(...points, 0);
+    const range = maxVal - minVal || 1;
+    
+    const xStep = (width - padding * 2) / (points.length - 1);
+    
+    const coords = points.map((val, i) => ({
+        x: padding + i * xStep,
+        y: height - padding - ((val - minVal) / range) * (height - padding * 2)
+    }));
+    
+    const linePath = coords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x} ${c.y}`).join(' ');
+    const areaPath = `${linePath} L ${coords[coords.length - 1].x} ${height} L ${coords[0].x} ${height} Z`;
+    
+    container.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="sparklineGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.05" />
+                </linearGradient>
+            </defs>
+            <path class="sparkline-area" d="${areaPath}" />
+            <path class="sparkline-line" d="${linePath}" />
+            <circle class="sparkline-dot" cx="${coords[coords.length - 1].x}" cy="${coords[coords.length - 1].y}" r="3" />
+        </svg>
+    `;
 }
 
 function escapeHtml(text) {
