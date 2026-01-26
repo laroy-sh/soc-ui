@@ -18,9 +18,67 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeNavigation();
     initializeFilterBar();
     initializeRocFilters();
+    initializeMobileMenu();
     loadAllData();
     startAutoRefresh();
 });
+
+// Mobile Menu
+function initializeMobileMenu() {
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (!menuBtn || !sidebar) return;
+    
+    const openMenu = () => {
+        sidebar.classList.add('open');
+        overlay?.classList.add('visible');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    };
+    
+    const closeMenu = () => {
+        sidebar.classList.remove('open');
+        overlay?.classList.remove('visible');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    };
+    
+    menuBtn.addEventListener('click', () => {
+        const isOpen = sidebar.classList.contains('open');
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+    
+    overlay?.addEventListener('click', closeMenu);
+    
+    // Close menu when a nav link is clicked (mobile)
+    sidebar.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeMenu();
+            }
+        });
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu when window resizes to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && sidebar.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+}
 
 // Navigation
 function initializeNavigation() {
