@@ -64,38 +64,38 @@
             <!-- SOC Analyst Dashboard -->
             <div id="dashboard-analyst" class="dashboard active">
                 <div class="grid">
-                    <!-- New Incidents Counter - Redesigned -->
-                    <div class="card card-highlight new-incidents-card">
-                        <h3>New Incidents</h3>
-                        <div class="new-incidents-layout">
-                            <div class="new-incidents-primary">
-                                <div class="incident-ring" id="incidentRing">
-                                    <svg viewBox="0 0 120 120">
-                                        <circle class="ring-bg" cx="60" cy="60" r="52" />
-                                        <circle class="ring-fill" cx="60" cy="60" r="52" id="incidentRingFill" />
-                                    </svg>
-                                    <div class="ring-content">
-                                        <div class="ring-value" id="newIncidents15m">—</div>
-                                        <div class="ring-label">Last 15m</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="new-incidents-details">
-                                <div class="incident-stat">
-                                    <div class="incident-stat-value" id="newIncidents60m">—</div>
-                                    <div class="incident-stat-label">Last 60 min</div>
-                                </div>
-                                <div class="incident-stat">
-                                    <div class="incident-stat-value" id="newIncidents24h">—</div>
-                                    <div class="incident-stat-label">Last 24 hours</div>
-                                </div>
-                                <div class="incident-severity-mini" id="incidentSeverityMini">
-                                    <!-- Filled by JS -->
-                                </div>
-                            </div>
+                    <!-- New Incidents Counter -->
+                    <div class="card card-highlight card-new-incidents">
+                        <div class="card-header-simple">
+                            <h3>New Incidents</h3>
                         </div>
-                        <div class="new-incidents-sparkline" id="incidentSparkline">
-                            <!-- SVG sparkline filled by JS -->
+                        <div class="counter-split">
+                            <div class="counter-panel">
+                                <div class="counter-icon-wrapper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="counter-content">
+                                    <div class="counter-value" id="newIncidents15m">—</div>
+                                    <div class="counter-label">Last 15 Minutes</div>
+                                </div>
+                            </div>
+                            <div class="counter-panel-divider"></div>
+                            <div class="counter-panel">
+                                <div class="counter-icon-wrapper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                                        <circle cx="12" cy="12" r="7"></circle>
+                                        <polyline points="12 9 12 12 13.5 13.5"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="counter-content">
+                                    <div class="counter-value" id="newIncidents60m">—</div>
+                                    <div class="counter-label">Last 60 Minutes</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
