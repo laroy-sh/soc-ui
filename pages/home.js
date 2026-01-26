@@ -291,7 +291,15 @@ export function buildHomeView() {
     bannerMeta.className = 'control-banner-meta';
     const timeRangeChip = document.createElement('span');
     timeRangeChip.className = 'control-chip';
+    const bannerDrilldown = document.createElement('button');
+    bannerDrilldown.type = 'button';
+    bannerDrilldown.className = 'control-chip control-chip--button';
+    bannerDrilldown.textContent = 'Open provider vs internal';
+    bannerDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/provider-vs-internal';
+    });
     bannerMeta.appendChild(timeRangeChip);
+    bannerMeta.appendChild(bannerDrilldown);
 
     bannerHeader.appendChild(bannerHeading);
     bannerHeader.appendChild(bannerMeta);
@@ -324,8 +332,16 @@ export function buildHomeView() {
     clearSelection.className = 'control-chip control-chip--button';
     clearSelection.textContent = 'Clear window';
     clearSelection.addEventListener('click', () => setSelectedTimeWindow(null));
+    const timelineDrilldown = document.createElement('button');
+    timelineDrilldown.type = 'button';
+    timelineDrilldown.className = 'control-chip control-chip--button';
+    timelineDrilldown.textContent = 'Open operator timeline';
+    timelineDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     timelineMeta.appendChild(selectionChip);
     timelineMeta.appendChild(clearSelection);
+    timelineMeta.appendChild(timelineDrilldown);
 
     timelineHeader.appendChild(timelineHeading);
     timelineHeader.appendChild(timelineMeta);
@@ -369,7 +385,15 @@ export function buildHomeView() {
     reviewMeta.className = 'review-meta';
     const reviewChip = document.createElement('span');
     reviewChip.className = 'control-chip';
+    const reviewDrilldown = document.createElement('button');
+    reviewDrilldown.type = 'button';
+    reviewDrilldown.className = 'control-chip control-chip--button';
+    reviewDrilldown.textContent = 'Open resource impact';
+    reviewDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/resource-impact';
+    });
     reviewMeta.appendChild(reviewChip);
+    reviewMeta.appendChild(reviewDrilldown);
 
     reviewHeader.appendChild(reviewHeading);
     reviewHeader.appendChild(reviewMeta);
@@ -452,14 +476,14 @@ export function buildHomeView() {
                     value: ticketedPct == null ? '--' : formatPercent(ticketedPct),
                     status: ticketedPct == null ? 'neutral' : ticketedPct >= 85 ? 'success' : ticketedPct >= 70 ? 'warning' : 'danger',
                     helper: signIns.length ? `${ticketedSessions} of ${signIns.length}` : 'No sessions',
-                    href: '/privileged'
+                    href: '/drilldown/operator-timeline'
                 }),
                 createKpiTile({
                     label: 'Break-glass usage',
                     value: `${breakGlassSessions}`,
                     status: breakGlassSessions === 0 ? 'success' : 'danger',
                     helper: unlinkedSessions ? `${unlinkedSessions} unlinked sessions` : 'No unlinked sessions',
-                    href: '/privileged'
+                    href: '/drilldown/no-ticket'
                 })
             ])
         );
@@ -471,14 +495,14 @@ export function buildHomeView() {
                     value: `${openHighRisk}`,
                     status: openHighRisk === 0 ? 'success' : openHighRisk > 2 ? 'danger' : 'warning',
                     helper: `${highRiskChanges.length} total`,
-                    href: '/change-ledger'
+                    href: '/drilldown/resource-impact'
                 }),
                 createKpiTile({
                     label: 'Critical without ticket',
                     value: `${ticketlessCritical}`,
                     status: ticketlessCritical === 0 ? 'success' : 'danger',
                     helper: ticketlessCritical ? 'Immediate escalation' : 'Ticketed',
-                    href: '/change-ledger'
+                    href: '/drilldown/no-ticket'
                 })
             ])
         );
@@ -490,14 +514,14 @@ export function buildHomeView() {
                     value: `${providerActivity.length}`,
                     status: providerActivity.length < 6 ? 'success' : providerActivity.length < 12 ? 'warning' : 'danger',
                     helper: `${activeOperators.size} active operators`,
-                    href: '/ueba'
+                    href: '/drilldown/provider-vs-internal'
                 }),
                 createKpiTile({
                     label: 'Privileged elevations',
                     value: `${filterItems(elevations, filters, 'startTime').length}`,
                     status: 'neutral',
                     helper: 'Provider + internal',
-                    href: '/privileged'
+                    href: '/drilldown/operator-timeline'
                 })
             ])
         );

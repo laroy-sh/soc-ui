@@ -507,8 +507,16 @@ export function buildPrivilegedView() {
     clearSelection.type = 'button';
     clearSelection.className = 'control-chip control-chip--button';
     clearSelection.textContent = 'Clear selection';
+    const heatmapDrilldown = document.createElement('button');
+    heatmapDrilldown.type = 'button';
+    heatmapDrilldown.className = 'control-chip control-chip--button';
+    heatmapDrilldown.textContent = 'Open operator timeline';
+    heatmapDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     heatmapMeta.appendChild(selectionChip);
     heatmapMeta.appendChild(clearSelection);
+    heatmapMeta.appendChild(heatmapDrilldown);
 
     heatmapHeader.appendChild(heatmapHeading);
     heatmapHeader.appendChild(heatmapMeta);
@@ -542,12 +550,23 @@ export function buildPrivilegedView() {
     inventoryCard.className = 'inventory-card';
     const inventoryHeader = document.createElement('div');
     inventoryHeader.className = 'inventory-header';
+    const inventoryMeta = document.createElement('div');
+    inventoryMeta.className = 'inventory-meta';
+    const inventoryDrilldown = document.createElement('button');
+    inventoryDrilldown.type = 'button';
+    inventoryDrilldown.className = 'control-chip control-chip--button';
+    inventoryDrilldown.textContent = 'Open provider vs internal';
+    inventoryDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/provider-vs-internal';
+    });
     const inventoryTitle = document.createElement('h3');
     inventoryTitle.textContent = 'Standing Privilege Inventory';
     const inventorySubtitle = document.createElement('p');
     inventorySubtitle.textContent = 'Counts of standing roles, split by provider vs internal.';
     inventoryHeader.appendChild(inventoryTitle);
     inventoryHeader.appendChild(inventorySubtitle);
+    inventoryHeader.appendChild(inventoryMeta);
+    inventoryMeta.appendChild(inventoryDrilldown);
     const inventoryMetrics = document.createElement('div');
     inventoryMetrics.className = 'inventory-metrics';
     const inventoryTotal = document.createElement('div');
@@ -587,6 +606,15 @@ export function buildPrivilegedView() {
     breakGlassCard.className = 'breakglass-card';
     const breakGlassHeader = document.createElement('div');
     breakGlassHeader.className = 'breakglass-header';
+    const breakGlassMeta = document.createElement('div');
+    breakGlassMeta.className = 'breakglass-meta';
+    const breakGlassDrilldown = document.createElement('button');
+    breakGlassDrilldown.type = 'button';
+    breakGlassDrilldown.className = 'control-chip control-chip--button';
+    breakGlassDrilldown.textContent = 'Open no-ticket view';
+    breakGlassDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/no-ticket';
+    });
     const breakGlassTitle = document.createElement('h3');
     breakGlassTitle.textContent = 'Break-glass Usage';
     const breakGlassSubtitle = document.createElement('p');
@@ -594,6 +622,8 @@ export function buildPrivilegedView() {
         'Impossible-to-miss signal for emergency access.';
     breakGlassHeader.appendChild(breakGlassTitle);
     breakGlassHeader.appendChild(breakGlassSubtitle);
+    breakGlassHeader.appendChild(breakGlassMeta);
+    breakGlassMeta.appendChild(breakGlassDrilldown);
     const breakGlassTileWrap = document.createElement('div');
     breakGlassTileWrap.className = 'breakglass-tile-wrap';
     const breakGlassTimeline = document.createElement('div');
@@ -627,8 +657,16 @@ export function buildPrivilegedView() {
     elevationWindowChip.className = 'control-chip';
     const elevationSelectionChip = document.createElement('span');
     elevationSelectionChip.className = 'control-chip';
+    const elevationDrilldown = document.createElement('button');
+    elevationDrilldown.type = 'button';
+    elevationDrilldown.className = 'control-chip control-chip--button';
+    elevationDrilldown.textContent = 'Open operator timeline';
+    elevationDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     elevationMeta.appendChild(elevationWindowChip);
     elevationMeta.appendChild(elevationSelectionChip);
+    elevationMeta.appendChild(elevationDrilldown);
     elevationHeader.appendChild(elevationHeading);
     elevationHeader.appendChild(elevationMeta);
 

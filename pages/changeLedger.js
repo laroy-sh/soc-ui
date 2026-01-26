@@ -811,9 +811,18 @@ export function buildChangeLedgerView() {
     const exposureChip = document.createElement('span');
     exposureChip.className = 'control-chip';
 
+    const ledgerDrilldown = document.createElement('button');
+    ledgerDrilldown.type = 'button';
+    ledgerDrilldown.className = 'control-chip control-chip--button';
+    ledgerDrilldown.textContent = 'Open resource impact';
+    ledgerDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/resource-impact';
+    });
+
     headerMeta.appendChild(windowChip);
     headerMeta.appendChild(tabChip);
     headerMeta.appendChild(exposureChip);
+    headerMeta.appendChild(ledgerDrilldown);
 
     headerTop.appendChild(headerCopy);
     headerTop.appendChild(headerMeta);
@@ -864,8 +873,16 @@ export function buildChangeLedgerView() {
     exposureTitle.textContent = 'Public exposure tracker';
     const exposureSubtitle = document.createElement('p');
     exposureSubtitle.textContent = 'Live exposure counts from open changes.';
+    const exposureDrilldown = document.createElement('button');
+    exposureDrilldown.type = 'button';
+    exposureDrilldown.className = 'control-chip control-chip--button';
+    exposureDrilldown.textContent = 'Open resource impact';
+    exposureDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/resource-impact';
+    });
     exposureHeader.appendChild(exposureTitle);
     exposureHeader.appendChild(exposureSubtitle);
+    exposureHeader.appendChild(exposureDrilldown);
     const exposureTiles = document.createElement('div');
     exposureTiles.className = 'exposure-tiles';
     exposureCard.appendChild(exposureHeader);
@@ -879,8 +896,16 @@ export function buildChangeLedgerView() {
     topRiskTitle.textContent = 'Top 10 riskiest changes this week';
     const topRiskSubtitle = document.createElement('p');
     topRiskSubtitle.textContent = 'Prioritized by severity and recency.';
+    const topRiskDrilldown = document.createElement('button');
+    topRiskDrilldown.type = 'button';
+    topRiskDrilldown.className = 'control-chip control-chip--button';
+    topRiskDrilldown.textContent = 'Open no-ticket view';
+    topRiskDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/no-ticket';
+    });
     topRiskHeader.appendChild(topRiskTitle);
     topRiskHeader.appendChild(topRiskSubtitle);
+    topRiskHeader.appendChild(topRiskDrilldown);
     const topRiskBody = document.createElement('div');
     topRiskBody.className = 'ledger-risk-table';
     topRiskCard.appendChild(topRiskHeader);
@@ -1004,7 +1029,8 @@ export function buildChangeLedgerView() {
                 label: 'Public endpoints open',
                 value: exposureMetrics.publicEndpoints,
                 status: exposureMetrics.publicEndpoints === 0 ? 'success' : 'danger',
-                helper: 'External ingress changes'
+                helper: 'External ingress changes',
+                href: '/drilldown/resource-impact'
             })
         );
         exposureTiles.appendChild(
@@ -1012,7 +1038,8 @@ export function buildChangeLedgerView() {
                 label: 'Unauthenticated services',
                 value: exposureMetrics.unauthenticated,
                 status: exposureMetrics.unauthenticated === 0 ? 'success' : 'warning',
-                helper: 'Missing auth controls'
+                helper: 'Missing auth controls',
+                href: '/drilldown/resource-impact'
             })
         );
         exposureTiles.appendChild(
@@ -1020,7 +1047,8 @@ export function buildChangeLedgerView() {
                 label: 'External admin roles',
                 value: exposureMetrics.externalAdmins,
                 status: exposureMetrics.externalAdmins === 0 ? 'success' : 'warning',
-                helper: 'Privilege expansion'
+                helper: 'Privilege expansion',
+                href: '/drilldown/provider-vs-internal'
             })
         );
         exposureTiles.appendChild(
@@ -1028,7 +1056,8 @@ export function buildChangeLedgerView() {
                 label: 'Data exfil risk',
                 value: exposureMetrics.dataExfil,
                 status: exposureMetrics.dataExfil === 0 ? 'success' : 'danger',
-                helper: 'High-risk data actions'
+                helper: 'High-risk data actions',
+                href: '/drilldown/no-ticket'
             })
         );
 

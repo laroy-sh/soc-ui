@@ -590,8 +590,16 @@ export function buildUebaView() {
     filterChip.className = 'control-chip';
     const rangeChip = document.createElement('span');
     rangeChip.className = 'control-chip';
+    const bannerDrilldown = document.createElement('button');
+    bannerDrilldown.type = 'button';
+    bannerDrilldown.className = 'control-chip control-chip--button';
+    bannerDrilldown.textContent = 'Open operator timeline';
+    bannerDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     bannerMeta.appendChild(filterChip);
     bannerMeta.appendChild(rangeChip);
+    bannerMeta.appendChild(bannerDrilldown);
 
     banner.appendChild(bannerTitle);
     banner.appendChild(bannerSubtitle);
@@ -618,8 +626,16 @@ export function buildUebaView() {
     riskCountChip.className = 'control-chip';
     const riskDeltaChip = document.createElement('span');
     riskDeltaChip.className = 'control-chip';
+    const riskDrilldown = document.createElement('button');
+    riskDrilldown.type = 'button';
+    riskDrilldown.className = 'control-chip control-chip--button';
+    riskDrilldown.textContent = 'Open operator timeline';
+    riskDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     riskMeta.appendChild(riskCountChip);
     riskMeta.appendChild(riskDeltaChip);
+    riskMeta.appendChild(riskDrilldown);
     riskHeader.appendChild(riskHeading);
     riskHeader.appendChild(riskMeta);
     const riskTableWrap = document.createElement('div');
@@ -645,8 +661,16 @@ export function buildUebaView() {
     firstCountChip.className = 'control-chip';
     const firstWindowChip = document.createElement('span');
     firstWindowChip.className = 'control-chip';
+    const firstDrilldown = document.createElement('button');
+    firstDrilldown.type = 'button';
+    firstDrilldown.className = 'control-chip control-chip--button';
+    firstDrilldown.textContent = 'Open no-ticket view';
+    firstDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/no-ticket';
+    });
     firstMeta.appendChild(firstCountChip);
     firstMeta.appendChild(firstWindowChip);
+    firstMeta.appendChild(firstDrilldown);
     firstHeader.appendChild(firstHeading);
     firstHeader.appendChild(firstMeta);
     const firstTableWrap = document.createElement('div');
@@ -676,7 +700,15 @@ export function buildUebaView() {
     travelMeta.className = 'ueba-card-meta';
     const travelCountChip = document.createElement('span');
     travelCountChip.className = 'control-chip';
+    const travelDrilldown = document.createElement('button');
+    travelDrilldown.type = 'button';
+    travelDrilldown.className = 'control-chip control-chip--button';
+    travelDrilldown.textContent = 'Open operator timeline';
+    travelDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     travelMeta.appendChild(travelCountChip);
+    travelMeta.appendChild(travelDrilldown);
     travelHeader.appendChild(travelHeading);
     travelHeader.appendChild(travelMeta);
     const travelTableWrap = document.createElement('div');
@@ -700,7 +732,15 @@ export function buildUebaView() {
     sessionMeta.className = 'ueba-card-meta';
     const sessionCountChip = document.createElement('span');
     sessionCountChip.className = 'control-chip';
+    const sessionDrilldown = document.createElement('button');
+    sessionDrilldown.type = 'button';
+    sessionDrilldown.className = 'control-chip control-chip--button';
+    sessionDrilldown.textContent = 'Open operator timeline';
+    sessionDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/operator-timeline';
+    });
     sessionMeta.appendChild(sessionCountChip);
+    sessionMeta.appendChild(sessionDrilldown);
     sessionHeader.appendChild(sessionHeading);
     sessionHeader.appendChild(sessionMeta);
     const sessionList = document.createElement('div');

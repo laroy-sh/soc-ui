@@ -428,8 +428,16 @@ export function buildBlastRadiusView() {
     timeRangeChip.className = 'control-chip';
     const criticalChip = document.createElement('span');
     criticalChip.className = 'control-chip';
+    const bannerDrilldown = document.createElement('button');
+    bannerDrilldown.type = 'button';
+    bannerDrilldown.className = 'control-chip control-chip--button';
+    bannerDrilldown.textContent = 'Open operator timeline';
+    bannerDrilldown.addEventListener('click', () => {
+        window.location.hash = `#${ROUTES.operatorTimeline}`;
+    });
     bannerMeta.appendChild(timeRangeChip);
     bannerMeta.appendChild(criticalChip);
+    bannerMeta.appendChild(bannerDrilldown);
     banner.appendChild(bannerTitle);
     banner.appendChild(bannerSubtitle);
     banner.appendChild(bannerMeta);
@@ -452,7 +460,15 @@ export function buildBlastRadiusView() {
     backupMeta.className = 'monitoring-card-meta';
     const backupChip = document.createElement('span');
     backupChip.className = 'control-chip';
+    const backupDrilldown = document.createElement('button');
+    backupDrilldown.type = 'button';
+    backupDrilldown.className = 'control-chip control-chip--button';
+    backupDrilldown.textContent = 'Open resource impact';
+    backupDrilldown.addEventListener('click', () => {
+        window.location.hash = `#${ROUTES.resourceImpact}`;
+    });
     backupMeta.appendChild(backupChip);
+    backupMeta.appendChild(backupDrilldown);
     backupHeader.appendChild(backupHeading);
     backupHeader.appendChild(backupMeta);
     const backupTiles = document.createElement('div');
@@ -478,7 +494,15 @@ export function buildBlastRadiusView() {
     keyMeta.className = 'monitoring-card-meta';
     const keyChip = document.createElement('span');
     keyChip.className = 'control-chip';
+    const keyDrilldown = document.createElement('button');
+    keyDrilldown.type = 'button';
+    keyDrilldown.className = 'control-chip control-chip--button';
+    keyDrilldown.textContent = 'Open resource impact';
+    keyDrilldown.addEventListener('click', () => {
+        window.location.hash = `#${ROUTES.resourceImpact}`;
+    });
     keyMeta.appendChild(keyChip);
+    keyMeta.appendChild(keyDrilldown);
     keyHeader.appendChild(keyHeading);
     keyHeader.appendChild(keyMeta);
     const keyTiles = document.createElement('div');
@@ -552,7 +576,15 @@ export function buildBlastRadiusView() {
     burstMeta.className = 'monitoring-card-meta';
     const burstChip = document.createElement('span');
     burstChip.className = 'control-chip';
+    const burstDrilldown = document.createElement('button');
+    burstDrilldown.type = 'button';
+    burstDrilldown.className = 'control-chip control-chip--button';
+    burstDrilldown.textContent = 'Open operator timeline';
+    burstDrilldown.addEventListener('click', () => {
+        window.location.hash = `#${ROUTES.operatorTimeline}`;
+    });
     burstMeta.appendChild(burstChip);
+    burstMeta.appendChild(burstDrilldown);
     burstHeader.appendChild(burstHeading);
     burstHeader.appendChild(burstMeta);
     const burstTableWrap = document.createElement('div');

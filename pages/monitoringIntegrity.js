@@ -510,8 +510,19 @@ export function buildMonitoringIntegrityView() {
     stanceSubtitle.className = 'monitoring-integrity-subtitle';
     stanceSubtitle.textContent =
         'Audit plane signals are immutable. Gaps surface as incidents, not silence.';
+    const stanceActions = document.createElement('div');
+    stanceActions.className = 'monitoring-banner-actions';
+    const stanceDrilldown = document.createElement('button');
+    stanceDrilldown.type = 'button';
+    stanceDrilldown.className = 'control-chip control-chip--button';
+    stanceDrilldown.textContent = 'Open provider vs internal';
+    stanceDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/provider-vs-internal';
+    });
+    stanceActions.appendChild(stanceDrilldown);
     stanceBanner.appendChild(stanceTitle);
     stanceBanner.appendChild(stanceSubtitle);
+    stanceBanner.appendChild(stanceActions);
 
     const planeGrid = document.createElement('div');
     planeGrid.className = 'monitoring-plane-grid';
@@ -553,7 +564,15 @@ export function buildMonitoringIntegrityView() {
     healthMeta.className = 'monitoring-card-meta';
     const healthChip = document.createElement('span');
     healthChip.className = 'control-chip';
+    const healthDrilldown = document.createElement('button');
+    healthDrilldown.type = 'button';
+    healthDrilldown.className = 'control-chip control-chip--button';
+    healthDrilldown.textContent = 'Open resource impact';
+    healthDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/resource-impact';
+    });
     healthMeta.appendChild(healthChip);
+    healthMeta.appendChild(healthDrilldown);
     healthHeader.appendChild(healthHeading);
     healthHeader.appendChild(healthMeta);
     const healthMapWrap = document.createElement('div');
@@ -576,7 +595,15 @@ export function buildMonitoringIntegrityView() {
     retentionMeta.className = 'monitoring-card-meta';
     const retentionChip = document.createElement('span');
     retentionChip.className = 'control-chip';
+    const retentionDrilldown = document.createElement('button');
+    retentionDrilldown.type = 'button';
+    retentionDrilldown.className = 'control-chip control-chip--button';
+    retentionDrilldown.textContent = 'Open resource impact';
+    retentionDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/resource-impact';
+    });
     retentionMeta.appendChild(retentionChip);
+    retentionMeta.appendChild(retentionDrilldown);
     retentionHeader.appendChild(retentionHeading);
     retentionHeader.appendChild(retentionMeta);
     const retentionTableWrap = document.createElement('div');
@@ -626,7 +653,15 @@ export function buildMonitoringIntegrityView() {
     tamperMeta.className = 'monitoring-card-meta';
     const tamperChip = document.createElement('span');
     tamperChip.className = 'control-chip';
+    const tamperDrilldown = document.createElement('button');
+    tamperDrilldown.type = 'button';
+    tamperDrilldown.className = 'control-chip control-chip--button';
+    tamperDrilldown.textContent = 'Open no-ticket view';
+    tamperDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/no-ticket';
+    });
     tamperMeta.appendChild(tamperChip);
+    tamperMeta.appendChild(tamperDrilldown);
     tamperHeader.appendChild(tamperHeading);
     tamperHeader.appendChild(tamperMeta);
     const tamperTableWrap = document.createElement('div');
@@ -649,7 +684,15 @@ export function buildMonitoringIntegrityView() {
     telemetryMeta.className = 'monitoring-card-meta';
     const telemetryChip = document.createElement('span');
     telemetryChip.className = 'control-chip';
+    const telemetryDrilldown = document.createElement('button');
+    telemetryDrilldown.type = 'button';
+    telemetryDrilldown.className = 'control-chip control-chip--button';
+    telemetryDrilldown.textContent = 'Open provider vs internal';
+    telemetryDrilldown.addEventListener('click', () => {
+        window.location.hash = '#/drilldown/provider-vs-internal';
+    });
     telemetryMeta.appendChild(telemetryChip);
+    telemetryMeta.appendChild(telemetryDrilldown);
     telemetryHeader.appendChild(telemetryHeading);
     telemetryHeader.appendChild(telemetryMeta);
     const telemetryTableWrap = document.createElement('div');
@@ -691,7 +734,8 @@ export function buildMonitoringIntegrityView() {
                 status: getConfidenceStatus(ingestionMetrics.confidence, ingestionMetrics.missing),
                 helper: ingestionMetrics.total
                     ? `${ingestionMetrics.healthy} healthy | ${ingestionMetrics.delayed} delayed | ${ingestionMetrics.missing} missing`
-                    : 'No ingestion sources'
+                    : 'No ingestion sources',
+                href: ROUTES.resourceImpact
             })
         );
         auditIndicators.appendChild(
@@ -701,7 +745,8 @@ export function buildMonitoringIntegrityView() {
                 status: ingestionMetrics.missing > 0 ? 'danger' : 'success',
                 helper: ingestionMetrics.total
                     ? `${ingestionMetrics.total} audit feeds monitored`
-                    : 'Audit feed coverage unknown'
+                    : 'Audit feed coverage unknown',
+                href: ROUTES.resourceImpact
             })
         );
 
@@ -715,7 +760,8 @@ export function buildMonitoringIntegrityView() {
                 status: getConfidenceStatus(telemetryMetrics.confidence, telemetryMetrics.missing),
                 helper: telemetryMetrics.total
                     ? `${telemetryMetrics.missing} missing | ${telemetryMetrics.delayed} delayed`
-                    : 'No telemetry feeds'
+                    : 'No telemetry feeds',
+                href: '/drilldown/provider-vs-internal'
             })
         );
         providerIndicators.appendChild(
@@ -723,7 +769,8 @@ export function buildMonitoringIntegrityView() {
                 label: 'Tampering success',
                 value: tamperSuccessCount,
                 status: tamperSuccessCount > 0 ? 'danger' : 'success',
-                helper: tampering.length ? `${tampering.length} attempts observed` : 'No tampering attempts'
+                helper: tampering.length ? `${tampering.length} attempts observed` : 'No tampering attempts',
+                href: ROUTES.operatorTimeline
             })
         );
 
