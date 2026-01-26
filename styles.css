@@ -633,12 +633,76 @@ body {
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
 }
 
 .counter-label {
     font-size: var(--font-size-sm);
     color: var(--text-muted);
     margin-top: var(--spacing-sm);
+}
+
+/* Trend Indicators */
+.trend-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.trend-indicator-up {
+    color: #fca5a5;
+    background: rgba(248, 113, 113, 0.15);
+}
+
+.trend-indicator-down {
+    color: #86efac;
+    background: rgba(74, 222, 128, 0.15);
+}
+
+.trend-indicator-neutral {
+    color: var(--text-secondary);
+    background: rgba(148, 163, 184, 0.15);
+}
+
+.trend-indicator svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.5;
+}
+
+.metric-value-with-trend {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+}
+
+.metric-trend {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 999px;
+}
+
+.metric-trend-up {
+    color: #fca5a5;
+    background: rgba(248, 113, 113, 0.15);
+}
+
+.metric-trend-down {
+    color: #86efac;
+    background: rgba(74, 222, 128, 0.15);
+}
+
+.metric-trend-neutral {
+    color: var(--text-muted);
+    background: rgba(148, 163, 184, 0.1);
 }
 
 /* Metrics */

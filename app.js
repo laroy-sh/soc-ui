@@ -526,16 +526,25 @@ function sleep(ms) {
 
 function renderNewIncidents(data) {
     const card = document.getElementById('newIncidents15m')?.closest('.card');
+    const el15m = document.getElementById('newIncidents15m');
+    const el60m = document.getElementById('newIncidents60m');
+    
     if (!data || !data.data) {
-        setTextIfChanged(document.getElementById('newIncidents15m'), '—');
-        setTextIfChanged(document.getElementById('newIncidents60m'), '—');
+        setTextIfChanged(el15m, '—');
+        setTextIfChanged(el60m, '—');
         setConfidenceNote(card, 'No visibility · Confidence: Low', 'low');
         return;
     }
 
     setConfidenceNote(card, null);
-    setTextIfChanged(document.getElementById('newIncidents15m'), String(data.data.last15m ?? 0));
-    setTextIfChanged(document.getElementById('newIncidents60m'), String(data.data.last60m ?? 0));
+    
+    const current15m = data.data.last15m ?? 0;
+    const current60m = data.data.last60m ?? 0;
+    const prev15m = data.data.prev15m ?? null;
+    const prev60m = data.data.prev60m ?? null;
+    
+    renderValueWithTrend(el15m, current15m, prev15m, String);
+    renderValueWithTrend(el60m, current60m, prev60m, String);
 }
 
 function renderBarChart(elementId, data, colorType) {
@@ -2560,6 +2569,55 @@ function setTextIfChanged(element, value) {
     if (element.textContent === nextValue) return false;
     element.textContent = nextValue;
     return true;
+}
+
+function createTrendIndicator(currentValue, previousValue, options = {}) {
+    const { invertColors = false, showPercent = true } = options;
+    
+    if (previousValue == null || previousValue === 0 || currentValue == null) {
+        return '';
+    }
+    
+    const diff = currentValue - previousValue;
+    const percentChange = Math.round((diff / previousValue) * 100);
+    
+    if (diff === 0) {
+        return `<span class="trend-indicator trend-indicator-neutral" title="No change from previous period">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>0%</span>
+        </span>`;
+    }
+    
+    const isUp = diff > 0;
+    // For incidents/alerts, up is bad (red), down is good (green)
+    // invertColors flips this for metrics where up is good
+    const colorClass = invertColors 
+        ? (isUp ? 'trend-indicator-down' : 'trend-indicator-up')
+        : (isUp ? 'trend-indicator-up' : 'trend-indicator-down');
+    
+    const arrow = isUp 
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>';
+    
+    const label = showPercent 
+        ? `${isUp ? '+' : ''}${percentChange}%` 
+        : `${isUp ? '+' : ''}${diff}`;
+    
+    const title = `${isUp ? 'Increased' : 'Decreased'} by ${Math.abs(percentChange)}% from previous period`;
+    
+    return `<span class="trend-indicator ${colorClass}" title="${title}">
+        ${arrow}
+        <span>${label}</span>
+    </span>`;
+}
+
+function renderValueWithTrend(element, currentValue, previousValue, formatter = String, options = {}) {
+    if (!element) return;
+    
+    const formattedValue = formatter(currentValue);
+    const trend = createTrendIndicator(currentValue, previousValue, options);
+    
+    element.innerHTML = `${formattedValue}${trend}`;
 }
 
 function setContainerHTML(container, html, options = {}) {

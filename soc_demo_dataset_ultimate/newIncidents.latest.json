@@ -3,6 +3,8 @@
   "generatedAt": "2026-01-19T10:15:00Z",
   "data": {
     "last15m": 4,
-    "last60m": 11
+    "last60m": 11,
+    "prev15m": 3,
+    "prev60m": 14
   }
 }
