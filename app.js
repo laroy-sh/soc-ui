@@ -3061,14 +3061,26 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+let lastRefreshTime = null;
+let refreshState = 'live'; // 'live', 'refreshing', 'stale', 'error'
+
 function updateTimestamp(isoString) {
+    const badge = document.querySelector('.badge-live, .badge-stale, .badge-error, .badge-refreshing');
+    const timestampEl = document.getElementById('generatedAt');
+    const lastUpdatedEl = document.getElementById('lastUpdated');
+    
     if (!isoString) {
-        setTextIfChanged(document.getElementById('generatedAt'), '—');
-        setTextIfChanged(document.getElementById('lastUpdated'), 'Last updated: —');
+        setTextIfChanged(timestampEl, '—');
+        setTextIfChanged(lastUpdatedEl, 'Last updated: —');
+        updateRefreshBadge(badge, 'error');
         return;
     }
     
     const date = new Date(isoString);
+    lastRefreshTime = date;
+    const now = new Date();
+    const ageMinutes = Math.floor((now - date) / 60000);
+    
     const formatted = date.toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -3078,8 +3090,66 @@ function updateTimestamp(isoString) {
         timeZoneName: 'short'
     });
     
-    setTextIfChanged(document.getElementById('generatedAt'), formatted);
-    setTextIfChanged(document.getElementById('lastUpdated'), `Last updated: ${formatted}`);
+    // Determine staleness
+    let relativeTime = '';
+    if (ageMinutes < 1) {
+        relativeTime = 'just now';
+    } else if (ageMinutes < 60) {
+        relativeTime = `${ageMinutes}m ago`;
+    } else {
+        const hours = Math.floor(ageMinutes / 60);
+        relativeTime = `${hours}h ago`;
+    }
+    
+    // Update badge based on staleness
+    if (ageMinutes > 15) {
+        updateRefreshBadge(badge, 'error');
+        refreshState = 'error';
+    } else if (ageMinutes > 5) {
+        updateRefreshBadge(badge, 'stale');
+        refreshState = 'stale';
+    } else {
+        updateRefreshBadge(badge, 'live');
+        refreshState = 'live';
+    }
+    
+    setTextIfChanged(timestampEl, `${formatted} (${relativeTime})`);
+    if (lastUpdatedEl) {
+        lastUpdatedEl.innerHTML = `Last updated: <span class="refresh-timestamp ${refreshState === 'stale' ? 'stale' : refreshState === 'error' ? 'error' : ''}">${relativeTime}</span>`;
+    }
+}
+
+function updateRefreshBadge(badge, state) {
+    if (!badge) return;
+    
+    badge.className = badge.className.replace(/badge-(live|stale|error|refreshing)/g, '').trim();
+    badge.classList.add(`badge-${state}`);
+    
+    const labels = {
+        live: 'Live (Sentinel)',
+        refreshing: 'Refreshing...',
+        stale: 'Data Stale',
+        error: 'Data Outdated'
+    };
+    
+    badge.textContent = labels[state] || labels.live;
+}
+
+function setRefreshing(isRefreshing) {
+    const badge = document.querySelector('.badge-live, .badge-stale, .badge-error, .badge-refreshing');
+    if (isRefreshing) {
+        updateRefreshBadge(badge, 'refreshing');
+    } else if (lastRefreshTime) {
+        const now = new Date();
+        const ageMinutes = Math.floor((now - lastRefreshTime) / 60000);
+        if (ageMinutes > 15) {
+            updateRefreshBadge(badge, 'error');
+        } else if (ageMinutes > 5) {
+            updateRefreshBadge(badge, 'stale');
+        } else {
+            updateRefreshBadge(badge, 'live');
+        }
+    }
 }
 
 function showError(message) {
@@ -3101,7 +3171,10 @@ function startAutoRefresh() {
     }
     
     refreshTimer = setInterval(() => {
-        loadAllData();
+        setRefreshing(true);
+        loadAllData().finally(() => {
+            setRefreshing(false);
+        });
     }, CONFIG.refreshInterval);
 }
 
