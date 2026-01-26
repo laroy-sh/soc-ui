@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFilterBar();
     initializeRocFilters();
     initializeMobileMenu();
+    initializeKeyboardShortcuts();
     loadAllData();
     startAutoRefresh();
 });
@@ -76,6 +77,140 @@ function initializeMobileMenu() {
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768 && sidebar.classList.contains('open')) {
             closeMenu();
+        }
+    });
+}
+
+// Keyboard Shortcuts
+const KEYBOARD_SHORTCUTS = {
+    '1': 'analyst',
+    '2': 'lead',
+    '3': 'telemetry',
+    '4': 'customer',
+    '5': 'roc',
+    '8': 'essential8',
+    'a': 'analyst',
+    'l': 'lead',
+    't': 'telemetry',
+    'c': 'customer',
+    'r': 'roc',
+    'e': 'essential8'
+};
+
+function initializeKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Don't trigger shortcuts when typing in inputs
+        if (e.target.matches('input, textarea, select, [contenteditable]')) {
+            return;
+        }
+        
+        // Require Alt/Option key for letter shortcuts to avoid conflicts
+        const key = e.key.toLowerCase();
+        const isNumberKey = /^[1-8]$/.test(key);
+        const isLetterShortcut = /^[altcre]$/.test(key) && e.altKey;
+        
+        if (isNumberKey || isLetterShortcut) {
+            const dashboard = KEYBOARD_SHORTCUTS[key];
+            if (dashboard) {
+                e.preventDefault();
+                switchDashboard(dashboard);
+                showShortcutToast(dashboard);
+            }
+        }
+        
+        // Question mark shows keyboard help
+        if (e.key === '?' && !e.target.matches('input, textarea, select')) {
+            e.preventDefault();
+            toggleKeyboardHelp();
+        }
+    });
+}
+
+function showShortcutToast(dashboard) {
+    const titles = {
+        'analyst': 'Analyst Dashboard',
+        'lead': 'SOC Lead Dashboard',
+        'telemetry': 'Telemetry Health',
+        'customer': 'Customer Dashboard',
+        'roc': 'ROC Dashboard',
+        'essential8': 'Essential Eight'
+    };
+    
+    // Remove existing toast
+    const existing = document.querySelector('.shortcut-toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'shortcut-toast';
+    toast.innerHTML = `<span class="shortcut-toast-icon">⌨️</span> Switched to ${titles[dashboard] || dashboard}`;
+    document.body.appendChild(toast);
+    
+    // Animate in
+    requestAnimationFrame(() => {
+        toast.classList.add('visible');
+    });
+    
+    // Remove after delay
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 200);
+    }, 1500);
+}
+
+function toggleKeyboardHelp() {
+    let modal = document.querySelector('.keyboard-help-modal');
+    
+    if (modal) {
+        modal.remove();
+        return;
+    }
+    
+    modal = document.createElement('div');
+    modal.className = 'keyboard-help-modal';
+    modal.innerHTML = `
+        <div class="keyboard-help-content">
+            <div class="keyboard-help-header">
+                <h3>Keyboard Shortcuts</h3>
+                <button class="keyboard-help-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="keyboard-help-body">
+                <div class="keyboard-shortcut-group">
+                    <h4>Dashboard Navigation</h4>
+                    <div class="keyboard-shortcut"><kbd>1</kbd> <span>Analyst Dashboard</span></div>
+                    <div class="keyboard-shortcut"><kbd>2</kbd> <span>SOC Lead Dashboard</span></div>
+                    <div class="keyboard-shortcut"><kbd>3</kbd> <span>Telemetry Health</span></div>
+                    <div class="keyboard-shortcut"><kbd>4</kbd> <span>Customer Dashboard</span></div>
+                    <div class="keyboard-shortcut"><kbd>5</kbd> <span>ROC Dashboard</span></div>
+                    <div class="keyboard-shortcut"><kbd>8</kbd> <span>Essential Eight</span></div>
+                </div>
+                <div class="keyboard-shortcut-group">
+                    <h4>Alt + Letter Shortcuts</h4>
+                    <div class="keyboard-shortcut"><kbd>Alt</kbd>+<kbd>A</kbd> <span>Analyst</span></div>
+                    <div class="keyboard-shortcut"><kbd>Alt</kbd>+<kbd>L</kbd> <span>SOC Lead</span></div>
+                    <div class="keyboard-shortcut"><kbd>Alt</kbd>+<kbd>T</kbd> <span>Telemetry</span></div>
+                    <div class="keyboard-shortcut"><kbd>Alt</kbd>+<kbd>R</kbd> <span>ROC</span></div>
+                    <div class="keyboard-shortcut"><kbd>Alt</kbd>+<kbd>E</kbd> <span>Essential Eight</span></div>
+                </div>
+                <div class="keyboard-shortcut-group">
+                    <h4>General</h4>
+                    <div class="keyboard-shortcut"><kbd>?</kbd> <span>Toggle this help</span></div>
+                    <div class="keyboard-shortcut"><kbd>Esc</kbd> <span>Close dialogs</span></div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close handlers
+    modal.querySelector('.keyboard-help-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+    document.addEventListener('keydown', function closeOnEsc(e) {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', closeOnEsc);
         }
     });
 }
