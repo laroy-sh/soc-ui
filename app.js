@@ -728,10 +728,15 @@ function renderNewIncidents(data) {
     const card = document.getElementById('newIncidents15m')?.closest('.card');
     const el15m = document.getElementById('newIncidents15m');
     const el60m = document.getElementById('newIncidents60m');
+    const statusEl = document.getElementById('newIncidentsStatus');
     
     if (!data || !data.data) {
         setTextIfChanged(el15m, '—');
         setTextIfChanged(el60m, '—');
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="status-dot"></span> No data available';
+            statusEl.style.color = 'var(--text-muted)';
+        }
         setConfidenceNote(card, 'No visibility · Confidence: Low', 'low');
         return;
     }
@@ -745,6 +750,30 @@ function renderNewIncidents(data) {
     
     renderValueWithTrend(el15m, current15m, prev15m, String);
     renderValueWithTrend(el60m, current60m, prev60m, String);
+    
+    // Apply visual state based on incident count
+    if (card) {
+        card.classList.remove('incidents-critical', 'incidents-zero');
+        
+        if (current15m === 0 && current60m === 0) {
+            card.classList.add('incidents-zero');
+            if (statusEl) {
+                statusEl.innerHTML = '<span class="status-dot"></span> All clear';
+                statusEl.style.color = '#34d399';
+            }
+        } else if (current15m >= 5) {
+            card.classList.add('incidents-critical');
+            if (statusEl) {
+                statusEl.innerHTML = '<span class="status-dot"></span> High activity detected';
+                statusEl.style.color = '#f87171';
+            }
+        } else {
+            if (statusEl) {
+                statusEl.innerHTML = '<span class="status-dot"></span> Monitoring active';
+                statusEl.style.color = '#34d399';
+            }
+        }
+    }
 }
 
 function renderBarChart(elementId, data, colorType) {

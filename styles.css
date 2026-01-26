@@ -754,6 +754,257 @@ body {
     border-left: 4px solid var(--accent);
 }
 
+/* ========================================
+   New Incidents Card - Enhanced Design
+   ======================================== */
+.card-new-incidents {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-new-incidents::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, #a855f7 100%);
+}
+
+.card-new-incidents::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.new-incidents-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
+}
+
+.new-incidents-header h3 {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.new-incidents-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.new-incidents-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+}
+
+.new-incidents-counters {
+    display: flex;
+    align-items: stretch;
+    gap: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
+}
+
+.new-incidents-counter {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.new-incidents-primary .new-incidents-value {
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f9fafb 0%, #d1d5db 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.new-incidents-secondary .new-incidents-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.new-incidents-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.new-incidents-time {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.new-incidents-pulse {
+    width: 8px;
+    height: 8px;
+    background: #34d399;
+    border-radius: 50%;
+    animation: incident-pulse 2s ease-in-out infinite;
+}
+
+@keyframes incident-pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+    }
+    50% {
+        opacity: 0.8;
+        box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+    }
+}
+
+.new-incidents-divider {
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%);
+    margin: 0 var(--spacing-sm);
+}
+
+.new-incidents-footer {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.new-incidents-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: #34d399;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.new-incidents-status .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #34d399;
+    border-radius: 50%;
+    animation: status-blink 3s ease-in-out infinite;
+}
+
+@keyframes status-blink {
+    0%, 90%, 100% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 0.3;
+    }
+}
+
+/* Critical state styling */
+.card-new-incidents.incidents-critical {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%);
+    border-color: rgba(248, 113, 113, 0.35);
+}
+
+.card-new-incidents.incidents-critical::before {
+    background: linear-gradient(90deg, #f87171 0%, #ef4444 50%, #dc2626 100%);
+}
+
+.card-new-incidents.incidents-critical .new-incidents-icon {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    animation: critical-glow 2s ease-in-out infinite;
+}
+
+@keyframes critical-glow {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6), 0 0 30px rgba(239, 68, 68, 0.3);
+    }
+}
+
+.card-new-incidents.incidents-critical .new-incidents-primary .new-incidents-value {
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-new-incidents.incidents-critical .new-incidents-pulse {
+    background: #f87171;
+    animation: critical-pulse 1s ease-in-out infinite;
+}
+
+@keyframes critical-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5);
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.2);
+        box-shadow: 0 0 0 8px rgba(248, 113, 113, 0);
+    }
+}
+
+.card-new-incidents.incidents-critical .new-incidents-status {
+    color: #f87171;
+}
+
+.card-new-incidents.incidents-critical .new-incidents-status .status-dot {
+    background: #f87171;
+}
+
+/* Zero incidents - calm state */
+.card-new-incidents.incidents-zero .new-incidents-primary .new-incidents-value {
+    background: linear-gradient(135deg, #86efac 0%, #34d399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-new-incidents.incidents-zero .new-incidents-icon {
+    background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.card-new-incidents.incidents-zero::before {
+    background: linear-gradient(90deg, #34d399 0%, #22c55e 50%, #16a34a 100%);
+}
+
 /* Counters */
 .counter-group {
     display: flex;

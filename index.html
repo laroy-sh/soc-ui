@@ -65,17 +65,38 @@
             <div id="dashboard-analyst" class="dashboard active">
                 <div class="grid">
                     <!-- New Incidents Counter -->
-                    <div class="card card-highlight">
-                        <h3>New Incidents</h3>
-                        <div class="counter-group">
-                            <div class="counter">
-                                <div class="counter-value" id="newIncidents15m">—</div>
-                                <div class="counter-label">Last 15 min</div>
+                    <div class="card card-new-incidents">
+                        <div class="new-incidents-header">
+                            <div class="new-incidents-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
                             </div>
-                            <div class="counter">
-                                <div class="counter-value" id="newIncidents60m">—</div>
-                                <div class="counter-label">Last 60 min</div>
+                            <h3>New Incidents</h3>
+                        </div>
+                        <div class="new-incidents-counters">
+                            <div class="new-incidents-counter new-incidents-primary">
+                                <div class="new-incidents-value" id="newIncidents15m">—</div>
+                                <div class="new-incidents-label">
+                                    <span class="new-incidents-time">15 min</span>
+                                    <span class="new-incidents-pulse"></span>
+                                </div>
                             </div>
+                            <div class="new-incidents-divider"></div>
+                            <div class="new-incidents-counter new-incidents-secondary">
+                                <div class="new-incidents-value" id="newIncidents60m">—</div>
+                                <div class="new-incidents-label">
+                                    <span class="new-incidents-time">60 min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="new-incidents-footer">
+                            <span class="new-incidents-status" id="newIncidentsStatus">
+                                <span class="status-dot"></span>
+                                Monitoring active
+                            </span>
                         </div>
                     </div>
 
