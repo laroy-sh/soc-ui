@@ -784,54 +784,53 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0;
-    justify-content: space-between;
 }
 
 .card-header-simple {
     padding: var(--spacing-lg) var(--spacing-lg) 0;
 }
 
-.counter-split {
+.new-incidents-grid {
     display: flex;
     flex: 1;
     align-items: center;
     padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    gap: var(--spacing-lg);
 }
 
-.counter-panel {
+.metric-block {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: var(--spacing-md);
 }
 
-.counter-icon-wrapper {
-    width: 32px;
-    height: 32px;
+.metric-value-lg {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--accent);
-    border-radius: 8px;
+    gap: 8px;
 }
 
-.counter-icon-wrapper svg {
-    width: 18px;
-    height: 18px;
+.metric-block .metric-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
 }
 
-.counter-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.counter-panel-divider {
+.metric-separator {
     width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--border), transparent);
-    margin: 0 var(--spacing-xl);
+    height: 48px;
+    background: var(--border);
+    opacity: 0.5;
 }
 
 .counter-value {
