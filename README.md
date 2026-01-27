@@ -112,7 +112,7 @@ Files marked as not implemented return:
 3. Open http://localhost:8000
 
 To point at Azure Storage, update `CONFIG.dataPath` in `app.js`.
-Testing checklist and project recap are in `CHANGELOG.md`.
+Testing checklist and project recap have been removed.
 
 ## Deployment
 
@@ -611,7 +611,6 @@ SOC UI/
 ├── styles.css              # All styling and layouts
 ├── app.js                  # Data loading and rendering logic
 ├── README.md               # This file
-├── CHANGELOG.md            # Project recap and testing checklist
 └── soc_demo_dataset/       # Demo data (JSON files)
     ├── activeAlertsBySeverity.latest.json
     ├── businessRiskPosture.latest.json
