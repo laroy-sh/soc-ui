@@ -1,6 +1,6 @@
 # MBCTG - SOC & ROC Dashboard
 
-A read-only web UI for visualizing Security Operations Center (SOC) and Risk Operations Center (ROC) metrics from Microsoft Sentinel.
+A read-only web UI for visualizing Security Operations Center (SOC) and Risk Operations Center (ROC) metrics from Microsoft Sentinel. Demo site: https://soc-ui-ejc.pages.dev
 
 ## Overview
 
