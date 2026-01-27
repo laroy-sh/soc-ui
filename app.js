@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    dataPath: './soc_demo_dataset_ultimate/',
+    dataPath: './soc_demo_dataset/',
     refreshInterval: 60000, // 1 minute
     loadingDelayMin: 200,
     loadingDelayMax: 500
