@@ -2406,15 +2406,23 @@ a {
 }
 
 @media (max-width: 900px) {
+    .app-shell {
+        flex-direction: column;
+    }
+
     .sidebar {
         position: static;
         width: 100%;
         display: flex;
         flex-direction: column;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
     }
 
     .main-content {
         margin-left: 0;
+        padding: 22px 18px 52px;
     }
 
     .page-header {
