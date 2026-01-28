@@ -343,7 +343,17 @@
 .e8 .kpi-card.compliance-score{
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
     border-color: rgba(99, 102, 241, 0.3);
-    padding-right: 7rem;
+    padding-right: 8.5rem;
+}
+
+.e8 .kpi-card.compliance-score .kpi-content{
+    max-width: calc(100% - 110px);
+}
+
+.e8 .kpi-card.compliance-score .kpi-chart{
+    right: 0.75rem;
+    top: 1rem;
+    transform: none;
 }
 
 .e8 .kpi-icon{
