@@ -278,6 +278,24 @@ body {
     display: block;
 }
 
+/* Embedded External Dashboards */
+.embedded-dashboard {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(5, 10, 20, 0.35);
+}
+
+.embedded-dashboard iframe {
+    width: 100%;
+    height: 80vh;
+    min-height: 800px;
+    border: 0;
+    display: block;
+    background: rgba(6, 10, 18, 0.9);
+}
+
 /* Main Content */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -1724,6 +1742,11 @@ tbody tr:hover {
     .storage-tier-chart {
         width: 140px;
         height: 140px;
+    }
+
+    .embedded-dashboard iframe {
+        height: 70vh;
+        min-height: 560px;
     }
 }
 

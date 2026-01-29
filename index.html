@@ -44,12 +44,12 @@
                 <li><a href="outsourcer-oversight.html" class="nav-link nav-link-external">SOC Dashboard</a></li>
                 <li class="nav-section">Frameworks</li>
                 <li><a href="#" class="nav-link" data-dashboard="essential8">Essential Eight</a></li>
-                <li><a href="https://ransomware.abrandao.net/mitre_attack_dashboard.html" class="nav-link nav-link-external">MITRE ATT&amp;CK Enterprise</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="mitre-attack">MITRE ATT&amp;CK Enterprise</a></li>
                 <li class="nav-section">Threat Intelligence Command Center</li>
-                <li><a href="https://ransomware.abrandao.net/threat_dashboard.html" class="nav-link nav-link-external">Threat Intelligence Dashboard</a></li>
-                <li><a href="https://ransomware.abrandao.net/intel_dashboard.html" class="nav-link nav-link-external">CVE Intelligence Dashboard</a></li>
-                <li><a href="https://ransomware.abrandao.net/victims_dashboard.html" class="nav-link nav-link-external">Victims Dashboard</a></li>
-                <li><a href="https://ransomware.abrandao.net/groups_dashboard.html" class="nav-link nav-link-external">Ransomware Groups Monitoring</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="threat-intel">Threat Intelligence Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="cve-intel">CVE Intelligence Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="victims">Victims Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="ransomware-groups">Ransomware Groups Monitoring</a></li>
             </ul>
             <div class="sidebar-footer">
                 <p class="data-source">Data Source: Microsoft Sentinel</p>
@@ -1020,6 +1020,57 @@
                             <div class="modal-body" id="e8-modalBody"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Embedded Threat Intelligence Dashboards -->
+            <div id="dashboard-mitre-attack" class="dashboard">
+                <div class="embedded-dashboard">
+                    <iframe
+                        src="https://ransomware.abrandao.net/mitre_attack_dashboard.html"
+                        title="MITRE ATT&amp;CK Enterprise"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </div>
+
+            <div id="dashboard-threat-intel" class="dashboard">
+                <div class="embedded-dashboard">
+                    <iframe
+                        src="https://ransomware.abrandao.net/threat_dashboard.html"
+                        title="Threat Intelligence Dashboard"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </div>
+
+            <div id="dashboard-cve-intel" class="dashboard">
+                <div class="embedded-dashboard">
+                    <iframe
+                        src="https://ransomware.abrandao.net/intel_dashboard.html"
+                        title="CVE Intelligence Dashboard"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </div>
+
+            <div id="dashboard-victims" class="dashboard">
+                <div class="embedded-dashboard">
+                    <iframe
+                        src="https://ransomware.abrandao.net/victims_dashboard.html"
+                        title="Victims Dashboard"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            </div>
+
+            <div id="dashboard-ransomware-groups" class="dashboard">
+                <div class="embedded-dashboard">
+                    <iframe
+                        src="https://ransomware.abrandao.net/groups_dashboard.html"
+                        title="Ransomware Groups Monitoring"
+                        loading="lazy"
+                    ></iframe>
                 </div>
             </div>
         </main>

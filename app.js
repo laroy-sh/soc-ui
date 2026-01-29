@@ -292,7 +292,12 @@ function switchDashboard(dashboardName) {
         'customer': 'SOC Customer Dashboard',
         'outsourcer': 'Outsourcer Oversight SOC Dashboard',
         'roc': 'Risk Operations Center Dashboard',
-        'essential8': 'Essential Eight Framework'
+        'essential8': 'Essential Eight Framework',
+        'mitre-attack': 'MITRE ATT&CK Enterprise',
+        'threat-intel': 'Threat Intelligence Dashboard',
+        'cve-intel': 'CVE Intelligence Dashboard',
+        'victims': 'Victims Dashboard',
+        'ransomware-groups': 'Ransomware Groups Monitoring'
     };
     document.getElementById('dashboardTitle').textContent = titles[dashboardName];
 }
