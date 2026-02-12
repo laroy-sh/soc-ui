@@ -294,6 +294,7 @@ function switchDashboard(dashboardName) {
         'roc': 'Risk Operations Center Dashboard',
         'essential8': 'Essential Eight Framework',
         'mitre-attack': 'MITRE ATT&CK Enterprise',
+        'mitre-attack-ics': 'MITRE ATT&CK for ICS',
         'threat-intel': 'Threat Intelligence Dashboard',
         'cve-intel': 'CVE Intelligence Dashboard',
         'victims': 'Victims Dashboard',

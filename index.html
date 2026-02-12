@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="essential8.css">
+    <link rel="stylesheet" href="mitre-ics.css">
 </head>
 <body>
     <div class="soc-bg-gradient"></div>
@@ -45,6 +46,7 @@
                 <li class="nav-section">Frameworks</li>
                 <li><a href="#" class="nav-link" data-dashboard="essential8">Essential Eight</a></li>
                 <li><a href="#" class="nav-link" data-dashboard="mitre-attack">MITRE ATT&amp;CK Enterprise</a></li>
+                <li><a href="#" class="nav-link" data-dashboard="mitre-attack-ics">MITRE ATT&amp;CK for ICS</a></li>
                 <li class="nav-section">Threat Intelligence Command Center</li>
                 <li><a href="#" class="nav-link" data-dashboard="threat-intel">Threat Intelligence Dashboard</a></li>
                 <li><a href="#" class="nav-link" data-dashboard="cve-intel">CVE Intelligence Dashboard</a></li>
@@ -1023,6 +1025,87 @@
                 </div>
             </div>
 
+            <!-- MITRE ATT&CK for ICS Dashboard -->
+            <div id="dashboard-mitre-attack-ics" class="dashboard">
+                <div class="frameworks-header">
+                    <h3>MITRE ATT&CK for ICS</h3>
+                    <p class="frameworks-note">Industrial Control Systems threat intelligence matrix based on the MITRE ATT&CK framework.</p>
+                </div>
+                <div class="mitre-ics">
+                    <div class="bg-gradient"></div>
+                    <div class="bg-grid"></div>
+                    <main class="mics-dashboard-container">
+                        <div class="mics-header">
+                            <div class="mics-header-content">
+                                <div class="mics-header-text">
+                                    <span class="mics-header-tag">MITRE ATT&CK v<span id="mics-version"></span></span>
+                                    <h1>ATT&CK for ICS</h1>
+                                    <p>Adversarial Tactics, Techniques &amp; Common Knowledge for Industrial Control Systems</p>
+                                </div>
+                                <div class="mics-header-meta">
+                                    <div class="mics-meta-item">
+                                        <span class="mics-meta-label">Last Updated</span>
+                                        <span class="mics-meta-value" id="mics-lastUpdate"></span>
+                                    </div>
+                                    <div class="mics-meta-item">
+                                        <span class="mics-meta-label">Framework</span>
+                                        <span class="mics-meta-value">ICS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mics-stats-section" id="mics-stats"></div>
+                        <div class="mics-tab-bar" id="mics-tabs">
+                            <button class="mics-tab-btn active" data-tab="matrix">Matrix</button>
+                            <button class="mics-tab-btn" data-tab="techniques">Techniques</button>
+                            <button class="mics-tab-btn" data-tab="assets">Assets</button>
+                            <button class="mics-tab-btn" data-tab="groups">Groups</button>
+                            <button class="mics-tab-btn" data-tab="software">Software</button>
+                            <button class="mics-tab-btn" data-tab="mitigations">Mitigations</button>
+                            <button class="mics-tab-btn" data-tab="campaigns">Campaigns</button>
+                        </div>
+                        <div class="mics-filter-bar" id="mics-filters">
+                            <div class="mics-search-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="mics-search" placeholder="Search techniques, groups, assets..." autocomplete="off">
+                            </div>
+                            <div class="mics-filter-group">
+                                <label for="mics-platform-filter">Platform</label>
+                                <select id="mics-platform-filter"><option value="all">All Platforms</option></select>
+                            </div>
+                            <div class="mics-filter-group">
+                                <label for="mics-tactic-filter">Tactic</label>
+                                <select id="mics-tactic-filter"><option value="all">All Tactics</option></select>
+                            </div>
+                            <div class="mics-filter-group">
+                                <label for="mics-asset-filter">Asset</label>
+                                <select id="mics-asset-filter"><option value="all">All Assets</option></select>
+                            </div>
+                            <button class="mics-btn-reset" id="mics-reset-filters">Reset</button>
+                            <button class="mics-btn-export" id="mics-export-btn">Export JSON</button>
+                        </div>
+                        <div class="mics-tab-content" id="mics-tabContent">
+                            <div id="mics-matrix-panel" class="mics-panel"></div>
+                            <div id="mics-techniques-panel" class="mics-panel" style="display:none"></div>
+                            <div id="mics-assets-panel" class="mics-panel" style="display:none"></div>
+                            <div id="mics-groups-panel" class="mics-panel" style="display:none"></div>
+                            <div id="mics-software-panel" class="mics-panel" style="display:none"></div>
+                            <div id="mics-mitigations-panel" class="mics-panel" style="display:none"></div>
+                            <div id="mics-campaigns-panel" class="mics-panel" style="display:none"></div>
+                        </div>
+                        <div class="mics-footer">
+                            <p>Data sourced from MITRE ATT&CK&reg; for ICS. MITRE ATT&CK is a registered trademark of The MITRE Corporation.</p>
+                        </div>
+                    </main>
+                    <div class="mics-modal-overlay" id="mics-modal-overlay">
+                        <div class="mics-modal">
+                            <button class="mics-modal-close">&times;</button>
+                            <div class="mics-modal-body" id="mics-modal-body"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Embedded Threat Intelligence Dashboards -->
             <div id="dashboard-mitre-attack" class="dashboard">
                 <div class="embedded-dashboard">
@@ -1078,5 +1161,6 @@
 
     <script src="app.js"></script>
     <script src="essential8.js"></script>
+    <script src="mitre-ics.js"></script>
 </body>
 </html>
