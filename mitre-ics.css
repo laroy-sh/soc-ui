@@ -1,0 +1,1330 @@
+/* ========================================
+   MITRE ATT&CK for ICS Dashboard - Styles
+   Dark Cyber Theme with Glassmorphism
+   All styles scoped under .mitre-ics
+   ======================================== */
+
+
+/* ========================================
+   1. CSS Variables
+   ======================================== */
+.mitre-ics {
+    /* Background Colors */
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #111827;
+    --bg-card: rgba(17, 24, 39, 0.8);
+    --bg-card-hover: rgba(31, 41, 55, 0.9);
+
+    /* Accent Colors */
+    --accent-primary: #00d4ff;
+    --accent-secondary: #8b5cf6;
+    --accent-orange: #f59e0b;
+    --accent-gradient: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+    --accent-gradient-reverse: linear-gradient(135deg, #8b5cf6 0%, #00d4ff 100%);
+
+    /* Status Colors */
+    --status-green: #10b981;
+    --status-green-bg: rgba(16, 185, 129, 0.15);
+    --status-red: #ef4444;
+    --status-red-bg: rgba(239, 68, 68, 0.15);
+    --status-orange: #f59e0b;
+    --status-orange-bg: rgba(245, 158, 11, 0.15);
+    --status-blue: #3b82f6;
+    --status-blue-bg: rgba(59, 130, 246, 0.15);
+    --status-pink: #ec4899;
+    --status-pink-bg: rgba(236, 72, 153, 0.15);
+
+    /* Stat Card Accent Colors */
+    --stat-techniques: #06b6d4;
+    --stat-groups: #a855f7;
+    --stat-software: #ec4899;
+    --stat-mitigations: #10b981;
+    --stat-assets: #f97316;
+    --stat-campaigns: #3b82f6;
+
+    /* Text Colors */
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+
+    /* Border & Effects */
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 212, 255, 0.3);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.2);
+
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: blur(20px);
+
+    /* Layout */
+    --border-radius: 16px;
+    --border-radius-sm: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ========================================
+   2. Reset & Base
+   ======================================== */
+.mitre-ics *,
+.mitre-ics *::before,
+.mitre-ics *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mitre-ics {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+/* ========================================
+   3. Background (bg-gradient, bg-grid)
+   ======================================== */
+.mitre-ics .bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 15% 25%, rgba(0, 212, 255, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(139, 92, 246, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.mitre-ics .bg-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ========================================
+   4. Dashboard Container
+   ======================================== */
+.mitre-ics .mics-dashboard-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+/* ========================================
+   5. Header Section
+   ======================================== */
+.mitre-ics .mics-header {
+    margin-bottom: 2rem;
+    padding: 2rem 2.5rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    backdrop-filter: var(--glass-blur);
+    animation: mics-fadeInUp 0.5s ease-out;
+}
+
+.mitre-ics .mics-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.mitre-ics .mics-header-tag {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    background: var(--accent-gradient);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.mitre-ics .mics-header h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 60%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.mitre-ics .mics-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 600px;
+}
+
+.mitre-ics .mics-header-meta {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mitre-ics .mics-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.mitre-ics .mics-meta-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.mitre-ics .mics-meta-value {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+
+/* ========================================
+   6. Stats Section
+   ======================================== */
+.mitre-ics .mics-stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mitre-ics .mics-stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    animation: mics-fadeInUp 0.5s ease-out both;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+/* Staggered animation delays for stat cards */
+.mitre-ics .mics-stat-card:nth-child(1) { animation-delay: 0.05s; }
+.mitre-ics .mics-stat-card:nth-child(2) { animation-delay: 0.10s; }
+.mitre-ics .mics-stat-card:nth-child(3) { animation-delay: 0.15s; }
+.mitre-ics .mics-stat-card:nth-child(4) { animation-delay: 0.20s; }
+.mitre-ics .mics-stat-card:nth-child(5) { animation-delay: 0.25s; }
+.mitre-ics .mics-stat-card:nth-child(6) { animation-delay: 0.30s; }
+
+.mitre-ics .mics-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.mitre-ics .mics-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.mitre-ics .mics-stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.mitre-ics .mics-stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+    font-variant-numeric: tabular-nums;
+    will-change: contents;
+}
+
+.mitre-ics .mics-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+
+/* ========================================
+   7. Tab Bar
+   ======================================== */
+.mitre-ics .mics-tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+}
+
+.mitre-ics .mics-tab-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.mitre-ics .mics-tab-btn {
+    padding: 0.6rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.mitre-ics .mics-tab-btn:hover {
+    background: rgba(31, 41, 55, 0.8);
+    color: var(--text-primary);
+}
+
+.mitre-ics .mics-tab-btn.active {
+    background: var(--accent-gradient);
+    color: #fff;
+    border-color: transparent;
+    font-weight: 600;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+
+/* ========================================
+   8. Filter Bar
+   ======================================== */
+.mitre-ics .mics-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Search box (HTML class: mics-search-box) */
+.mitre-ics .mics-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.mitre-ics .mics-search-box svg {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.mitre-ics .mics-search-box input {
+    width: 100%;
+    padding: 0.65rem 0.85rem 0.65rem 2.4rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: var(--transition);
+    outline: none;
+}
+
+.mitre-ics .mics-search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.mitre-ics .mics-search-box input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1), 0 0 15px rgba(0, 212, 255, 0.08);
+}
+
+/* Filter group (HTML class: mics-filter-group) */
+.mitre-ics .mics-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.mitre-ics .mics-filter-group label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.mitre-ics .mics-filter-group select {
+    padding: 0.65rem 2.25rem 0.65rem 0.85rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e7681' d='M6 8.825L1.175 4 2.238 2.938 6 6.7 9.763 2.937 10.825 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+}
+
+.mitre-ics .mics-filter-group select:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+.mitre-ics .mics-btn-reset {
+    padding: 0.65rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mitre-ics .mics-btn-reset:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.mitre-ics .mics-btn-export {
+    padding: 0.65rem 1.25rem;
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.mitre-ics .mics-btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+
+/* ========================================
+   9. Matrix View
+   Classes used by JS: mics-matrix-grid,
+   mics-matrix-column, mics-matrix-header,
+   mics-matrix-tactic-id, mics-matrix-tactic-name,
+   mics-matrix-tactic-count, mics-matrix-techniques,
+   mics-matrix-pill, mics-pill-id, mics-pill-name,
+   mics-pill-asset-badge
+   ======================================== */
+.mitre-ics .mics-matrix-grid {
+    display: flex;
+    gap: 0.5rem;
+    min-width: max-content;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Tactic Column */
+.mitre-ics .mics-matrix-column {
+    flex: 1;
+    min-width: 140px;
+    max-width: 220px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tactic Header */
+.mitre-ics .mics-matrix-header {
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.25) 0%, rgba(0, 212, 255, 0.12) 100%);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    padding: 0.85rem 0.75rem;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-bottom: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.mitre-ics .mics-matrix-tactic-id {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mitre-ics .mics-matrix-tactic-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+}
+
+.mitre-ics .mics-matrix-tactic-count {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Technique List */
+.mitre-ics .mics-matrix-techniques {
+    flex: 1;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
+    background: rgba(17, 24, 39, 0.4);
+    padding: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+/* Custom Scrollbar for Technique List */
+.mitre-ics .mics-matrix-techniques::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mitre-ics .mics-matrix-techniques::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.6);
+    border-radius: 3px;
+}
+
+.mitre-ics .mics-matrix-techniques::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-secondary), var(--accent-primary));
+    border-radius: 3px;
+}
+
+.mitre-ics .mics-matrix-techniques::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #a78bfa, #22d3ee);
+}
+
+/* Firefox scrollbar */
+.mitre-ics .mics-matrix-techniques {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-secondary) rgba(17, 24, 39, 0.6);
+}
+
+/* Technique Pill */
+.mitre-ics .mics-matrix-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.5rem 0.6rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mitre-ics .mics-matrix-pill:hover {
+    transform: scale(1.05);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.1);
+    background: var(--bg-card-hover);
+}
+
+.mitre-ics .mics-pill-id {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--accent-primary);
+    margin-bottom: 0.15rem;
+    display: block;
+}
+
+.mitre-ics .mics-pill-name {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+    display: block;
+}
+
+.mitre-ics .mics-pill-asset-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    border-radius: 50px;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-orange);
+    margin-top: 0.3rem;
+}
+
+/* Horizontal scrollbar for matrix grid */
+.mitre-ics .mics-matrix-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.mitre-ics .mics-matrix-grid::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.6);
+    border-radius: 3px;
+}
+
+.mitre-ics .mics-matrix-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 3px;
+}
+
+.mitre-ics .mics-matrix-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #22d3ee, #a78bfa);
+}
+
+/* Firefox scrollbar for matrix grid */
+.mitre-ics .mics-matrix-grid {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-primary) rgba(17, 24, 39, 0.6);
+}
+
+
+/* ========================================
+   10. ID Color Classes
+   Used by JS as: mics-id-cyan, mics-id-orange, etc.
+   ======================================== */
+.mitre-ics .mics-id-cyan {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--accent-primary);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mitre-ics .mics-id-orange {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--accent-orange);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mitre-ics .mics-id-red {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--status-red);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mitre-ics .mics-id-pink {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--status-pink);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mitre-ics .mics-id-green {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--status-green);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mitre-ics .mics-id-blue {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--status-blue);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+
+/* ========================================
+   11. Badge Classes
+   Used by JS as: mics-badge, mics-badge-tactic,
+   mics-badge-cyan, mics-badge-orange, etc.
+   ======================================== */
+.mitre-ics .mics-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    border-radius: 50px;
+    background: rgba(0, 212, 255, 0.12);
+    color: var(--accent-primary);
+}
+
+.mitre-ics .mics-badge-tactic {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    border-radius: 50px;
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-secondary);
+}
+
+.mitre-ics .mics-badge-cyan {
+    background: rgba(0, 212, 255, 0.12);
+    color: var(--accent-primary);
+}
+
+.mitre-ics .mics-badge-orange {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-orange);
+}
+
+.mitre-ics .mics-badge-pink {
+    background: var(--status-pink-bg);
+    color: var(--status-pink);
+}
+
+.mitre-ics .mics-badge-green {
+    background: var(--status-green-bg);
+    color: var(--status-green);
+}
+
+.mitre-ics .mics-badge-purple {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-secondary);
+}
+
+.mitre-ics .mics-badge-red {
+    background: var(--status-red-bg);
+    color: var(--status-red);
+}
+
+.mitre-ics .mics-badge-blue {
+    background: var(--status-blue-bg);
+    color: var(--status-blue);
+}
+
+
+/* ========================================
+   12. Tag Classes
+   ======================================== */
+.mitre-ics .mics-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border-radius: 50px;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent-primary);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.mitre-ics .mics-tag-muted {
+    background: rgba(110, 118, 129, 0.1);
+    color: var(--text-muted);
+    border-color: rgba(110, 118, 129, 0.15);
+}
+
+
+/* ========================================
+   13. Table View
+   Classes used by JS: mics-table-info,
+   mics-table, mics-table-row
+   ======================================== */
+.mitre-ics .mics-table-info {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.mitre-ics .mics-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.mitre-ics .mics-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.mitre-ics .mics-table thead th {
+    padding: 0.85rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    background: rgba(17, 24, 39, 0.6);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.mitre-ics .mics-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.mitre-ics .mics-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.mitre-ics .mics-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.04);
+}
+
+.mitre-ics .mics-table-row {
+    cursor: pointer;
+}
+
+.mitre-ics .mics-table td {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+
+/* ========================================
+   14. Card Grid
+   Classes used by JS: mics-card-grid,
+   mics-card-grid-2, mics-card-grid-3,
+   mics-card, mics-card-clickable,
+   mics-card-header, mics-card-title,
+   mics-card-desc, mics-card-tags,
+   mics-card-badges, mics-card-aliases,
+   mics-card-footer, mics-card-link,
+   mics-card-dates, mics-date-label,
+   mics-date-sep
+   ======================================== */
+.mitre-ics .mics-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mitre-ics .mics-card-grid.mics-card-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.mitre-ics .mics-card-grid.mics-card-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.mitre-ics .mics-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.mitre-ics .mics-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.08);
+}
+
+.mitre-ics .mics-card-clickable {
+    cursor: pointer;
+}
+
+.mitre-ics .mics-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mitre-ics .mics-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+}
+
+.mitre-ics .mics-card-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mitre-ics .mics-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+}
+
+.mitre-ics .mics-card-badges {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.mitre-ics .mics-card-aliases {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.mitre-ics .mics-card-footer {
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.mitre-ics .mics-card-link {
+    font-size: 0.75rem;
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: var(--transition);
+    margin-top: auto;
+    padding-top: 0.25rem;
+}
+
+.mitre-ics .mics-card-link:hover {
+    text-decoration: underline;
+    color: #5ce1ff;
+}
+
+.mitre-ics .mics-card-dates {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mitre-ics .mics-date-label {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.mitre-ics .mics-date-sep {
+    color: var(--text-muted);
+}
+
+
+/* ========================================
+   15. Pagination
+   Classes used by JS: mics-pagination,
+   mics-page-btn, mics-page-ellipsis
+   ======================================== */
+.mitre-ics .mics-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.mitre-ics .mics-page-btn {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mitre-ics .mics-page-btn:hover:not(:disabled) {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent-primary);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.mitre-ics .mics-page-btn.active {
+    background: var(--accent-gradient);
+    color: #fff;
+    border-color: transparent;
+}
+
+.mitre-ics .mics-page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.mitre-ics .mics-page-ellipsis {
+    color: var(--text-muted);
+    padding: 0 0.25rem;
+}
+
+
+/* ========================================
+   16. Modal
+   HTML structure:
+     .mics-modal-overlay#mics-modal-overlay
+       .mics-modal
+         .mics-modal-close
+         .mics-modal-body
+   JS injects into mics-modal-body:
+     .mics-modal-header (code + h2)
+     .mics-modal-section (h3 + content)
+     .mics-modal-link, .mics-modal-ext-link,
+     .mics-modal-asset-list, .mics-modal-badge-list,
+     .mics-modal-aliases, .mics-modal-scrollable
+   ======================================== */
+.mitre-ics .mics-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mitre-ics .mics-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mitre-ics .mics-modal {
+    width: 100%;
+    max-width: 700px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: mics-fadeInUp 0.3s ease-out;
+}
+
+/* Modal custom scrollbar */
+.mitre-ics .mics-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mitre-ics .mics-modal::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.6);
+}
+
+.mitre-ics .mics-modal::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-secondary), var(--accent-primary));
+    border-radius: 3px;
+}
+
+.mitre-ics .mics-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1;
+}
+
+.mitre-ics .mics-modal-close:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--status-red);
+}
+
+.mitre-ics .mics-modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Modal header (injected by JS) */
+.mitre-ics .mics-modal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-right: 2.5rem;
+}
+
+.mitre-ics .mics-modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Modal section (injected by JS) */
+.mitre-ics .mics-modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.mitre-ics .mics-modal-section h3 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.mitre-ics .mics-modal-section p {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.mitre-ics .mics-modal-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.85rem;
+}
+
+.mitre-ics .mics-modal-link:hover {
+    text-decoration: underline;
+    color: #5ce1ff;
+}
+
+.mitre-ics .mics-modal-ext-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    background: var(--accent-gradient);
+    color: #fff;
+    text-decoration: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: var(--transition);
+    align-self: flex-start;
+}
+
+.mitre-ics .mics-modal-ext-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.mitre-ics .mics-modal-asset-list {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.mitre-ics .mics-modal-badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.mitre-ics .mics-modal-aliases {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.mitre-ics .mics-modal-scrollable {
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+.mitre-ics .mics-modal-scrollable::-webkit-scrollbar {
+    width: 4px;
+}
+
+.mitre-ics .mics-modal-scrollable::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.6);
+}
+
+.mitre-ics .mics-modal-scrollable::-webkit-scrollbar-thumb {
+    background: var(--accent-secondary);
+    border-radius: 2px;
+}
+
+
+/* ========================================
+   17. Footer
+   ======================================== */
+.mitre-ics .mics-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.mitre-ics .mics-footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.mitre-ics .mics-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ========================================
+   18. Animations
+   ======================================== */
+@keyframes mics-fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes mics-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Loading/skeleton state */
+.mitre-ics .mics-loading {
+    animation: mics-pulse 1.5s ease-in-out infinite;
+}
+
+
+/* ========================================
+   19. Responsive Breakpoints
+   ======================================== */
+
+/* 1200px and below */
+@media (max-width: 1200px) {
+    .mitre-ics .mics-card-grid,
+    .mitre-ics .mics-card-grid.mics-card-grid-2,
+    .mitre-ics .mics-card-grid.mics-card-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 768px and below */
+@media (max-width: 768px) {
+    .mitre-ics .mics-dashboard-container {
+        padding: 1rem;
+    }
+
+    .mitre-ics .mics-card-grid,
+    .mitre-ics .mics-card-grid.mics-card-grid-2,
+    .mitre-ics .mics-card-grid.mics-card-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .mitre-ics .mics-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mitre-ics .mics-search-box {
+        min-width: 100%;
+    }
+
+    .mitre-ics .mics-tab-bar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+    }
+
+    .mitre-ics .mics-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .mitre-ics .mics-header {
+        padding: 1.25rem;
+    }
+
+    .mitre-ics .mics-header-content {
+        flex-direction: column;
+    }
+
+    .mitre-ics .mics-header-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .mitre-ics .mics-modal {
+        max-height: 90vh;
+    }
+
+    .mitre-ics .mics-pagination {
+        flex-wrap: wrap;
+    }
+}
+
